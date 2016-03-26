@@ -1,16 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoveFrame : MonoBehaviour {
+public class MoveFrame {
 
-	
-	// Use this for initialization
-	void Start () {
-	
+	public BezierCurve motion;
+	public Vector3 startPosition;
+	public Vector3 endPosition {
+		get {
+			return startPosition + motion.getPoint(1f);
+		}
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
