@@ -3,32 +3,34 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-	Queue<MoveFrame> queuedFrames;
-	Queue<MoveFrame> activeFrames;
-	MoveFrame currentFrame;
+	Queue<MoveFrame> queuedFrames = new Queue<MoveFrame>();
+	Queue<MoveFrame> activeFrames = new Queue<MoveFrame>();
+	MoveFrame currentFrame = null;
 	float timeInCurrentFrame = 0f;
-	float timePerFrame;
+	float timePerFrame = 1f;
 
-	// Use this for initialization
-	void Start () {
-		
+	void Start() {
+		MoveFrame testFrame1 = new MoveFrame();
+		testFrame1.motion = new BezierCurve(
+			new Vector3[] {
+				Vector3.zero,
+				Vector3.up,
+				Vector3.right
+			});
+		QueueFrame(testFrame1);
+		ActivateFrames();
 	}
-	
-	// Update is called once per frame
 
 	void Update () {
-
 		if (currentFrame == null) {
 			NextFrame();
 			return;
 		}
-
 		float u = timeInCurrentFrame / timePerFrame;
 		Vector3 posiitonInFrame = currentFrame.motion.getPoint(u);
 		transform.position = currentFrame.startPosition + posiitonInFrame;
 		timeInCurrentFrame += Time.deltaTime;
 		if (timeInCurrentFrame > timePerFrame) currentFrame = null;
-
 	}
 
 	private void NextFrame() {
