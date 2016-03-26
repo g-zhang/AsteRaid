@@ -5,6 +5,11 @@ public class BezierCurve {
 
 	private readonly Vector3[] controlPoints;
 
+	public BezierCurve (BezierCurve b) {
+		controlPoints = new Vector3[b.controlPoints.Length];
+		b.controlPoints.CopyTo(controlPoints, 0);
+	}
+
 	public BezierCurve(params Vector3[] pts) {
 		controlPoints = pts;
 	}

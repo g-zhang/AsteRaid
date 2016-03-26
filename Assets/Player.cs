@@ -10,22 +10,30 @@ public class Player : MonoBehaviour {
 	float timePerFrame = 1f;
 
 	void Start() {
+
 		MoveFrame testFrame1 = new MoveFrame();
 		testFrame1.motion = new BezierCurve(
-			new Vector3[] {
-				Vector3.zero,
-				Vector3.up,
-				Vector3.right
-			});
+			Vector3.zero,
+			Vector3.up,
+			Vector3.right
+		);
+
+		MoveFrame testFrame2 = new MoveFrame(testFrame1);
+		MoveFrame testFrame3 = new MoveFrame(testFrame1);
+
 		QueueFrame(testFrame1);
+		QueueFrame(testFrame2);
+		QueueFrame(testFrame3);
 		ActivateFrames();
 	}
 
 	void Update () {
+
 		if (currentFrame == null) {
 			NextFrame();
 			return;
 		}
+
 		float u = timeInCurrentFrame / timePerFrame;
 		Vector3 posiitonInFrame = currentFrame.motion.getPoint(u);
 		transform.position = currentFrame.startPosition + posiitonInFrame;
@@ -41,11 +49,8 @@ public class Player : MonoBehaviour {
 
 	public void ActivateFrames() {
 		while (true) {
-			try {
-				activeFrames.Enqueue(queuedFrames.Dequeue());
-			} catch {
-				break;
-			}
+			try { activeFrames.Enqueue(queuedFrames.Dequeue()); }
+			catch { break; }
 		}
 	}
 
