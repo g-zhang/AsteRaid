@@ -3,6 +3,10 @@ using System.Collections;
 
 public class MoveFrame {
 
+	public MoveFrame( BezierCurve b) {
+		motion = b;
+	}
+
 	public MoveFrame (MoveFrame m) {
 		motion = new BezierCurve(m.motion);
 		startPosition = m.startPosition;

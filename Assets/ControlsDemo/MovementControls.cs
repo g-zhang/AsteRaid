@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Controls))]
+[RequireComponent(typeof(Player))]
 public class MovementControls : MonoBehaviour {
 
     private Controls controls;
@@ -15,10 +16,13 @@ public class MovementControls : MonoBehaviour {
     public List<Vector3> directions = new List<Vector3>();
     public List<GameObject> markers = new List<GameObject>();
 
+	public Player player;
+
 	// Use this for initialization
 	void Start () {
         controls = GetComponent<Controls>();
         positions.Add(transform.position);
+		player = GetComponent<Player>();
 	}
 	
 	// Update is called once per frame
@@ -61,5 +65,22 @@ public class MovementControls : MonoBehaviour {
                 markers.RemoveAt(markers.Count - 1);
             }
         }
+
+		if (controls.ID.Action3.WasPressed || Input.GetKeyDown(KeyCode.E)) {
+			Vector3[] relPositions = new Vector3[positions.Count];
+			for (int i = 0; i < positions.Count; i++)
+				relPositions[i] = positions[i] - positions[0];
+			player.QueueFrame(new MoveFrame(new BezierCurve(relPositions)));
+			Vector3 tmp = positions[positions.Count - 1];
+			positions.Clear();
+			positions.Add(tmp);
+			directions.Clear();
+			GameObject go = markers[markers.Count - 1];
+			markers.Clear();
+			markers.Add(go);
+			print("adding move frame with ctl points" + positions.ToString());
+		}
+
+		if (controls.ID.Action4.WasPressed || Input.GetKeyDown(KeyCode.Space)) player.ActivateFrames();
 	}
 }

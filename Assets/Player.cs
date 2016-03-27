@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
 	float timePerFrame = 1f;
 
 	void Start() {
-
+		/*
 		MoveFrame testFrame1 = new MoveFrame();
 		testFrame1.motion = new BezierCurve(
 			Vector3.zero,
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
 		QueueFrame(testFrame1);
 		QueueFrame(testFrame2);
 		QueueFrame(testFrame3);
-		ActivateFrames();
+		ActivateFrames();*/
 	}
 
 	void Update () {
