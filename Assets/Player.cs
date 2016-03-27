@@ -3,29 +3,11 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-	Queue<MoveFrame> queuedFrames = new Queue<MoveFrame>();
-	Queue<MoveFrame> activeFrames = new Queue<MoveFrame>();
-	MoveFrame currentFrame = null;
+	Queue<ActionFrame> queuedFrames = new Queue<ActionFrame>();
+	Queue<ActionFrame> activeFrames = new Queue<ActionFrame>();
+	ActionFrame currentFrame = null;
 	float timeInCurrentFrame = 0f;
 	float timePerFrame = 1f;
-
-	void Start() {
-		/*
-		MoveFrame testFrame1 = new MoveFrame();
-		testFrame1.motion = new BezierCurve(
-			Vector3.zero,
-			Vector3.up,
-			Vector3.right
-		);
-
-		MoveFrame testFrame2 = new MoveFrame(testFrame1);
-		MoveFrame testFrame3 = new MoveFrame(testFrame1);
-
-		QueueFrame(testFrame1);
-		QueueFrame(testFrame2);
-		QueueFrame(testFrame3);
-		ActivateFrames();*/
-	}
 
 	void Update () {
 
@@ -34,17 +16,25 @@ public class Player : MonoBehaviour {
 			return;
 		}
 
+		DoFrame();
+	}
+
+	private void DoFrame() {
 		float u = timeInCurrentFrame / timePerFrame;
-		Vector3 posiitonInFrame = currentFrame.motion.getPoint(u);
-		transform.position = currentFrame.startPosition + posiitonInFrame;
-		timeInCurrentFrame += Time.deltaTime;
-		if (timeInCurrentFrame > timePerFrame) currentFrame = null;
+		if (currentFrame is MoveFrame) {
+			MoveFrame mf = currentFrame as MoveFrame;
+			Vector3 posiitonInFrame = mf.motion.getPoint(u);
+			transform.position = mf.startPosition + posiitonInFrame;
+			timeInCurrentFrame += Time.deltaTime;
+			if (timeInCurrentFrame > timePerFrame) currentFrame = null;
+		}
 	}
 
 	private void NextFrame() {
 		try { currentFrame = activeFrames.Dequeue(); }
 		catch { currentFrame = null; return; }
 		timeInCurrentFrame = 0f;
+
 	}
 
 	public void ActivateFrames() {
@@ -62,11 +52,11 @@ public class Player : MonoBehaviour {
 	private Vector3 endPointOfFrames {
 		get {
 			if (lastFrame == null) return transform.position;
-			return lastFrame.endPosition;
+			return (lastFrame as MoveFrame).endPosition;
 		}
 	}
 
-	private MoveFrame lastFrame {
+	private ActionFrame lastFrame {
 		get {
 			if (queuedFrames.Count > 0)
 				return queuedFrames.ToArray()[queuedFrames.Count - 1];
