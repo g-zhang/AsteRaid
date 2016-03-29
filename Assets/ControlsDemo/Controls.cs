@@ -30,7 +30,7 @@ public class Controls : MonoBehaviour  {
                 InputManager.Devices[playerNum] : null;
     }
 
-    void Awake()
+    void Start()
     {
         inputDevice = UpdateState();
     }
