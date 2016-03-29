@@ -12,7 +12,7 @@ public class DevTest_Movement : MonoBehaviour
 	RigidbodyConstraints activeConstraints;
 	RigidbodyConstraints passiveConstraints;
 
-	void Awake()
+	void Start()
 	{
 		activeConstraints =
 			RigidbodyConstraints.FreezeRotation |

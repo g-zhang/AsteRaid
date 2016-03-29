@@ -15,6 +15,7 @@ public class ControlPoint : MonoBehaviour
 	public Color neutralColor;
 	public Color team0Color;
 	public Color team1Color;
+	public float alpha = 0.25f;
 
 	[Header("Control Point: Dynamically Set Fields")]
 	public List<DevTest_Player> capturingObjects;
@@ -27,13 +28,14 @@ public class ControlPoint : MonoBehaviour
 	void Awake()
 	{
 		mat = GetComponent<MeshRenderer>().material;
-		neutralColor.a = mat.color.a;
-		team0Color.a = mat.color.a;
-		team1Color.a = mat.color.a;
+		neutralColor.a = alpha;
+		team0Color.a = alpha;
+		team1Color.a = alpha;
 
 		capturingObjects = new List<DevTest_Player>();
 		captureSpectrum = 0f;
 		driftPoint = 0f;
+
 		mat.color = neutralColor;
 
 		return;
