@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class TurretAI : MonoBehaviour
+public class AI_Turret : MonoBehaviour
 {
-	[Header("TurretAI: Inspector Set Fields")]
+	[Header("AI_Turret: Inspector Set Fields")]
 	public int teamNumber = 0;
 	public float rotationSpeed = 5f;
 
@@ -11,7 +11,7 @@ public class TurretAI : MonoBehaviour
 	public float delayBetweenShots = 0.5f;
 	public float weaponMaxDistance = 50f; // See Weapon description.
 
-	[Header("TurretAI: Dynamically Set Fields")]
+	[Header("AI_Turret: Dynamically Set Fields")]
 	public List<DevTest_Player> targets;
 	public Transform gun;
 
