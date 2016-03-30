@@ -13,11 +13,19 @@ public class ShipControls : MonoBehaviour {
 	[Header("Ship Parameters")]
 	public bool localShipControls = false;
 	public bool strafeControls = false;
+	public bool rotationIndependent = false;
 	public float minSpeed = 0f;
 	public float maxSpeed = 5f;
 	public float shipRotationSpeed = 12f;
 	public float shipYawSpeed = 120f;
 	public bool shipFaceMouse = false;
+
+	// TODOs:
+	// reverse max speed indep of forward max speed
+	// ship accceleration parameterized
+	// move to enums for translation and rotation modes
+	// move to xz plane
+	// split to turret / ship classes (rotator class?)
 
 	[Header("Turret Parameters")]
 	public bool localTurretControls = false;
@@ -57,9 +65,16 @@ public class ShipControls : MonoBehaviour {
 			return;
 		}
 
-		if (strafeControls) { 
+		if (rotationIndependent) {
 			Vector3 angles = currentRotation.eulerAngles;
 			angles.z += Time.deltaTime * shipYawSpeed * controls.YawAxis;
+			shipRotation = Quaternion.Euler(angles);
+			return;
+		}
+
+		if (localShipControls) {
+			Vector3 angles = currentRotation.eulerAngles;
+			angles.z += Time.deltaTime * -shipYawSpeed * controls.MoveStick.x;
 			shipRotation = Quaternion.Euler(angles);
 			return;
 		}
@@ -91,8 +106,12 @@ public class ShipControls : MonoBehaviour {
 	
 	void FixedUpdate() {
 
-		if (localShipControls) rigid.velocity += transform.TransformDirection(moveControl);
-		else rigid.velocity += moveControl;
+		if (localShipControls) {
+			float speedSign = Vector3.Dot(rigid.velocity, transform.up) > 0 ? 1f : -1f;
+			rigid.velocity = transform.TransformDirection(new Vector3(0, speedSign * rigid.velocity.magnitude + moveControl.y, 0));
+		} else if (strafeControls) {
+			rigid.velocity = transform.TransformDirection(moveControl);
+		} else rigid.velocity += moveControl;
 		
 		if (rigid.velocity.magnitude > maxSpeed) rigid.velocity = maxSpeed * rigid.velocity.normalized;
 		if (rigid.velocity.magnitude <= minSpeed) rigid.velocity = Vector3.zero;
