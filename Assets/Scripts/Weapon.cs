@@ -1,0 +1,13 @@
+﻿using UnityEngine;
+
+public class Weapon : MonoBehaviour
+{
+	[Header("Weapon: Externally Set Fields")]
+	public Vector3 startingDirection;
+
+	// This represents different things based on weapon.
+	//
+	// Bullets: Max distance before disappearing. (?)
+	// Lasers: Length of the laser beam.
+	public float maxDistance;
+}
