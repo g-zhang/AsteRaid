@@ -73,12 +73,18 @@ public class Controls : MonoBehaviour  {
 		}
 	}
 
-	public Vector3 ToMouseVector {
+	public Vector3 MousePosition {
 		get {
 			Vector3 mouse = Input.mousePosition;
-			mouse.z = -Camera.main.transform.position.z;
 			mouse = Camera.main.ScreenToWorldPoint(mouse);
-			return mouse - transform.position;
+			mouse.y = 0f;
+			return mouse;
+		}
+	}
+
+	public Vector3 ToMouseVector {
+		get {
+			return MousePosition - transform.position;
 		}
 	}
 

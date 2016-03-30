@@ -1,6 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+public enum RotationMode {
+	PointAtMouse,
+	PointAlongMoveStick,
+	PointAlongAimStick,
+	YawOnMoveStick,
+	YawOnYawAxis,
+	PointInVelocity
+}
+
+public enum TranslaionMode {
+
+}
+
 [RequireComponent(typeof(Controls))]
 [RequireComponent(typeof(Rigidbody))]
 public class ShipControls : MonoBehaviour {
@@ -24,7 +38,6 @@ public class ShipControls : MonoBehaviour {
 	// reverse max speed indep of forward max speed
 	// ship accceleration parameterized
 	// move to enums for translation and rotation modes
-	// move to xz plane
 	// split to turret / ship classes (rotator class?)
 
 	[Header("Turret Parameters")]
@@ -49,68 +62,65 @@ public class ShipControls : MonoBehaviour {
 	}
 
 	void Update () {
-		aimControl = new Vector3(controls.AimStick.x, controls.AimStick.y, 0f);
-		moveControl = new Vector3(controls.MoveStick.x, controls.MoveStick.y, 0f);
+		aimControl = new Vector3(controls.AimStick.x, 0f, controls.AimStick.y);
+		moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
 		SetShipRotation();
 		SetTurretRotation();
 	}
 
+	private Quaternion currentRotation {
+		get {
+			return localShipControls ? transform.localRotation : transform.rotation;
+		}
+	}
+
 	void SetShipRotation() {
+		if (shipFaceMouse) PointAlongVector(controls.ToMouseVector);
+		else if (rotationIndependent) RotateShipBy(Time.deltaTime * shipYawSpeed * controls.YawAxis);
+		else if (localShipControls) RotateShipBy(Time.deltaTime * shipYawSpeed * controls.MoveStick.x);
+		else PointAlongVector(rigid.velocity.normalized);
+	}
 
-		Quaternion currentRotation = localShipControls ? transform.localRotation : transform.rotation;
+	void RotateShipBy(float degrees) {
+		Vector3 angles = currentRotation.eulerAngles;
+		angles.y += degrees;
+		shipRotation = Quaternion.Euler(angles);
+	}
 
-		if (shipFaceMouse) {
-			Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, controls.ToMouseVector);
-			shipRotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * shipRotationSpeed);
-			return;
-		}
-
-		if (rotationIndependent) {
-			Vector3 angles = currentRotation.eulerAngles;
-			angles.z += Time.deltaTime * shipYawSpeed * controls.YawAxis;
-			shipRotation = Quaternion.Euler(angles);
-			return;
-		}
-
-		if (localShipControls) {
-			Vector3 angles = currentRotation.eulerAngles;
-			angles.z += Time.deltaTime * -shipYawSpeed * controls.MoveStick.x;
-			shipRotation = Quaternion.Euler(angles);
-			return;
-		}
-
-		Vector3 normVel = rigid.velocity.normalized;
-		Quaternion lookRotation = Quaternion.LookRotation(Vector3.forward, normVel);
-		shipRotation = Quaternion.Slerp(currentRotation, lookRotation, Time.deltaTime * shipRotationSpeed);
-		return;
-
+	void PointAlongVector(Vector3 heading) {
+		if (heading.magnitude == 0f) return;
+		Quaternion targetRotation = Quaternion.LookRotation(heading, Vector3.up);
+		shipRotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * shipRotationSpeed);
 	}
 
 	void SetTurretRotation() {
 
 		if (turretFaceMouse) {
-			Quaternion lookRotation = Quaternion.LookRotation(Vector3.forward, controls.ToMouseVector);
+			if (controls.ToMouseVector.magnitude == 0f) return;
+			Quaternion lookRotation = Quaternion.LookRotation(controls.ToMouseVector, Vector3.up);
 			turretRotation = Quaternion.Slerp(turret.rotation, lookRotation, Time.deltaTime * shipRotationSpeed);
 			return;
 		}
 
-		if (controls.AimStick.magnitude > 0f) turretTargetAngle = Vector3.Angle(Vector3.up, aimControl);
+		if (controls.AimStick.magnitude > 0f) turretTargetAngle = Vector3.Angle(Vector3.forward, aimControl);
 		else if (turretFloatsHome) turretTargetAngle = 0f;
+
 		if (turretTargetAngle > turretConeHalfAngle) turretTargetAngle = turretConeHalfAngle;
-		if (controls.AimStick.x > 0) turretTargetAngle = -turretTargetAngle;
-		Quaternion turretTargetRotation = Quaternion.Euler(0f, 0f, turretTargetAngle);
+		if (controls.AimStick.x < 0) turretTargetAngle = -turretTargetAngle;
+		Quaternion turretTargetRotation = Quaternion.Euler(0f, turretTargetAngle, 0f);
 		float turretSpeed = (controls.AimStick.magnitude == 0) ? turretReturnSpeed : turretRotationSpeed;
-		turretRotation = Quaternion.Slerp(turret.rotation, turretTargetRotation, Time.deltaTime * turretSpeed);
+		Quaternion curRot = localTurretControls ? turret.localRotation : turret.rotation;
+		turretRotation = Quaternion.Slerp(curRot, turretTargetRotation, Time.deltaTime * turretSpeed);
 		return;
 	}
 	
 	void FixedUpdate() {
 
 		if (localShipControls) {
-			float speedSign = Vector3.Dot(rigid.velocity, transform.up) > 0 ? 1f : -1f;
-			rigid.velocity = transform.TransformDirection(new Vector3(0, speedSign * rigid.velocity.magnitude + moveControl.y, 0));
+			float speedSign = Vector3.Dot(rigid.velocity, transform.forward) > 0 ? 1f : -1f;
+			rigid.velocity = transform.TransformDirection(new Vector3(0f, 0f, speedSign * rigid.velocity.magnitude + moveControl.z));
 		} else if (strafeControls) {
-			rigid.velocity = transform.TransformDirection(moveControl);
+			rigid.velocity += transform.TransformDirection(moveControl);
 		} else rigid.velocity += moveControl;
 		
 		if (rigid.velocity.magnitude > maxSpeed) rigid.velocity = maxSpeed * rigid.velocity.normalized;
