@@ -3,17 +3,26 @@ using System.Collections;
 
 public enum RotationMode {
 	PointAtMouse,
-	PointAlongStick,
-	YawOnStick,
-	YawOnYawAxis,
-	PointInVelocity
+	PointAlongMoveStick,
+	PointAlongAimStick,
+	PointInVelocity,
+	YawOnMoveStick,
+	YawOnAimStick,
+	YawOnYawAxis
 }
 
 public class Swivel : MonoBehaviour {
 
-	public Quaternion rotation = Quaternion.identity;
+	protected Rigidbody rigid;
+	protected Controls controls;
+	protected Quaternion rotation = Quaternion.identity;
+
+	[Header("Swivel Parameters")]
 	public RotationMode swivelMode = RotationMode.PointInVelocity;
 	public float rotationLerpSpeed = 60f;
+	public float yawSpeed = 120f;
+	//public bool recenters = false;
+	//public float coneHalfAngle = 180f;
 
 	public void RotateBy(float degrees) {
 		Vector3 angles = transform.rotation.eulerAngles;
@@ -27,4 +36,57 @@ public class Swivel : MonoBehaviour {
 		rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationLerpSpeed);
 	}
 
+	public void SetRotation() {
+		switch (swivelMode) {
+			case (RotationMode.PointAtMouse):
+				PointAlongVector(controls.ToMouseVector);
+				break;
+			case (RotationMode.YawOnMoveStick):
+				RotateBy(Time.deltaTime * yawSpeed * controls.MoveStick.x);
+				break;
+			case (RotationMode.YawOnAimStick):
+				RotateBy(Time.deltaTime * yawSpeed * controls.AimStick.x);
+				break;
+			case (RotationMode.YawOnYawAxis):
+				RotateBy(Time.deltaTime * yawSpeed * controls.YawAxis);
+				break;
+			case (RotationMode.PointInVelocity):
+				PointAlongVector(rigid.velocity.normalized);
+				break;
+			case (RotationMode.PointAlongMoveStick):
+				PointAlongVector(Vector2ToXZVector3(controls.MoveStick));
+				break;
+			case (RotationMode.PointAlongAimStick):
+				PointAlongVector(Vector2ToXZVector3(controls.AimStick));
+				break;
+			default:
+				break;
+		}
+	}
+
+	Vector3 Vector2ToXZVector3(Vector2 v2) {
+		return new Vector3(v2.x, 0f, v2.y);
+	}
+
+	void Awake() {
+
+		controls = GetComponent<Controls>();
+		rigid = GetComponent<Rigidbody>();
+
+		if (controls != null && rigid != null) return;
+
+		controls = transform.parent.GetComponent<Controls>();
+		rigid = transform.parent.GetComponent<Rigidbody>();
+		if (controls == null || rigid == null) {
+			print("Using Swivel without deriving from it requires that the parent object has both a Controls and a Rigidbody.");
+		}
+	}
+
+	void Update() {
+		SetRotation();
+	}
+
+	void FixedUpdate() {
+		transform.rotation = rotation;
+	}
 }
