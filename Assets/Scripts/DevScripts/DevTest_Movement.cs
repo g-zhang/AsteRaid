@@ -16,7 +16,7 @@ public class DevTest_Movement : MonoBehaviour
 	{
 		activeConstraints =
 			RigidbodyConstraints.FreezeRotation |
-			RigidbodyConstraints.FreezePositionZ;
+			RigidbodyConstraints.FreezePositionY;
 		passiveConstraints = RigidbodyConstraints.FreezeAll;
 
 		foreach (DevTest_Player player in players)
@@ -54,11 +54,11 @@ public class DevTest_Movement : MonoBehaviour
 		Vector3 vel = Vector3.zero;
 		if (Input.GetKey(KeyCode.W))
 		{
-			vel.y += movementSpeed;
+			vel.z += movementSpeed;
 		}
 		if (Input.GetKey(KeyCode.S))
 		{
-			vel.y -= movementSpeed;
+			vel.z -= movementSpeed;
 		}
 		if (Input.GetKey(KeyCode.A))
 		{

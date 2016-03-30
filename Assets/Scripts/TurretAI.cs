@@ -28,7 +28,7 @@ public class TurretAI : MonoBehaviour
 
 		Vector3 direction = targets[0].transform.position - transform.position;
 		Quaternion targetRotation =
-			Quaternion.LookRotation(Vector3.forward, direction);
+			Quaternion.LookRotation(direction, gun.up);
 		gun.localRotation = Quaternion.Slerp(
 			gun.localRotation, targetRotation, Time.deltaTime * rotationSpeed);
 
