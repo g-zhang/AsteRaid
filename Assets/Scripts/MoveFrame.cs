@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoveFrame : ActionFrame {
+public class MoveFrame {
 
 	public MoveFrame( BezierCurve b) {
 		motion = b;
