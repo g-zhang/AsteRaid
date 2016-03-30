@@ -4,7 +4,7 @@
 public class DevTest_Player : MonoBehaviour
 {
 	[Header("DevTest_Player: Inspector Set Fields")]
-	public int teamNumber = 0;
+	public int teamNumber = 1;
 
 	[Header("DevTest_Player: Dynamically Set Fields")]
 	public Rigidbody rigid;

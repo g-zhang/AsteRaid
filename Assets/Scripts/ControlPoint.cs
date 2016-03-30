@@ -13,8 +13,8 @@ public class ControlPoint : MonoBehaviour
 	public bool additiveCaptureTime = false;
 
 	public Color neutralColor;
-	public Color team0Color;
 	public Color team1Color;
+	public Color team2Color;
 	public float alpha = 0.25f;
 
 	[Header("Control Point: Dynamically Set Fields")]
@@ -29,8 +29,8 @@ public class ControlPoint : MonoBehaviour
 	{
 		mat = GetComponent<MeshRenderer>().material;
 		neutralColor.a = alpha;
-		team0Color.a = alpha;
 		team1Color.a = alpha;
+		team2Color.a = alpha;
 
 		capturingObjects = new List<DevTest_Player>();
 		captureSpectrum = 0f;
@@ -64,43 +64,43 @@ public class ControlPoint : MonoBehaviour
 		}
 		else
 		{
-			List<DevTest_Player> team0 =
-				capturingObjects.FindAll(p => p.teamNumber == 0);
 			List<DevTest_Player> team1 =
 				capturingObjects.FindAll(p => p.teamNumber == 1);
+			List<DevTest_Player> team2 =
+				capturingObjects.FindAll(p => p.teamNumber == 2);
 
-			int team0Weight = (team0.Count == 0) ? 0 : 1;
 			int team1Weight = (team1.Count == 0) ? 0 : 1;
+			int team2Weight = (team2.Count == 0) ? 0 : 1;
 			if (additiveCaptureTime)
 			{
-				team0Weight = team0.Count;
 				team1Weight = team1.Count;
+				team2Weight = team2.Count;
 			}
 			else
 			{
-				if (team0.Count > team1.Count)
+				if (team1.Count > team2.Count)
+				{
+					team2Weight = 0;
+				}
+				else if (team2.Count > team1.Count)
 				{
 					team1Weight = 0;
-				}
-				else if (team1.Count > team0.Count)
-				{
-					team0Weight = 0;
 				}
 			}
 
 			if (anyOpposingBlocks)
 			{
-				if (team1.Count == 0)
+				if (team2.Count == 0)
 				{
-					captureSpectrum += Time.deltaTime * team0Weight;
+					captureSpectrum += Time.deltaTime * team1Weight;
 					if ((driftPoint < 0f) && (captureSpectrum > 0f))
 					{
 						driftPoint = 0f;
 					}
 				}
-				else if (team0.Count == 0)
+				else if (team1.Count == 0)
 				{
-					captureSpectrum -= Time.deltaTime * team1Weight;
+					captureSpectrum -= Time.deltaTime * team2Weight;
 					if ((driftPoint > 0f) && (captureSpectrum < 0f))
 					{
 						driftPoint = 0f;
@@ -109,7 +109,7 @@ public class ControlPoint : MonoBehaviour
 			}
 			else
 			{
-				float change = Time.deltaTime * (team0Weight - team1Weight);
+				float change = Time.deltaTime * (team1Weight - team2Weight);
 				captureSpectrum += change;
 
 				if ((change > 0f) &&
@@ -138,12 +138,12 @@ public class ControlPoint : MonoBehaviour
 
 		if (captureSpectrum > 0f)
 		{
-			mat.color = Color.Lerp(neutralColor, team0Color,
+			mat.color = Color.Lerp(neutralColor, team1Color,
 				captureSpectrum / captureAbsValue);
 		}
 		else if (captureSpectrum < 0f)
 		{
-			mat.color = Color.Lerp(neutralColor, team1Color,
+			mat.color = Color.Lerp(neutralColor, team2Color,
 				-captureSpectrum / captureAbsValue);
 		}
 		else
@@ -189,12 +189,12 @@ public class ControlPoint : MonoBehaviour
 		if (captureFlatTime)
 		{
 			if ((captureSpectrum > driftPoint) &&
-				(capturingObjects.Find(p => p.teamNumber == 0) == null))
+				(capturingObjects.Find(p => p.teamNumber == 1) == null))
 			{
 				captureSpectrum = driftPoint;
 			}
 			else if ((captureSpectrum < driftPoint) &&
-				(capturingObjects.Find(p => p.teamNumber == 1) == null))
+				(capturingObjects.Find(p => p.teamNumber == 2) == null))
 			{
 				captureSpectrum = driftPoint;
 			}
