@@ -29,4 +29,40 @@ public class Weapon_Bullet : Weapon
 		}
 		return;
 	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		Transform parent = other.transform;
+		while (parent.parent != null)
+		{
+			parent = parent.parent;
+		}
+
+		Player otherPlayer = parent.GetComponent<Player>();
+		AI otherAI = parent.GetComponent<AI>();
+
+		if (otherPlayer != null)
+		{
+			if (otherPlayer.teamNumber == teamNumber)
+			{
+				return;
+			}
+		}
+		if (otherAI != null)
+		{
+			if (otherAI.teamNumber == teamNumber)
+			{
+				return;
+			}
+		}
+
+		Destroy(gameObject);
+		return;
+	}
+
+	void OnTriggerStay(Collider other)
+	{
+		BaseOnTriggerStay(other);
+		return;
+	}
 }

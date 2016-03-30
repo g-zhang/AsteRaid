@@ -18,7 +18,7 @@ public class ControlPoint : MonoBehaviour
 	public float alpha = 0.25f;
 
 	[Header("Control Point: Dynamically Set Fields")]
-	public List<DevTest_Player> capturingObjects;
+	public List<Player> capturingObjects;
 
 	public float captureSpectrum;
 	public float driftPoint;
@@ -32,7 +32,7 @@ public class ControlPoint : MonoBehaviour
 		team1Color.a = alpha;
 		team2Color.a = alpha;
 
-		capturingObjects = new List<DevTest_Player>();
+		capturingObjects = new List<Player>();
 		captureSpectrum = 0f;
 		driftPoint = 0f;
 
@@ -64,9 +64,9 @@ public class ControlPoint : MonoBehaviour
 		}
 		else
 		{
-			List<DevTest_Player> team1 =
+			List<Player> team1 =
 				capturingObjects.FindAll(p => p.teamNumber == 1);
-			List<DevTest_Player> team2 =
+			List<Player> team2 =
 				capturingObjects.FindAll(p => p.teamNumber == 2);
 
 			int team1Weight = (team1.Count == 0) ? 0 : 1;
@@ -156,7 +156,7 @@ public class ControlPoint : MonoBehaviour
 	
 	void OnTriggerEnter(Collider other)
 	{
-		DevTest_Player player = other.GetComponent<DevTest_Player>();
+		Player player = other.GetComponent<Player>();
 		if (player == null)
 		{
 			return;
@@ -173,7 +173,7 @@ public class ControlPoint : MonoBehaviour
 
 	void OnTriggerExit(Collider other)
 	{
-		DevTest_Player player = other.GetComponent<DevTest_Player>();
+		Player player = other.GetComponent<Player>();
 		if (player == null)
 		{
 			return;

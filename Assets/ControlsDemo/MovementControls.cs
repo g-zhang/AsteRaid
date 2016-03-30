@@ -79,7 +79,7 @@ public class MovementControls : MonoBehaviour {
 			Vector3[] relPositions = new Vector3[positions.Count];
 			for (int i = 0; i < positions.Count; i++)
 				relPositions[i] = positions[i] - positions[0];
-			player.QueueFrame(new MoveFrame(new BezierCurve(relPositions)));
+			//player.QueueFrame(new MoveFrame(new BezierCurve(relPositions)));
 			Vector3 tmp = positions[positions.Count - 1];
 			positions.Clear();
 			positions.Add(tmp);
@@ -98,7 +98,7 @@ public class MovementControls : MonoBehaviour {
 
         if (controls.ActivateFrames)
         {
-            player.ActivateFrames();
+            //player.ActivateFrames();
         }
 	}
 }

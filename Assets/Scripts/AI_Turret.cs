@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class AI_Turret : MonoBehaviour
+public class AI_Turret : AI
 {
 	[Header("AI_Turret: Inspector Set Fields")]
-	public int teamNumber = 0;
 	public float rotationSpeed = 5f;
 
 	public GameObject weaponPrefab;
@@ -12,18 +11,19 @@ public class AI_Turret : MonoBehaviour
 	public float weaponMaxDistance = 50f; // See Weapon description.
 
 	[Header("AI_Turret: Dynamically Set Fields")]
-	public List<DevTest_Player> targets;
+	public RangeFinder range;
 	public Transform gun;
 
 	public float elapsedFireDelay;
 
 	void Awake()
 	{
-		targets = new List<DevTest_Player>();
+		range = transform.Find("Range").GetComponent<RangeFinder>();
 		gun = transform.Find("Gun");
 
 		elapsedFireDelay = 0f;
 
+		BaseAwake();
 		return;
 	}
 
@@ -31,13 +31,14 @@ public class AI_Turret : MonoBehaviour
 	{
 		// TODO: Allow settings to change who it targets.
 
-		if (targets.Count == 0)
+		if (range.inRange.Count == 0)
 		{
 			elapsedFireDelay = 0f;
 			return;
 		}
 
-		Vector3 direction = targets[0].transform.position - transform.position;
+		Vector3 direction =
+			range.inRange[0].transform.position - transform.position;
 		Quaternion targetRotation =
 			Quaternion.LookRotation(direction, Vector3.up);
 		gun.rotation = Quaternion.Slerp(
@@ -55,47 +56,15 @@ public class AI_Turret : MonoBehaviour
 
 			weaponComp.startingDirection = gun.rotation * Vector3.forward;
 			weaponComp.maxDistance = weaponMaxDistance;
+			weaponComp.teamNumber = teamNumber;
 		}
 
 		return;
 	}
 
-	void OnTriggerEnter(Collider other)
+	void FixedUpdate()
 	{
-		DevTest_Player target = other.GetComponent<DevTest_Player>();
-		if (target == null)
-		{
-			return;
-		}
-
-		if (target.teamNumber == teamNumber)
-		{
-			return;
-		}
-
-		if (targets.Find(t => t == target) != null)
-		{
-			return;
-		}
-
-		targets.Add(target);
-		return;
-	}
-
-	void OnTriggerExit(Collider other)
-	{
-		DevTest_Player target = other.GetComponent<DevTest_Player>();
-		if (target == null)
-		{
-			return;
-		}
-
-		if (targets.Find(t => t == target) == null)
-		{
-			return;
-		}
-
-		targets.Remove(target);
+		BaseFixedUpdate();
 		return;
 	}
 }

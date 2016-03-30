@@ -35,4 +35,10 @@ public class Weapon_LaserBeam : Weapon
 
 		return;
 	}
+
+	void OnTriggerStay(Collider other)
+	{
+		BaseOnTriggerStay(other);
+		return;
+	}
 }

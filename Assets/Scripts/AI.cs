@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-public class Player : MonoBehaviour
+public class AI : MonoBehaviour
 {
-	[Header("Player: Inspector Set Fields")]
-	public int teamNumber = 1;
-	public int maxHealth = 50;
-	public float damageTimeout = 0.5f;
+	[Header("AI: Inspector Set Fields")]
+	public int teamNumber = 0;
+	public int maxHealth = 20;
+	public float damageTimeout = 0.25f;
 
-	[Header("Player: Dynamically Set Fields")]
+	[Header("AI: Dynamically Set Fields")]
 	public int currHealth;
 	public int damagePower;
 
@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
 	public bool tookDamage;
 	public float elapsedDamageTime;
 
-	void Awake()
+	protected void BaseAwake()
 	{
 		currHealth = maxHealth;
 		damagePower = 0;
@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
 		return;
 	}
 
-	void FixedUpdate()
+	protected void BaseFixedUpdate()
 	{
 		if (!beingHit)
 		{
