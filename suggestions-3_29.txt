@@ -1,0 +1,12 @@
+Ideas:
+- Transforming ships, changing the type of play (tank to high dps, low health style)
+- Some customization on player loadouts ^
+- Map – figure 8
+- Minimap in the middle with scores.
+    - Rhombus map
+
+
+Things that need to be done by 3/31
+4 ships fun
+	Simple shmup mechanics done for thurs
+
