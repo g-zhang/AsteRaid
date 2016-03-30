@@ -43,6 +43,7 @@ public class TurretAI : MonoBehaviour
 		gun.rotation = Quaternion.Slerp(
 			gun.rotation, targetRotation, Time.deltaTime * rotationSpeed);
 
+		elapsedFireDelay += Time.deltaTime;
 		if (elapsedFireDelay >= delayBetweenShots)
 		{
 			elapsedFireDelay = 0f;
@@ -54,10 +55,6 @@ public class TurretAI : MonoBehaviour
 
 			weaponComp.startingDirection = gun.rotation * Vector3.forward;
 			weaponComp.maxDistance = weaponMaxDistance;
-		}
-		else
-		{
-			elapsedFireDelay += Time.deltaTime;
 		}
 
 		return;

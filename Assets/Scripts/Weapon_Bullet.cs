@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Bullet : Weapon
+public class Weapon_Bullet : Weapon
 {
-	[Header("Bullet: Inspector Set Fields")]
+	[Header("Weapon_Bullet: Inspector Set Fields")]
 	public float speed = 5f;
 
-	[Header("Bullet: Dynamically Set Fields")]
+	[Header("Weapon_Bullet: Dynamically Set Fields")]
 	public Rigidbody rigid;
 	public Vector3 startPosition;
 
