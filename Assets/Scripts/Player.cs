@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-	Queue<ActionFrame> queuedFrames = new Queue<ActionFrame>();
-	Queue<ActionFrame> activeFrames = new Queue<ActionFrame>();
-	ActionFrame currentFrame = null;
+	Queue<MoveFrame> queuedFrames = new Queue<MoveFrame>();
+	Queue<MoveFrame> activeFrames = new Queue<MoveFrame>();
+	MoveFrame currentFrame = null;
 	float timeInCurrentFrame = 0f;
 	float timePerFrame = 1f;
 
@@ -56,7 +56,7 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	private ActionFrame lastFrame {
+	private MoveFrame lastFrame {
 		get {
 			if (queuedFrames.Count > 0)
 				return queuedFrames.ToArray()[queuedFrames.Count - 1];
