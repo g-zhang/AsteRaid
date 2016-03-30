@@ -1,23 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
-public enum RotationMode {
-	PointAtMouse,
-	PointAlongMoveStick,
-	PointAlongAimStick,
-	YawOnMoveStick,
-	YawOnYawAxis,
-	PointInVelocity
-}
-
-public enum TranslaionMode {
-
+public enum TranslationMode {
+	GlobalMotion,
+	ThrusterOnly,
+	Strafing
 }
 
 [RequireComponent(typeof(Controls))]
 [RequireComponent(typeof(Rigidbody))]
-public class ShipControls : MonoBehaviour {
+public class ShipControls : Swivel {
 
 	[Header("Components")]
 	private Controls controls;
@@ -25,20 +17,16 @@ public class ShipControls : MonoBehaviour {
 	private Transform turret;
 
 	[Header("Ship Parameters")]
-	public bool localShipControls = false;
-	public bool strafeControls = false;
-	public bool rotationIndependent = false;
 	public float minSpeed = 0f;
 	public float maxSpeed = 5f;
-	public float shipRotationSpeed = 12f;
 	public float shipYawSpeed = 120f;
-	public bool shipFaceMouse = false;
+	public TranslationMode shipTranslationMode = TranslationMode.GlobalMotion;
+	public RotationMode turretRotationMode = RotationMode.PointAlongStick;
 
 	// TODOs:
 	// reverse max speed indep of forward max speed
 	// ship accceleration parameterized
-	// move to enums for translation and rotation modes
-	// split to turret / ship classes (rotator class?)
+	// split to turret / ship classes
 
 	[Header("Turret Parameters")]
 	public bool localTurretControls = false;
@@ -52,7 +40,6 @@ public class ShipControls : MonoBehaviour {
 	private Vector3 moveControl;
 	private float turretTargetAngle;
 	private Quaternion turretRotation = Quaternion.identity;
-	private Quaternion shipRotation = Quaternion.identity;
 
 	void Awake() { 
 		controls = GetComponent<Controls>();
@@ -68,29 +55,26 @@ public class ShipControls : MonoBehaviour {
 		SetTurretRotation();
 	}
 
-	private Quaternion currentRotation {
-		get {
-			return localShipControls ? transform.localRotation : transform.rotation;
-		}
-	}
-
 	void SetShipRotation() {
-		if (shipFaceMouse) PointAlongVector(controls.ToMouseVector);
-		else if (rotationIndependent) RotateShipBy(Time.deltaTime * shipYawSpeed * controls.YawAxis);
-		else if (localShipControls) RotateShipBy(Time.deltaTime * shipYawSpeed * controls.MoveStick.x);
-		else PointAlongVector(rigid.velocity.normalized);
-	}
-
-	void RotateShipBy(float degrees) {
-		Vector3 angles = currentRotation.eulerAngles;
-		angles.y += degrees;
-		shipRotation = Quaternion.Euler(angles);
-	}
-
-	void PointAlongVector(Vector3 heading) {
-		if (heading.magnitude == 0f) return;
-		Quaternion targetRotation = Quaternion.LookRotation(heading, Vector3.up);
-		shipRotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * shipRotationSpeed);
+		switch (swivelMode) {
+			case (RotationMode.PointAtMouse):
+				PointAlongVector(controls.ToMouseVector);
+				break;
+			case (RotationMode.YawOnStick):
+				RotateBy(Time.deltaTime * shipYawSpeed * controls.MoveStick.x);
+				break;
+			case (RotationMode.YawOnYawAxis):
+				RotateBy(Time.deltaTime * shipYawSpeed * controls.YawAxis);
+				break;
+			case (RotationMode.PointInVelocity):
+				PointAlongVector(rigid.velocity.normalized);
+				break;
+			case (RotationMode.PointAlongStick):
+				PointAlongVector(controls.MoveStick);
+				break;
+			default:
+				break;
+		}
 	}
 
 	void SetTurretRotation() {
@@ -98,7 +82,7 @@ public class ShipControls : MonoBehaviour {
 		if (turretFaceMouse) {
 			if (controls.ToMouseVector.magnitude == 0f) return;
 			Quaternion lookRotation = Quaternion.LookRotation(controls.ToMouseVector, Vector3.up);
-			turretRotation = Quaternion.Slerp(turret.rotation, lookRotation, Time.deltaTime * shipRotationSpeed);
+			turretRotation = Quaternion.Slerp(turret.rotation, lookRotation, Time.deltaTime * turretRotationSpeed);
 			return;
 		}
 
@@ -111,24 +95,30 @@ public class ShipControls : MonoBehaviour {
 		float turretSpeed = (controls.AimStick.magnitude == 0) ? turretReturnSpeed : turretRotationSpeed;
 		Quaternion curRot = localTurretControls ? turret.localRotation : turret.rotation;
 		turretRotation = Quaternion.Slerp(curRot, turretTargetRotation, Time.deltaTime * turretSpeed);
-		return;
 	}
 	
 	void FixedUpdate() {
 
-		if (localShipControls) {
-			float speedSign = Vector3.Dot(rigid.velocity, transform.forward) > 0 ? 1f : -1f;
-			rigid.velocity = transform.TransformDirection(new Vector3(0f, 0f, speedSign * rigid.velocity.magnitude + moveControl.z));
-		} else if (strafeControls) {
-			rigid.velocity += transform.TransformDirection(moveControl);
-		} else rigid.velocity += moveControl;
+		switch (shipTranslationMode) {
+			case TranslationMode.GlobalMotion:
+				rigid.velocity += moveControl;
+				break;
+			case TranslationMode.Strafing:
+				rigid.velocity += transform.TransformDirection(moveControl);
+				break;
+			case TranslationMode.ThrusterOnly:
+				float speedSign = Vector3.Dot(rigid.velocity, transform.forward) > 0 ? 1f : -1f;
+				float forwardSpeed = speedSign * rigid.velocity.magnitude + moveControl.z;
+				Vector3 localVelocity = new Vector3(0f, 0f, forwardSpeed);
+				rigid.velocity = transform.TransformDirection(localVelocity);
+				break;
+			default:
+				break;
+		}
 		
 		if (rigid.velocity.magnitude > maxSpeed) rigid.velocity = maxSpeed * rigid.velocity.normalized;
 		if (rigid.velocity.magnitude <= minSpeed) rigid.velocity = Vector3.zero;
-
-		if (localShipControls) transform.localRotation = shipRotation;
-		else transform.rotation = shipRotation;
-
+		transform.rotation = rotation;
 		if (localTurretControls) turret.localRotation = turretRotation;
 		else turret.rotation = turretRotation;
 	}
