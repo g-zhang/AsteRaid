@@ -23,6 +23,9 @@ public class Player : MonoBehaviour
 	public Transform[] turretTransforms;
 	private Controls controls;
 
+	public float rateOfFire = 10f;
+	private float timeSinceShot = 0f;
+
 	void Awake()
 	{
 		currHealth = maxHealth;
@@ -50,7 +53,8 @@ public class Player : MonoBehaviour
 	}
 
 	void Update() {
-		if (controls.FireButtonWasPressed && weapons.Length > selectedWeapon) Fire(weapons[selectedWeapon]);
+		timeSinceShot += Time.deltaTime;
+		if (controls.FireButtonIsPressed && weapons.Length > selectedWeapon) Fire(weapons[selectedWeapon]);
 	}
 
 	void FixedUpdate()
@@ -116,6 +120,9 @@ public class Player : MonoBehaviour
 	}
 
 	void Fire(GameObject weapon) {
+
+		if (timeSinceShot < 1f / rateOfFire) return;
+		
 		foreach (Transform turret in turretTransforms) {
 			GameObject go = Instantiate(weapon) as GameObject;
 			Weapon weaponScript = go.GetComponent<Weapon>();
@@ -124,6 +131,7 @@ public class Player : MonoBehaviour
 			weaponScript.maxDistance = 50f;
 			go.transform.position = turret.position;
 		}
+		timeSinceShot = 0f;
 	}
 
 }

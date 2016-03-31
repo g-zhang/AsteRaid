@@ -22,6 +22,10 @@ public class ShipControls : Swivel {
 	
 	void FixedUpdate() {
 
+		Vector3 pos = transform.position;
+		pos.y = 0f;
+		transform.position = pos;
+
 		transform.rotation = rotation;
 
 		Vector3 moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
@@ -46,6 +50,8 @@ public class ShipControls : Swivel {
 		
 		if (rigid.velocity.magnitude > maxSpeed) rigid.velocity = maxSpeed * rigid.velocity.normalized;
 		if (rigid.velocity.magnitude <= minSpeed) rigid.velocity = Vector3.zero;
+
+		//rigid.velocity = Vector3.up * 12f;
 
 	}
 }
