@@ -97,9 +97,13 @@ public class Controls : MonoBehaviour  {
         get
         {
             Vector3 mouse = Input.mousePosition;
-            mouse = Camera.main.ScreenToWorldPoint(mouse);
-            mouse.y = 0f;
-            return mouse;
+            if(!Camera.main.orthographic)
+            {
+                mouse.z = Camera.main.farClipPlane;
+            }
+            var mouse3d = Camera.main.ScreenToWorldPoint(mouse);
+            mouse3d.y = 0f;
+            return mouse3d;
         }
     }
 
