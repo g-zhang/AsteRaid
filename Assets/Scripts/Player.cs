@@ -58,4 +58,24 @@ public class Player : MonoBehaviour
 
 		return;
 	}
+
+	void OnTriggerStay(Collider other)
+	{
+		Transform parent = other.transform;
+		while (parent.parent != null)
+		{
+			parent = parent.parent;
+		}
+
+		Weapon otherWeapon = parent.GetComponent<Weapon>();
+		if (otherWeapon == null)
+		{
+			return;
+		}
+
+		damagePower = otherWeapon.damagePower;
+		beingHit = true;
+
+		return;
+	}
 }

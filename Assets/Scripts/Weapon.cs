@@ -14,41 +14,4 @@ public class Weapon : MonoBehaviour
 	// Bullets: Max distance before disappearing.
 	// Lasers: Length of the laser beam.
 	public float maxDistance;
-
-	protected void BaseOnTriggerStay(Collider other)
-	{
-		// Ignore RangeFinders.
-		if (other.GetComponent<RangeFinder>() != null)
-		{
-			return;
-		}
-
-		Transform parent = other.transform;
-		while (parent.parent != null)
-		{
-			parent = parent.parent;
-		}
-
-		Player otherPlayer = parent.GetComponent<Player>();
-		AI otherAI = parent.GetComponent<AI>();
-
-		if (otherPlayer != null)
-		{
-			if ((otherPlayer.teamNumber != teamNumber) && !otherPlayer.beingHit)
-			{
-				otherPlayer.damagePower = damagePower;
-				otherPlayer.beingHit = true;
-			}
-		}
-		if (otherAI != null)
-		{
-			if ((otherAI.teamNumber != teamNumber) && !otherAI.beingHit)
-			{
-				otherAI.damagePower = damagePower;
-				otherAI.beingHit = true;
-			}
-		}
-
-		return;
-	}
 }

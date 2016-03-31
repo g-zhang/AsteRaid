@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class AI_Turret : AI
 {
@@ -54,7 +53,7 @@ public class AI_Turret : AI
 
 			Weapon weaponComp = weapon.GetComponent<Weapon>();
 
-			weaponComp.startingDirection = gun.rotation * Vector3.forward;
+			weaponComp.startingDirection = gun.forward;
 			weaponComp.maxDistance = weaponMaxDistance;
 			weaponComp.teamNumber = teamNumber;
 		}
@@ -65,6 +64,12 @@ public class AI_Turret : AI
 	void FixedUpdate()
 	{
 		BaseFixedUpdate();
+		return;
+	}
+
+	void OnTriggerStay(Collider other)
+	{
+		BaseOnTriggerStay(other);
 		return;
 	}
 }

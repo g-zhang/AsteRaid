@@ -38,9 +38,14 @@ public class Weapon_Bullet : Weapon
 			parent = parent.parent;
 		}
 
+		Weapon otherWeapon = parent.GetComponent<Weapon>();
 		Player otherPlayer = parent.GetComponent<Player>();
 		AI otherAI = parent.GetComponent<AI>();
 
+		if (otherWeapon != null)
+		{
+			return;
+		}
 		if (otherPlayer != null)
 		{
 			if (otherPlayer.teamNumber == teamNumber)
@@ -57,12 +62,6 @@ public class Weapon_Bullet : Weapon
 		}
 
 		Destroy(gameObject);
-		return;
-	}
-
-	void OnTriggerStay(Collider other)
-	{
-		BaseOnTriggerStay(other);
 		return;
 	}
 }
