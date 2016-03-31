@@ -11,6 +11,7 @@ public class AttackDroneController : AI {
 	public GameObject weaponPrefab;
 	public float delayBetweenShots = 0.5f;
 	public float weaponMaxDistance = 50f; // See Weapon description.
+	public float maxEnemyDistance = 10f;
 
 	float currThrusterSpeed;
 
@@ -24,8 +25,11 @@ public class AttackDroneController : AI {
 		range = transform.Find("Range").GetComponent<RangeFinder>();
 		mesh = transform.Find ("Mesh1");
 		elapsedFireDelay = 0f;
-
 		RB = GetComponent<Rigidbody> ();
+
+		GetComponent<PlayerStructure> ().teamNumber = teamNumber;
+
+		transform.Find ("Range").GetComponent<SphereCollider> ().radius = maxEnemyDistance;
 	}
 
 	void Update () {
@@ -40,7 +44,7 @@ public class AttackDroneController : AI {
 		// If there is something in range
 		if (range.inRange.Count > 0) {
 			rotateToFaceEnemy (range.inRange [0]);	
-			thruster();
+			thruster ();
 			fireWeapon (range.inRange [0]);
 		}
 	}

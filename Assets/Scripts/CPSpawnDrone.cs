@@ -8,7 +8,8 @@ public class CPSpawnDrone : MonoBehaviour {
 	public GameObject attackDrone;
 	public float spawnRate;
 	public int maxDrones;
-	public List<GameObject> spawnedDrones;
+	public List<GameObject> spawnedDrones_Team1;
+	public List<GameObject> spawnedDrones_Team2;
 
 	float elapsedSpawnDelay;
 
@@ -21,8 +22,11 @@ public class CPSpawnDrone : MonoBehaviour {
 		if (elapsedSpawnDelay >= spawnRate) {
 			elapsedSpawnDelay = 0f;
 
-			if (whichTeam () != 0 && (spawnedDrones.Count) < maxDrones) {
-				spawnAttackDrone (whichTeam ());
+			int currTeam = whichTeam ();
+
+			if ((currTeam == 1 && (spawnedDrones_Team1.Count) < maxDrones) 
+				|| (currTeam == 2 && (spawnedDrones_Team2.Count) < maxDrones)) {
+				spawnAttackDrone (currTeam);
 			}
 		}
 	}
@@ -45,7 +49,12 @@ public class CPSpawnDrone : MonoBehaviour {
 		aDrone.GetComponent<AttackDroneController> ().teamNumber = teamNum;
 		aDrone.transform.position = transform.position;
 
-		spawnedDrones.Add (aDrone);
+		if (teamNum == 1) {
+			spawnedDrones_Team1.Add (aDrone);
+		}
+		else if (teamNum == 2) {
+			spawnedDrones_Team2.Add (aDrone);
+		}
 	}
 
 }
