@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
 			GameObject go = Instantiate(weapon) as GameObject;
 			Weapon weaponScript = go.GetComponent<Weapon>();
 			weaponScript.teamNumber = teamNumber;
-			weaponScript.startingDirection = turret.forward;
+			weaponScript.startingVelocity = turret.forward;
 			weaponScript.maxDistance = 50f;
 			go.transform.position = turret.position;
 		}

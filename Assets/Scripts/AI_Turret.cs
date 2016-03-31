@@ -53,7 +53,7 @@ public class AI_Turret : AI
 
 			Weapon weaponComp = weapon.GetComponent<Weapon>();
 
-			weaponComp.startingDirection = gun.forward;
+			weaponComp.startingVelocity = gun.forward;
 			weaponComp.maxDistance = weaponMaxDistance;
 			weaponComp.teamNumber = teamNumber;
 		}

@@ -10,11 +10,11 @@ public class Weapon_LaserBeam : Weapon
 
 	void Start()
 	{
-		startingDirection.Normalize();
+		startingVelocity.Normalize();
 
-		transform.position += startingDirection * maxDistance;
+		transform.position += startingVelocity * maxDistance;
 		transform.rotation =
-			Quaternion.LookRotation(transform.forward, startingDirection);
+			Quaternion.LookRotation(transform.forward, startingVelocity);
 
 		Vector3 scale = transform.localScale;
 		scale.y = maxDistance;
