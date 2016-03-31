@@ -99,6 +99,11 @@ public class Player : MonoBehaviour
 			return;
 		}
 
+		if (otherWeapon.teamNumber == teamNumber)
+		{
+			return;
+		}
+
 		damagePower = otherWeapon.damagePower;
 		beingHit = true;
 
