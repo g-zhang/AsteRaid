@@ -87,6 +87,11 @@ public class Player : MonoBehaviour
 
 	void OnTriggerStay(Collider other)
 	{
+		if (beingHit)
+		{
+			return;
+		}
+
 		Transform parent = other.transform;
 		while (parent.parent != null)
 		{

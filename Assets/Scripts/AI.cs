@@ -61,6 +61,11 @@ public class AI : MonoBehaviour
 
 	protected void BaseOnTriggerStay(Collider other)
 	{
+		if (beingHit)
+		{
+			return;
+		}
+
 		Transform parent = other.transform;
 		while (parent.parent != null)
 		{
