@@ -17,6 +17,8 @@ public class AttackDroneController : AI {
 
 	[Header("AttackDrone: Dynamically Set Fields")]
 	public float elapsedFireDelay;
+	public NavMeshAgent NMAgent;
+	GameObject navAgentObj;
 	RangeFinder range;
 	Transform mesh;
 	Rigidbody RB;
@@ -27,8 +29,10 @@ public class AttackDroneController : AI {
 		elapsedFireDelay = 0f;
 		RB = GetComponent<Rigidbody> ();
 
-		GetComponent<PlayerStructure> ().teamNumber = teamNumber;
+		navAgentObj = transform.Find ("NavAgentObj").gameObject;
+		NMAgent = navAgentObj.GetComponent<NavMeshAgent> ();
 
+		GetComponent<PlayerStructure> ().teamNumber = teamNumber;
 		transform.Find ("Range").GetComponent<SphereCollider> ().radius = maxEnemyDistance;
 	}
 
@@ -46,6 +50,11 @@ public class AttackDroneController : AI {
 			rotateToFaceEnemy (range.inRange [0]);	
 			thruster ();
 			fireWeapon (range.inRange [0]);
+		}
+		// Otherwise, go around and do stuff;
+		else {
+			NMAgent.SetDestination (new Vector3(10f, 10f, 10f));
+			followNavAgentObj ();
 		}
 	}
 
@@ -92,5 +101,13 @@ public class AttackDroneController : AI {
 		}
 	}
 
+	void followNavAgentObj() {
+		Vector3 NAO_Position = navAgentObj.transform.position;
+		Vector3 NAO_Rotation = navAgentObj.transform.rotation.eulerAngles;
+		Vector3 this_Rotation = transform.rotation.eulerAngles;
 
+		transform.position = new Vector3(NAO_Position.x, transform.position.y, NAO_Position.z);
+
+		transform.rotation = Quaternion.Euler (new Vector3 (this_Rotation.x, NAO_Rotation.y, this_Rotation.z));
+	}
 }

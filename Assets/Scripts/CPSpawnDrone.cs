@@ -29,6 +29,20 @@ public class CPSpawnDrone : MonoBehaviour {
 				spawnAttackDrone (currTeam);
 			}
 		}
+
+		// REALLY HACKY CLEANUP, PLEASE CHANGE LATER
+		for (int i = 0; i < spawnedDrones_Team1.Count; i++) {
+			if (spawnedDrones_Team1 [i].GetComponent<PlayerStructure> ().currHealth <= 1) {
+				Destroy (spawnedDrones_Team1 [i]);
+				spawnedDrones_Team1.RemoveAt (i);
+			}
+		}
+		for (int i = 0; i < spawnedDrones_Team2.Count; i++) {
+			if (spawnedDrones_Team2 [i].GetComponent<PlayerStructure> ().currHealth <= 1) {
+				Destroy (spawnedDrones_Team2 [i]);
+				spawnedDrones_Team2.RemoveAt (i);
+			}
+		}
 	}
 
 	// Returns: 0 - Neutral, 1 - Team1, 2 - Team2
