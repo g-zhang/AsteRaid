@@ -103,18 +103,25 @@ public class Controls : MonoBehaviour  {
         }
     }
 
-    public Vector3 ToMouseVector
-    {
-        get
-        {
-            return MousePosition - transform.position;
-        }
-    }
-    #endregion
+	public bool FireButtonWasPressed {
+		get {
+			if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
+			return Input.GetMouseButtonDown(0);
+		}
+	}
 
-    #region General Use Properties
-    //InControl object is not referencable when isActive is false
-    public bool isActive {
+	public bool FireButtonIsPressed {
+		get {
+			if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
+			return Input.GetMouseButton(0);
+		}
+	}
+
+	#endregion
+
+	#region General Use Properties
+	//InControl object is not referencable when isActive is false
+	public bool isActive {
         get {
 			return inputDevice != null;
 		}
