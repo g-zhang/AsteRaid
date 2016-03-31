@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
 	}
 
 	void Update() {
-		timeSinceShot += Time.deltaTime;
+        timeSinceShot += Time.deltaTime;
 		if (controls.FireButtonIsPressed && weapons.Length > selectedWeapon) Fire(weapons[selectedWeapon]);
 	}
 
@@ -89,6 +89,7 @@ public class Player : MonoBehaviour
             transform.Find("Turret/Barrel").GetComponent<Collider>().enabled = false;
         }
 		tookDamage = true;
+        controls.VibrateFor(.25f, .25f);
 
 		return;
 	}

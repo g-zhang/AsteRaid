@@ -2,12 +2,13 @@
 using System.Collections;
 using InControl;
 
-public class Controls : MonoBehaviour  {
+public class Controls : MonoBehaviour
+{
 
     #region Public Unity Fields
     [Header("Config")]
     public int playerNum; //(values [0-3])
-    public bool InvertSticks = false; 
+    public bool InvertSticks = false;
     public enum Mode { Controller = 0, MouseKeyboard }
     public Mode ControlsMode = Mode.Controller;
     #endregion
@@ -17,7 +18,7 @@ public class Controls : MonoBehaviour  {
     {
         get
         {
-            return (ControlsMode == Mode.Controller) ? LStickVector: WASDVector;
+            return (ControlsMode == Mode.Controller) ? LStickVector : WASDVector;
         }
     }
 
@@ -51,7 +52,7 @@ public class Controls : MonoBehaviour  {
         get
         {
             return InvertSticks ?
-                Vector2.ClampMagnitude(ID.RightStick.Vector, 1f):
+                Vector2.ClampMagnitude(ID.RightStick.Vector, 1f) :
                 Vector2.ClampMagnitude(ID.LeftStick.Vector, 1f);
         }
     }
@@ -97,7 +98,7 @@ public class Controls : MonoBehaviour  {
         get
         {
             Vector3 mouse = Input.mousePosition;
-            if(!Camera.main.orthographic)
+            if (!Camera.main.orthographic)
             {
                 mouse.z = Camera.main.farClipPlane;
             }
@@ -107,40 +108,53 @@ public class Controls : MonoBehaviour  {
         }
     }
 
-	public bool FireButtonWasPressed {
-		get {
-			if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
-			return Input.GetMouseButtonDown(0);
-		}
-	}
+    public bool FireButtonWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
+            return Input.GetMouseButtonDown(0);
+        }
+    }
 
-	public bool FireButtonIsPressed {
-		get {
-			if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
-			return Input.GetMouseButton(0);
-		}
-	}
+    public bool FireButtonIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
+            return Input.GetMouseButton(0);
+        }
+    }
 
-	#endregion
+    public void VibrateFor(float intensity, float time)
+    {
+        VibrateFor(intensity, intensity, time);
+    }
 
-	#region General Use Properties
-	/// <summary>
-    /// Returns true if the InControl instance is valid.
+    public void VibrateFor(float leftMotor, float rightMotor, float time)
+    {
+        leftMotorInt = leftMotor;
+        rightMotorInt = rightMotor;
+        currVibrationTime = time;
+    }
+    #endregion
+
+    #region General Use Properties
+    /// <summary>
+    /// Returns true if the InControl instance is currently valid.
     /// </summary>
-	public bool isActive {
-        get {
-			return inputDevice != null;
-		}
+    public bool isActive
+    {
+        get { return inputDevice != null; }
     }
 
     /// <summary>
     /// Returns the InControl reference.
     /// Returns null if the controller is disconnected.
     /// </summary>
-    public InputDevice ID {
-        get {
-			return inputDevice;
-		}
+    public InputDevice ID
+    {
+        get { return inputDevice; }
     }
     #endregion
 
@@ -148,7 +162,12 @@ public class Controls : MonoBehaviour  {
     private InputDevice inputDevice = null;
     private bool fallbackMode = false;
 
-    InputDevice UpdateState() {
+    private float leftMotorInt = 0f;
+    private float rightMotorInt = 0f;
+    private float currVibrationTime = 0f;
+
+    InputDevice UpdateState()
+    {
         return (InputManager.Devices.Count > playerNum) ?
                 InputManager.Devices[playerNum] : null;
     }
@@ -164,7 +183,7 @@ public class Controls : MonoBehaviour  {
             fallbackMode = true;
         }
         //switch controller input back on when reconnected
-        if(fallbackMode && isActive)
+        if (fallbackMode && isActive)
         {
             print("Controller(" + playerNum + ") connected, "
                 + "Switched to Controller Input.");
@@ -173,14 +192,33 @@ public class Controls : MonoBehaviour  {
         }
     }
 
-    void Start() {
+    void UpdateVibration()
+    {
+        if (currVibrationTime > 0f)
+        {
+            currVibrationTime -= Time.deltaTime;
+            if (isActive) ID.Vibrate(leftMotorInt, rightMotorInt);
+        }
+        else
+        {
+            if (isActive) ID.Vibrate(0f);
+            currVibrationTime = 0f;
+            leftMotorInt = 0f;
+            rightMotorInt = 0f;
+        }
+    }
+
+    void Start()
+    {
         inputDevice = UpdateState();
         ControlsFBCheck();
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         inputDevice = UpdateState();
         ControlsFBCheck();
+        UpdateVibration();
     }
     #endregion
 }
