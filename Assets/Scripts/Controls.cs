@@ -6,8 +6,8 @@ public class Controls : MonoBehaviour  {
 
     #region Public Unity Fields
     [Header("Config")]
-    public int playerNum;
-    public bool InvertSticks = false;
+    public int playerNum; //(values [0-3])
+    public bool InvertSticks = false; 
     public enum Mode { Controller = 0, MouseKeyboard }
     public Mode ControlsMode = Mode.Controller;
     #endregion
@@ -124,14 +124,19 @@ public class Controls : MonoBehaviour  {
 	#endregion
 
 	#region General Use Properties
-	//InControl object is not referencable when isActive is false
+	/// <summary>
+    /// Returns true if the InControl instance is valid.
+    /// </summary>
 	public bool isActive {
         get {
 			return inputDevice != null;
 		}
     }
 
-    //returns the InControl object
+    /// <summary>
+    /// Returns the InControl reference.
+    /// Returns null if the controller is disconnected.
+    /// </summary>
     public InputDevice ID {
         get {
 			return inputDevice;
@@ -141,6 +146,7 @@ public class Controls : MonoBehaviour  {
 
     #region Internal Methods
     private InputDevice inputDevice = null;
+    private bool fallbackMode = false;
 
     InputDevice UpdateState() {
         return (InputManager.Devices.Count > playerNum) ?
@@ -155,6 +161,15 @@ public class Controls : MonoBehaviour  {
             print("Controller(" + playerNum + ") not detected, "
                 + "Falling back on M+KB Controls.");
             ControlsMode = Mode.MouseKeyboard;
+            fallbackMode = true;
+        }
+        //switch controller input back on when reconnected
+        if(fallbackMode && isActive)
+        {
+            print("Controller(" + playerNum + ") connected, "
+                + "Switched to Controller Input.");
+            ControlsMode = Mode.Controller;
+            fallbackMode = false;
         }
     }
 
@@ -165,6 +180,7 @@ public class Controls : MonoBehaviour  {
 
     void FixedUpdate() {
         inputDevice = UpdateState();
+        ControlsFBCheck();
     }
     #endregion
 }

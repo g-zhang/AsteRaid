@@ -81,9 +81,13 @@ public class Player : MonoBehaviour
 		currHealth -= damagePower;
 		if (currHealth <= 0)
 		{
-			// This will likely be changed.
-			Destroy(gameObject);
-		}
+            // This will likely be changed.
+            enabled = false;
+            transform.Find("Mesh1").GetComponent<MeshRenderer>().enabled = false;
+            transform.Find("Mesh1").GetComponent<Collider>().enabled = false;
+            transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = false;
+            transform.Find("Turret/Barrel").GetComponent<Collider>().enabled = false;
+        }
 		tookDamage = true;
 
 		return;
