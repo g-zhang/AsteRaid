@@ -14,9 +14,7 @@ public class Weapon_Bullet : Weapon
 	{
 		rigid = GetComponent<Rigidbody>();
 		startPosition = transform.position;
-
-		startingDirection.Normalize();
-		rigid.velocity = startingDirection * speed;
+		rigid.velocity = startingVelocity * speed;
 
 		return;
 	}
