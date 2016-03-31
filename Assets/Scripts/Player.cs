@@ -34,7 +34,14 @@ public class Player : MonoBehaviour
 
 		List<Transform> turrets = new List<Transform>();
 		foreach (Transform child in transform) {
-			if (child.name == "Turret") turrets.Add(child);
+			if (child.name == "Turret") {
+				Transform barrel = child.Find("Barrel");
+				if (barrel == null) {
+					print("Turret has no barrel :(");
+					return;
+				}
+				turrets.Add(barrel);
+			}
 		}
 		turretTransforms = turrets.ToArray();
 
@@ -88,6 +95,11 @@ public class Player : MonoBehaviour
 
 		Weapon otherWeapon = parent.GetComponent<Weapon>();
 		if (otherWeapon == null)
+		{
+			return;
+		}
+
+		if (otherWeapon.teamNumber == teamNumber)
 		{
 			return;
 		}
