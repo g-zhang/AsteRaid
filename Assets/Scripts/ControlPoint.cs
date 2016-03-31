@@ -156,7 +156,13 @@ public class ControlPoint : MonoBehaviour
 	
 	void OnTriggerEnter(Collider other)
 	{
-		Player player = other.GetComponent<Player>();
+		Transform parent = other.transform;
+		while (parent.parent != null)
+		{
+			parent = parent.parent;
+		}
+
+		Player player = parent.GetComponent<Player>();
 		if (player == null)
 		{
 			return;
@@ -173,7 +179,13 @@ public class ControlPoint : MonoBehaviour
 
 	void OnTriggerExit(Collider other)
 	{
-		Player player = other.GetComponent<Player>();
+		Transform parent = other.transform;
+		while (parent.parent != null)
+		{
+			parent = parent.parent;
+		}
+
+		Player player = parent.GetComponent<Player>();
 		if (player == null)
 		{
 			return;
