@@ -73,6 +73,11 @@ public class AI : MonoBehaviour
 			return;
 		}
 
+		if (otherWeapon.teamNumber == teamNumber)
+		{
+			return;
+		}
+
 		damagePower = otherWeapon.damagePower;
 		beingHit = true;
 

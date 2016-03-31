@@ -29,8 +29,14 @@ public class RangeFinder : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		Player otherPlayer = other.GetComponent<Player>();
-		AI otherAI = other.GetComponent<AI>();
+		Transform parent = other.transform;
+		while (parent.parent != null)
+		{
+			parent = parent.parent;
+		}
+
+		Player otherPlayer = parent.GetComponent<Player>();
+		AI otherAI = parent.GetComponent<AI>();
 
 		if ((otherPlayer == null) && (otherAI == null))
 		{
