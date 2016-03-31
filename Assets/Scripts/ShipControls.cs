@@ -14,6 +14,7 @@ public class ShipControls : Swivel {
 	[Header("Ship Parameters")]
 	public float minSpeed = 0f;
 	public float maxSpeed = 5f;
+	public float acceleration = 10f;
 	public TranslationMode shipTranslationMode = TranslationMode.GlobalMotion;
 	// TODOs:
 	// reverse max speed indep of forward max speed
@@ -24,6 +25,7 @@ public class ShipControls : Swivel {
 		transform.rotation = rotation;
 
 		Vector3 moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
+		moveControl *= Time.deltaTime * acceleration;
 
 		switch (shipTranslationMode) {
 			case TranslationMode.GlobalMotion:

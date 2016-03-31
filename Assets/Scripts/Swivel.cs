@@ -39,7 +39,7 @@ public class Swivel : MonoBehaviour {
 	public void SetRotation() {
 		switch (swivelMode) {
 			case (RotationMode.PointAtMouse):
-				PointAlongVector(controls.ToMouseVector);
+				PointAlongVector(ToMouseVector);
 				break;
 			case (RotationMode.YawOnMoveStick):
 				RotateBy(Time.deltaTime * yawSpeed * controls.MoveStick.x);
@@ -72,14 +72,13 @@ public class Swivel : MonoBehaviour {
 
 		controls = GetComponent<Controls>();
 		rigid = GetComponent<Rigidbody>();
-
 		if (controls != null && rigid != null) return;
 
 		controls = transform.parent.GetComponent<Controls>();
 		rigid = transform.parent.GetComponent<Rigidbody>();
-		if (controls == null || rigid == null) {
-			print("Using Swivel without deriving from it requires that the parent object has both a Controls and a Rigidbody.");
-		}
+		if (controls != null && rigid != null) return;
+		print("Warning: Swivel requires a Controls and a Rigidbody on this object or it's parent!");
+		Destroy(this);
 	}
 
 	void Update() {
@@ -88,5 +87,11 @@ public class Swivel : MonoBehaviour {
 
 	void FixedUpdate() {
 		transform.rotation = rotation;
+	}
+
+	public Vector3 ToMouseVector {
+		get {
+			return controls.MousePosition - transform.position;
+		}
 	}
 }

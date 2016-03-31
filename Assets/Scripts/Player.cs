@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
+[RequireComponent(typeof(Controls))]
 public class Player : MonoBehaviour
 {
 	[Header("Player: Inspector Set Fields")]
@@ -15,6 +17,12 @@ public class Player : MonoBehaviour
 	public bool tookDamage;
 	public float elapsedDamageTime;
 
+	public GameObject[] weapons;
+	public int selectedWeapon = 0;
+
+	public Transform[] turretTransforms;
+	private Controls controls;
+
 	void Awake()
 	{
 		currHealth = maxHealth;
@@ -24,7 +32,18 @@ public class Player : MonoBehaviour
 		tookDamage = false;
 		elapsedDamageTime = 0f;
 
+		List<Transform> turrets = new List<Transform>();
+		foreach (Transform child in transform) {
+			if (child.name == "Turret") turrets.Add(child);
+		}
+		turretTransforms = turrets.ToArray();
+
+		controls = GetComponent<Controls>();
 		return;
+	}
+
+	void Update() {
+		if (controls.FireButtonWasPressed && weapons.Length > selectedWeapon) Fire(weapons[selectedWeapon]);
 	}
 
 	void FixedUpdate()
@@ -78,4 +97,16 @@ public class Player : MonoBehaviour
 
 		return;
 	}
+
+	void Fire(GameObject weapon) {
+		foreach (Transform turret in turretTransforms) {
+			GameObject go = Instantiate(weapon) as GameObject;
+			Weapon weaponScript = go.GetComponent<Weapon>();
+			weaponScript.teamNumber = teamNumber;
+			weaponScript.startingDirection = turret.forward;
+			weaponScript.maxDistance = 50f;
+			go.transform.position = turret.position;
+		}
+	}
+
 }
