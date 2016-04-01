@@ -10,7 +10,6 @@ public class AttackDroneController : AI {
 	public float drag;
 	public GameObject weaponPrefab;
 	public float delayBetweenShots = 0.5f;
-	public float weaponMaxDistance = 50f; // See Weapon description.
 	public float maxEnemyDistance = 10f;
 
 	float currThrusterSpeed;
@@ -96,7 +95,7 @@ public class AttackDroneController : AI {
 			weaponComp.startingVelocity = transform.forward;
 			weaponComp.startingVelocity.Normalize();
 
-			weaponComp.maxDistance = weaponMaxDistance;
+			weaponComp.maxDistance = maxEnemyDistance;
 			weaponComp.teamNumber = teamNumber;
 		}
 	}
