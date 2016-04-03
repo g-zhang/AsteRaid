@@ -17,12 +17,20 @@ public class Swivel : MonoBehaviour {
 	private Controls controls;
 	private Quaternion rotation = Quaternion.identity;
 
-	[Header("Swivel Parameters")]
+    [Header("Swivel Parameters")]
 	public RotationMode swivelMode = RotationMode.PointInVelocity;
 	public float rotationLerpSpeed = 60f;
 	public float yawSpeed = 120f;
 
-	public void RotateBy(float degrees) {
+    [Header("Spin Attack Config")]
+    public float spinTime = .5f;
+    public float slerpSpeed = .5f;
+    public float maxSpinSpeed = 3600f;
+    float currSpinSpeed = 0f;
+    bool isSpinning = false;
+    float currSpinTime = 0f;
+
+    public void RotateBy(float degrees) {
 		Vector3 angles = transform.rotation.eulerAngles;
 		angles.y += degrees;
 		rotation = Quaternion.Euler(angles);
@@ -60,13 +68,40 @@ public class Swivel : MonoBehaviour {
 			default:
 				break;
 		}
-	}
+        if (isSpinning)
+        {
+            SpinAttack();
+        }
+    }
+
+    void SpinAttack()
+    {
+        if (currSpinTime > 0f)
+        {
+            currSpinTime -= Time.deltaTime;
+            currSpinSpeed = maxSpinSpeed;
+        }
+        else
+        {
+            currSpinSpeed = Mathf.Lerp(currSpinSpeed, 0f, rotationLerpSpeed * Time.deltaTime);
+        }
+
+        RotateBy(currSpinSpeed * Time.deltaTime);
+
+        if (currSpinSpeed <= rotationLerpSpeed)
+        {
+            currSpinTime = spinTime;
+            isSpinning = false;
+            currSpinSpeed = 0f;
+        }
+    }
 
 	Vector3 Vector2ToXZVector3(Vector2 v2) {
 		return new Vector3(v2.x, 0f, v2.y);
 	}
 
 	void Start() {
+        currSpinTime = spinTime;
 
 		controls = GetComponent<Controls>();
 		rigid = GetComponent<Rigidbody>();
@@ -81,6 +116,10 @@ public class Swivel : MonoBehaviour {
 
 	protected virtual void Update() {
 		SetRotation();
+        if(controls.SpinButtonWasPressed)
+        {
+            isSpinning = true;
+        }
 	}
 
 	protected virtual void FixedUpdate() {

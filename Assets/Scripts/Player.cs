@@ -15,8 +15,7 @@ public class Player : HealthSystem
 
     public Transform[] turretTransforms;
     private Controls controls;
-
-    public float rateOfFire = 10f;
+	
 	private float coolDownTimeRemaining = 0f;
 
     [Header("Player Respawn Config")]
@@ -139,7 +138,6 @@ public class Player : HealthSystem
             Weapon weaponScript = go.GetComponent<Weapon>();
             weaponScript.teamNumber = teamNumber;
             weaponScript.startingVelocity = turret.forward;
-            weaponScript.maxDistance = 50f;
             go.transform.position = turret.position;
         }
 

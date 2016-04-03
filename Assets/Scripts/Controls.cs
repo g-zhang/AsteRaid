@@ -136,7 +136,39 @@ public class Controls : MonoBehaviour
 		}
 	}
 
-	public void VibrateFor(float intensity, float time)
+	public bool BoostButtonWasPressed {
+		get {
+			if (ControlsMode == Mode.Controller) return ID.Action2.WasPressed;
+			return Input.GetKeyDown(KeyCode.LeftShift);
+		}
+	}
+
+	public bool BoostButtonIsPressed {
+		get {
+			if (ControlsMode == Mode.Controller) return ID.Action2.IsPressed;
+			return Input.GetKey(KeyCode.LeftShift);
+		}
+	}
+
+    public bool SpinButtonWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.LeftBumper.WasPressed;
+            return Input.GetKeyDown(KeyCode.Z);
+        }
+    }
+
+    public bool SpinButtonIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.LeftBumper.IsPressed;
+            return Input.GetKey(KeyCode.Z);
+        }
+    }
+
+    public void VibrateFor(float intensity, float time)
     {
         VibrateFor(intensity, intensity, time);
     }
