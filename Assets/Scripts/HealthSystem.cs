@@ -29,12 +29,22 @@ public class HealthSystem : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    public virtual void DoOnFixedUpdate()
+    protected virtual void DoOnFixedUpdate()
     {
 
     }
 
-    public virtual void OnAwake()
+    protected virtual void DoOnUpdate()
+    {
+
+    }
+
+    protected virtual void OnAwake()
+    {
+
+    }
+
+    protected virtual void OnStart()
     {
 
     }
@@ -59,6 +69,16 @@ public class HealthSystem : MonoBehaviour {
 
         OnAwake();
         return;
+    }
+
+    void Start()
+    {
+        OnStart();
+    }
+
+    void Update()
+    {
+        DoOnUpdate();
     }
 
     void FixedUpdate()

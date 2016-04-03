@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Controls))]
-[RequireComponent(typeof(PlayerHealth))]
-public class Player : MonoBehaviour
+public class Player : HealthSystem
 {
-	public GameObject[] weapons;
+    public enum State { Normal = 0, Dead, size };
+
+    [Header("Player: Status")]
+    public State currState = State.Normal;
+
+    [Header("Player Weapon Config")]
+    public GameObject[] weapons;
 	public int selectedWeapon = 0;
 
 	public Transform[] turretTransforms;
@@ -14,9 +19,14 @@ public class Player : MonoBehaviour
 	public float rateOfFire = 10f;
 	private float timeSinceShot = 0f;
 
-    public int teamNumber = 0;
+    [Header("Player Respawn Config")]
+    public Transform respawnLocation;
+    public float respawnDelayTime = 3f;
+    public float maxRandomOffset = .5f;
+    private float currDelayTime;
+    private Vector3 respawnLocationVector;
 
-    void Awake()
+    protected override void OnAwake()
 	{
 		List<Transform> turrets = new List<Transform>();
 		foreach (Transform child in transform) {
@@ -32,22 +42,86 @@ public class Player : MonoBehaviour
 		turretTransforms = turrets.ToArray();
 
 		controls = GetComponent<Controls>();
-        teamNumber = GetComponent<HealthSystem>().teamNumber;
-		return;
+
+        currDelayTime = respawnDelayTime;
+        respawnLocationVector = respawnLocation.position;
+        currState = State.Normal;
 	}
 
-	void Update() {
+    protected override void DoOnUpdate()
+    {
         timeSinceShot += Time.deltaTime;
-		if (controls.FireButtonIsPressed && weapons.Length > selectedWeapon) Fire(weapons[selectedWeapon]);
-	}
 
-	void FixedUpdate()
-	{
+        switch (currState)
+        {
+            case State.Normal:
+                if (controls.FireButtonIsPressed && weapons.Length > selectedWeapon)
+                {
+                    Fire(weapons[selectedWeapon]);
+                }
+                break;
 
-	}
+            case State.Dead:
+                ManageDeadState();
+                break;
 
+            default:
+                break;
+        }
+    }
 
-	void Fire(GameObject weapon) {
+    protected override void DoOnFixedUpdate()
+    {
+        if (tookDamage)
+        {
+            controls.VibrateFor(.25f, .1f);
+        }
+    }
+
+    public override void DeathProcedure()
+    {
+        if(currState != State.Dead)
+        {
+            currState = State.Dead;
+            controls.VibrateFor(.5f, .5f);
+        }
+    }
+
+    void ManageDeadState()
+    {
+        if (currDelayTime > 0)
+        {
+            currDelayTime -= Time.deltaTime;
+
+            tookDamage = false;
+            beingHit = false;
+
+            transform.Find("Mesh1").GetComponent<MeshRenderer>().enabled = false;
+            transform.Find("Mesh1").GetComponent<Collider>().enabled = false;
+            transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = false;
+            transform.Find("Turret/Barrel").GetComponent<Collider>().enabled = false;
+            transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
+        }
+        else
+        {
+            transform.position = new Vector3(respawnLocationVector.x
+                                             + Random.Range(-maxRandomOffset, maxRandomOffset),
+                                             transform.position.y,
+                                             respawnLocationVector.z
+                                             + Random.Range(-maxRandomOffset, maxRandomOffset));
+            //renable the player
+            currState = State.Normal;
+            currHealth = maxHealth;
+            transform.Find("Mesh1").GetComponent<MeshRenderer>().enabled = true;
+            transform.Find("Mesh1").GetComponent<Collider>().enabled = true;
+            transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = true;
+            transform.Find("Turret/Barrel").GetComponent<Collider>().enabled = true;
+            transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
+            currDelayTime = respawnDelayTime;
+        }
+    }
+
+    void Fire(GameObject weapon) {
 
 		if (timeSinceShot < 1f / rateOfFire) return;
 		
