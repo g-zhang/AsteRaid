@@ -28,12 +28,12 @@ public class UpdateUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Player0Text.text = "P1 HP: " + Player0.GetComponent<Player>().currHealth;
-        Player1Text.text = "P2 HP: " + Player1.GetComponent<Player>().currHealth;
-        Player2Text.text = "P3 HP: " + Player2.GetComponent<Player>().currHealth;
-        Player3Text.text = "P4 HP: " + Player3.GetComponent<Player>().currHealth;
+        Player0Text.text = "P1 HP: " + Player0.GetComponent<PlayerHealth>().currHealth;
+        Player1Text.text = "P2 HP: " + Player1.GetComponent<PlayerHealth>().currHealth;
+        Player2Text.text = "P3 HP: " + Player2.GetComponent<PlayerHealth>().currHealth;
+        Player3Text.text = "P4 HP: " + Player3.GetComponent<PlayerHealth>().currHealth;
 
-        Base1Text.text = "Blue Base HP: " + Base1.GetComponent<PlayerStructure>().currHealth;
-        Base2Text.text = "Red Base HP: " + Base2.GetComponent<PlayerStructure>().currHealth;
+        Base1Text.text = "Blue Base HP: " + Base1.GetComponent<HealthSystem>().currHealth;
+        Base2Text.text = "Red Base HP: " + Base2.GetComponent<HealthSystem>().currHealth;
     }
 }

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Player))]
+[RequireComponent(typeof(PlayerHealth))]
 public class PlayerRespawn : MonoBehaviour {
 
-    private Player player;
+    private PlayerHealth player;
     private float currDelayTime;
     private Vector3 respawnLocationVector;
 
@@ -15,7 +15,7 @@ public class PlayerRespawn : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        player = GetComponent<Player>();
+        player = GetComponent<PlayerHealth>();
         currDelayTime = respawnDelayTime;
         respawnLocationVector = respawnLocation.position;
 	}
