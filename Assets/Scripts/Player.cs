@@ -17,7 +17,7 @@ public class Player : HealthSystem
     private Controls controls;
 
     public float rateOfFire = 10f;
-    private float timeSinceShot = 0f;
+	private float coolDownTimeRemaining = 0f;
 
     [Header("Player Respawn Config")]
     public Transform respawnLocation;
@@ -53,7 +53,8 @@ public class Player : HealthSystem
 
     protected override void DoOnUpdate()
     {
-        timeSinceShot += Time.deltaTime;
+        coolDownTimeRemaining -= Time.deltaTime;
+		if (coolDownTimeRemaining < 0f) coolDownTimeRemaining = 0f;
 
         switch (currState)
         {
@@ -71,6 +72,10 @@ public class Player : HealthSystem
             default:
                 break;
         }
+
+		if (controls.CycleButtonWasPressed) {
+			CycleWeapon();
+		}
     }
 
     protected override void DoOnFixedUpdate()
@@ -126,7 +131,7 @@ public class Player : HealthSystem
     void Fire(GameObject weapon)
     {
 
-        if (timeSinceShot < 1f / rateOfFire) return;
+		if (coolDownTimeRemaining > 0f) return;
 
         foreach (Transform turret in turretTransforms)
         {
@@ -137,6 +142,12 @@ public class Player : HealthSystem
             weaponScript.maxDistance = 50f;
             go.transform.position = turret.position;
         }
-        timeSinceShot = 0f;
+
+		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
     }
+
+	void CycleWeapon() {
+		selectedWeapon++;
+		selectedWeapon %= weapons.Length;
+	}
 }

@@ -13,16 +13,14 @@ public enum RotationMode {
 
 public class Swivel : MonoBehaviour {
 
-	protected Rigidbody rigid;
-	protected Controls controls;
-	protected Quaternion rotation = Quaternion.identity;
+	private Rigidbody rigid;
+	private Controls controls;
+	private Quaternion rotation = Quaternion.identity;
 
 	[Header("Swivel Parameters")]
 	public RotationMode swivelMode = RotationMode.PointInVelocity;
 	public float rotationLerpSpeed = 60f;
 	public float yawSpeed = 120f;
-	//public bool recenters = false;
-	//public float coneHalfAngle = 180f;
 
 	public void RotateBy(float degrees) {
 		Vector3 angles = transform.rotation.eulerAngles;
@@ -68,7 +66,7 @@ public class Swivel : MonoBehaviour {
 		return new Vector3(v2.x, 0f, v2.y);
 	}
 
-	void Awake() {
+	void Start() {
 
 		controls = GetComponent<Controls>();
 		rigid = GetComponent<Rigidbody>();
@@ -81,11 +79,11 @@ public class Swivel : MonoBehaviour {
 		Destroy(this);
 	}
 
-	void Update() {
+	protected virtual void Update() {
 		SetRotation();
 	}
 
-	void FixedUpdate() {
+	protected virtual void FixedUpdate() {
 		transform.rotation = rotation;
 	}
 
