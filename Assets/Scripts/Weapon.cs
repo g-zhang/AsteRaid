@@ -6,7 +6,7 @@ public class Weapon : MonoBehaviour
 	public int damagePower = 1;
 
 	[Header("Weapon: Externally Set Fields")]
-	public int teamNumber;
+	public Team teamNumber;
 	public Vector3 startingVelocity;
 
 	// This represents different things based on weapon.

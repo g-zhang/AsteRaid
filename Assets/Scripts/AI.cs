@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 
-public class AI : MonoBehaviour
+public class AI : HealthSystem
 {
 	[Header("AI: Inspector Set Fields")]
-	public int teamNumber = 0;
 	public int maxHealth = 20;
 	public float damageTimeout = 0.25f;
 

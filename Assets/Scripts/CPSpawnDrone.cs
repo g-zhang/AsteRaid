@@ -30,39 +30,39 @@ public class CPSpawnDrone : MonoBehaviour {
 		if (elapsedSpawnDelay >= spawnRate) {
 			elapsedSpawnDelay = 0f;
 
-			int currTeam = whichTeam ();
+			Team currTeam = whichTeam ();
 
-			if ((currTeam == 1 && (spawnedDrones_Team1.Count) < maxDrones) 
-				|| (currTeam == 2 && (spawnedDrones_Team2.Count) < maxDrones)) {
+			if ((currTeam == Team.Team1 && (spawnedDrones_Team1.Count) < maxDrones) 
+				|| (currTeam == Team.Team2 && (spawnedDrones_Team2.Count) < maxDrones)) {
 				spawnAttackDrone (currTeam);
 			}
 		}
 	}
 
 	// Returns: 0 - Neutral, 1 - Team1, 2 - Team2
-	int whichTeam() {
+	Team whichTeam() {
 		// Team1
 		if (CP.driftPoint == CP.captureAbsValue) {
-			return 1;
+			return Team.Team1;
 		}
 		// Team2
 		else if (CP.driftPoint == (-1f * CP.captureAbsValue)) {
-			return 2;
+			return Team.Team2;
 		}
-		return 0;
+		return Team.Neutral;
 	}
 
-	void spawnAttackDrone(int teamNum) {
+	void spawnAttackDrone(Team teamNum) {
 		GameObject aDrone = Instantiate(attackDrone);
 		aDrone.GetComponent<AttackDroneController> ().teamNumber = teamNum;
 		aDrone.GetComponent<AttackDroneController> ().CPSpawn = this.gameObject;
 		aDrone.transform.position = transform.position;
 
-		if (teamNum == 1) {
+		if (teamNum == Team.Team1) {
 			aDrone.GetComponent<AttackDroneController> ().enemyBase = team2Base;
 			spawnedDrones_Team1.Add (aDrone);
 		}
-		else if (teamNum == 2) {
+		else if (teamNum == Team.Team2) {
 			aDrone.GetComponent<AttackDroneController> ().enemyBase = team1Base;
 			spawnedDrones_Team2.Add (aDrone);
 		}
