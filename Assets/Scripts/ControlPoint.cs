@@ -1,24 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+public enum ControlPointBehavior
+{
+	ProximityCapture,
+	DestoryNoCapture,
+	DestroyCapture
+}
+
 public class ControlPoint : MonoBehaviour
 {
-	[Header("ControlPoint: Inspector Set Fields")]
+	// Destroy on Capture
+	// Proximity/destroy to capture
+	// Spawn minions - attach current script?
+	// Track turrets - able to change allegiances easily
+
+	[Header("ControlPoint: Inspector Set General Fields")]
+	public ControlPointBehavior behavior = ControlPointBehavior.ProximityCapture;
+	public bool playersCanCapture = true;
+	public bool minionsCanCapture = true;
+
+	public Color neutralAreaColor;
+	public Color team1AreaColor;
+	public Color team2AreaColor;
+	public float areaAlpha = 0.25f;
+
+	public Team startingTeam = Team.Neutral;
+
+	[Header("ControlPoint: Inspector Set Proximity Capture Fields")]
 	public float captureAbsValue = 10f;
 	public bool captureFlatTime = false;
 
-	public float spectrumDriftSpeed = 0f;
+	public float spectrumDriftSpeed = 1f;
 
 	public bool anyOpposingBlocks = false;
-	public bool additiveCaptureTime = false;
+	public bool additiveCaptureTime = true;
 
-	public Color neutralColor;
-	public Color team1Color;
-	public Color team2Color;
-	public float alpha = 0.25f;
-
-	[Header("Control Point: Dynamically Set Fields")]
-	public List<Player> capturingObjects;
+	[Header("ControlPoint: Dynamically Set Proximity Capture Fields")]
+	public List<Player> capturingPlayers;
+	public List<AI> capturingMinions;
 
 	public float captureSpectrum;
 	public float driftPoint;
@@ -27,22 +47,75 @@ public class ControlPoint : MonoBehaviour
 
 	void Awake()
 	{
-		mat = GetComponent<MeshRenderer>().material;
-		neutralColor.a = alpha;
-		team1Color.a = alpha;
-		team2Color.a = alpha;
+		mat = GetComponent<Renderer>().material;
+		neutralAreaColor.a = areaAlpha;
+		team1AreaColor.a = areaAlpha;
+		team2AreaColor.a = areaAlpha;
 
-		capturingObjects = new List<Player>();
-		captureSpectrum = 0f;
-		driftPoint = 0f;
+		capturingPlayers = new List<Player>();
+		capturingMinions = new List<AI>();
 
-		mat.color = neutralColor;
+		switch (startingTeam)
+		{
+		case Team.Neutral:
+		{
+			captureSpectrum = 0f;
+			driftPoint = 0f;
+			mat.color = neutralAreaColor;
+
+			break;
+		}
+
+		case Team.Team1:
+		{
+			captureSpectrum = Mathf.Abs(captureAbsValue);
+			driftPoint = Mathf.Abs(captureAbsValue);
+			mat.color = team1AreaColor;
+
+			break;
+		}
+
+		case Team.Team2:
+		{
+			captureSpectrum = -Mathf.Abs(captureAbsValue);
+			driftPoint = -Mathf.Abs(captureAbsValue);
+			mat.color = team2AreaColor;
+
+			break;
+		}
+		}
 
 		return;
 	}
 
 	void Update()
 	{
+		if (behavior == ControlPointBehavior.ProximityCapture)
+		{
+			ProximityUpdateCapture();
+		}
+
+		return;
+	}
+
+	void ProximityUpdateCapture()
+	{
+		List<HealthSystem> capturingObjects = new List<HealthSystem>();
+		if (playersCanCapture)
+		{
+			foreach (Player p in capturingPlayers)
+			{
+				capturingObjects.Add(p);
+			}
+		}
+		if (minionsCanCapture)
+		{
+			foreach (AI m in capturingMinions)
+			{
+				capturingObjects.Add(m);
+			}
+		}
+
 		if (capturingObjects.Count == 0)
 		{
 			if (captureSpectrum < driftPoint)
@@ -64,10 +137,11 @@ public class ControlPoint : MonoBehaviour
 		}
 		else
 		{
-			List<Player> team1 =
-				capturingObjects.FindAll(p => p.teamNumber == 1);
-			List<Player> team2 =
-				capturingObjects.FindAll(p => p.teamNumber == 2);
+			List<HealthSystem> team1 = new List<HealthSystem>();
+			team1.AddRange(capturingObjects.FindAll(o => o.teamNumber == Team.Team1));
+
+			List<HealthSystem> team2 = new List<HealthSystem>();
+			team2.AddRange(capturingObjects.FindAll(o => o.teamNumber == Team.Team2));
 
 			int team1Weight = (team1.Count == 0) ? 0 : 1;
 			int team2Weight = (team2.Count == 0) ? 0 : 1;
@@ -138,24 +212,29 @@ public class ControlPoint : MonoBehaviour
 
 		if (captureSpectrum > 0f)
 		{
-			mat.color = Color.Lerp(neutralColor, team1Color,
+			mat.color = Color.Lerp(neutralAreaColor, team1AreaColor,
 				captureSpectrum / captureAbsValue);
 		}
 		else if (captureSpectrum < 0f)
 		{
-			mat.color = Color.Lerp(neutralColor, team2Color,
+			mat.color = Color.Lerp(neutralAreaColor, team2AreaColor,
 				-captureSpectrum / captureAbsValue);
 		}
 		else
 		{
-			mat.color = neutralColor;
+			mat.color = neutralAreaColor;
 		}
 
 		return;
 	}
-	
+
 	void OnTriggerEnter(Collider other)
 	{
+		if (behavior != ControlPointBehavior.ProximityCapture)
+		{
+			return;
+		}
+
 		Transform parent = other.transform;
 		while (parent.parent != null)
 		{
@@ -163,22 +242,33 @@ public class ControlPoint : MonoBehaviour
 		}
 
 		Player player = parent.GetComponent<Player>();
-		if (player == null)
+		AI ai = parent.GetComponent<AI>();
+		
+		if (player != null)
 		{
-			return;
+			if (capturingPlayers.Find(p => p == player) == null)
+			{
+				capturingPlayers.Add(player);
+			}
+		}
+		if (ai != null)
+		{
+			if (capturingMinions.Find(m => m == ai) == null)
+			{
+				capturingMinions.Add(ai);
+			}
 		}
 
-		if (capturingObjects.Find(p => p == player) != null)
-		{
-			return;
-		}
-
-		capturingObjects.Add(player);
 		return;
 	}
 
 	void OnTriggerExit(Collider other)
 	{
+		if (behavior != ControlPointBehavior.ProximityCapture)
+		{
+			return;
+		}
+
 		Transform parent = other.transform;
 		while (parent.parent != null)
 		{
@@ -186,27 +276,62 @@ public class ControlPoint : MonoBehaviour
 		}
 
 		Player player = parent.GetComponent<Player>();
-		if (player == null)
-		{
-			return;
-		}
+		AI ai = parent.GetComponent<AI>();
 
-		if (capturingObjects.Find(p => p == player) == null)
+		if (player != null)
 		{
-			return;
+			if (capturingPlayers.Find(p => p == player) != null)
+			{
+				capturingPlayers.Remove(player);
+			}
 		}
-
-		capturingObjects.Remove(player);
+		if (ai != null)
+		{
+			if (capturingMinions.Find(m => m == ai) != null)
+			{
+				capturingMinions.Remove(ai);
+			}
+		}
 
 		if (captureFlatTime)
 		{
-			if ((captureSpectrum > driftPoint) &&
-				(capturingObjects.Find(p => p.teamNumber == 1) == null))
+			List<HealthSystem> team1 = new List<HealthSystem>();
+			List<HealthSystem> team2 = new List<HealthSystem>();
+
+			if (playersCanCapture)
+			{
+				foreach (Player p in capturingPlayers)
+				{
+					if (p.teamNumber == Team.Team1)
+					{
+						team1.Add(p);
+					}
+					else if (p.teamNumber == Team.Team2)
+					{
+						team2.Add(p);
+					}
+				}
+			}
+			if (minionsCanCapture)
+			{
+				foreach (AI m in capturingMinions)
+				{
+					if (m.teamNumber == Team.Team1)
+					{
+						team1.Add(m);
+					}
+					else if (m.teamNumber == Team.Team2)
+					{
+						team2.Add(m);
+					}
+				}
+			}
+
+			if ((captureSpectrum > driftPoint) && (team1.Count == 0))
 			{
 				captureSpectrum = driftPoint;
 			}
-			else if ((captureSpectrum < driftPoint) &&
-				(capturingObjects.Find(p => p.teamNumber == 2) == null))
+			else if ((captureSpectrum < driftPoint) && (team2.Count == 0))
 			{
 				captureSpectrum = driftPoint;
 			}

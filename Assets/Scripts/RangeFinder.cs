@@ -5,7 +5,7 @@ public class RangeFinder : MonoBehaviour
 {
 	[Header("RangeFinder: Dynamically Set Fields")]
 	public List<GameObject> inRange;
-	public int parentTeamNumber;
+	public Team parentTeamNumber;
 
 	void Awake()
 	{

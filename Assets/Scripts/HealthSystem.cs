@@ -4,7 +4,7 @@ using System.Collections;
 public class HealthSystem : MonoBehaviour {
 
     [Header("Health Sys: Config")]
-    public int teamNumber = 1;
+    public Team teamNumber = Team.Neutral;
     public int maxHealth = 50;
     public float damageTimeout = 0.25f;
 

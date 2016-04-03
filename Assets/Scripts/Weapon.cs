@@ -7,7 +7,7 @@ public class Weapon : MonoBehaviour
 	public float coolDownTime = 0.5f;
 
 	[Header("Weapon: Externally Set Fields")]
-	public int teamNumber;
+	public Team teamNumber;
 	public Vector3 startingVelocity;
 
 	// This represents different things based on weapon.

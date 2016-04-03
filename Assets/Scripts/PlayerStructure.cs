@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerStructure : MonoBehaviour {
     [Header("Player Structure: Inspector Set Fields")]
-    public int teamNumber = 1;
+    public Team teamNumber = Team.Team1;
     public int maxHealth = 50;
     public float damageTimeout = 0.5f;
 
