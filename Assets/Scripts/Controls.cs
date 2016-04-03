@@ -108,25 +108,35 @@ public class Controls : MonoBehaviour
         }
     }
 
-    public bool FireButtonWasPressed
-    {
-        get
-        {
-            if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
-            return Input.GetMouseButtonDown(0);
-        }
-    }
+	public bool FireButtonWasPressed {
+		get {
+			if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
+			return Input.GetMouseButtonDown(0);
+		}
+	}
 
-    public bool FireButtonIsPressed
-    {
-        get
-        {
-            if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
-            return Input.GetMouseButton(0);
-        }
-    }
+	public bool FireButtonIsPressed {
+		get {
+			if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
+			return Input.GetMouseButton(0);
+		}
+	}
 
-    public void VibrateFor(float intensity, float time)
+	public bool CycleButtonWasPressed {
+		get {
+			if (ControlsMode == Mode.Controller) return ID.Action1.WasPressed;
+			return Input.GetMouseButtonDown(1);
+		}
+	}
+
+	public bool CycleButtonIsPressed {
+		get {
+			if (ControlsMode == Mode.Controller) return ID.Action1.IsPressed;
+			return Input.GetMouseButton(1);
+		}
+	}
+
+	public void VibrateFor(float intensity, float time)
     {
         VibrateFor(intensity, intensity, time);
     }
