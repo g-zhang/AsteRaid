@@ -29,7 +29,6 @@ public class ShipTrails : MonoBehaviour {
 	}
 
 	private void enableTrails() {
-		print("EN");
 		foreach (Vector3 pos in trailPositions) {
 			GameObject trail = Instantiate(windTrailPrefab);
 			trail.transform.parent = transform;
@@ -39,7 +38,6 @@ public class ShipTrails : MonoBehaviour {
 	}
 
 	private void disableTrails() {
-		print("DIS");
 		foreach (GameObject trail in trails) {
 			trail.transform.parent = null;
 			deadTrails.Add(trail);
