@@ -15,8 +15,7 @@ public class Player : HealthSystem
 
     public Transform[] turretTransforms;
     private Controls controls;
-
-    public float rateOfFire = 10f;
+	
 	private float coolDownTimeRemaining = 0f;
 
     [Header("Player Respawn Config")]
