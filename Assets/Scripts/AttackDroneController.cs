@@ -15,6 +15,9 @@ public class AttackDroneController : AI {
 	float currThrusterSpeed;
 
 	[Header("AttackDrone: Dynamically Set Fields")]
+	public GameObject CPSpawn;
+	public GameObject enemyBase;
+
 	public float elapsedFireDelay;
 	public NavMeshAgent NMAgent;
 	GameObject navAgentObj;
@@ -44,6 +47,12 @@ public class AttackDroneController : AI {
 
 		spin ();
 
+		if (NMAgent.remainingDistance <= maxEnemyDistance) {
+			rotateToFaceEnemy (enemyBase);
+			thruster ();
+			fireWeapon (enemyBase);
+		}
+
 		// If there is something in range
 		if (range.inRange.Count > 0) {
 			rotateToFaceEnemy (range.inRange [0]);	
@@ -52,7 +61,7 @@ public class AttackDroneController : AI {
 		}
 		// Otherwise, go around and do stuff;
 		else {
-			NMAgent.SetDestination (new Vector3(10f, 10f, 10f));
+			NMAgent.SetDestination (enemyBase.transform.position);
 			followNavAgentObj ();
 		}
 	}
@@ -108,5 +117,14 @@ public class AttackDroneController : AI {
 		transform.position = new Vector3(NAO_Position.x, transform.position.y, NAO_Position.z);
 
 		transform.rotation = Quaternion.Euler (new Vector3 (this_Rotation.x, NAO_Rotation.y, this_Rotation.z));
+	}
+
+	// Deal with clean up after death
+	void OnDestroy() {
+		if (teamNumber == 1) {
+			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedDrones_Team1.Remove (this.gameObject);
+		} else if (teamNumber == 2) {
+			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedDrones_Team2.Remove (this.gameObject);
+		}
 	}
 }

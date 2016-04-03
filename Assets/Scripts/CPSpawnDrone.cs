@@ -4,10 +4,18 @@ using System.Collections.Generic;
 
 public class CPSpawnDrone : MonoBehaviour {
 
-	ControlPoint CP;
+	[Header("Inspector Set Fields")]
 	public GameObject attackDrone;
 	public float spawnRate;
 	public int maxDrones;
+
+	// :/ I need to figure out a smarter method
+	// At this point, you have to set it at each CP
+	public GameObject team1Base;
+	public GameObject team2Base;
+
+	[Header("Dynamically Set Fields")]
+	ControlPoint CP;
 	public List<GameObject> spawnedDrones_Team1;
 	public List<GameObject> spawnedDrones_Team2;
 
@@ -29,20 +37,6 @@ public class CPSpawnDrone : MonoBehaviour {
 				spawnAttackDrone (currTeam);
 			}
 		}
-
-		// REALLY HACKY CLEANUP, PLEASE CHANGE LATER
-		for (int i = 0; i < spawnedDrones_Team1.Count; i++) {
-			if (spawnedDrones_Team1 [i].GetComponent<PlayerStructure> ().currHealth <= 1) {
-				Destroy (spawnedDrones_Team1 [i]);
-				spawnedDrones_Team1.RemoveAt (i);
-			}
-		}
-		for (int i = 0; i < spawnedDrones_Team2.Count; i++) {
-			if (spawnedDrones_Team2 [i].GetComponent<PlayerStructure> ().currHealth <= 1) {
-				Destroy (spawnedDrones_Team2 [i]);
-				spawnedDrones_Team2.RemoveAt (i);
-			}
-		}
 	}
 
 	// Returns: 0 - Neutral, 1 - Team1, 2 - Team2
@@ -61,12 +55,15 @@ public class CPSpawnDrone : MonoBehaviour {
 	void spawnAttackDrone(int teamNum) {
 		GameObject aDrone = Instantiate(attackDrone);
 		aDrone.GetComponent<AttackDroneController> ().teamNumber = teamNum;
+		aDrone.GetComponent<AttackDroneController> ().CPSpawn = this.gameObject;
 		aDrone.transform.position = transform.position;
 
 		if (teamNum == 1) {
+			aDrone.GetComponent<AttackDroneController> ().enemyBase = team2Base;
 			spawnedDrones_Team1.Add (aDrone);
 		}
 		else if (teamNum == 2) {
+			aDrone.GetComponent<AttackDroneController> ().enemyBase = team1Base;
 			spawnedDrones_Team2.Add (aDrone);
 		}
 	}
