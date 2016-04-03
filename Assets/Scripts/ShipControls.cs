@@ -17,10 +17,14 @@ public class ShipControls : Swivel {
 	public float acceleration = 10f;
 	public TranslationMode shipTranslationMode = TranslationMode.GlobalMotion;
 	public float friction = 0.01f;
+	public float alignmentEffect = .2f;
+
 	// TODOs:
 	// reverse max speed indep of forward max speed
 	// ship accceleration parameterized
-	
+
+	Vector3 baseVelocity = Vector3.zero;
+
 	void FixedUpdate() {
 
 		Vector3 pos = transform.position;
@@ -28,32 +32,37 @@ public class ShipControls : Swivel {
 		transform.position = pos;
 
 		transform.rotation = rotation;
-		rigid.velocity *= 1-friction;
+		baseVelocity *= 1-friction;
 
 		Vector3 moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
 		moveControl *= Time.deltaTime * acceleration;
 
 		switch (shipTranslationMode) {
 			case TranslationMode.GlobalMotion:
-				rigid.velocity += moveControl;
+				baseVelocity += moveControl;
 				break;
 			case TranslationMode.Strafing:
-				rigid.velocity += transform.TransformDirection(moveControl);
+				baseVelocity += transform.TransformDirection(moveControl);
 				break;
 			case TranslationMode.ThrusterOnly:
-				float speedSign = Vector3.Dot(rigid.velocity, transform.forward) > 0 ? 1f : -1f;
-				float forwardSpeed = speedSign * rigid.velocity.magnitude + moveControl.z;
+				float speedSign = Vector3.Dot(baseVelocity, transform.forward) > 0 ? 1f : -1f;
+				float forwardSpeed = speedSign * baseVelocity.magnitude + moveControl.z;
 				Vector3 localVelocity = new Vector3(0f, 0f, forwardSpeed);
-				rigid.velocity = transform.TransformDirection(localVelocity);
+				baseVelocity = transform.TransformDirection(localVelocity);
 				break;
 			default:
 				break;
 		}
-		
-		if (rigid.velocity.magnitude > maxSpeed) rigid.velocity = maxSpeed * rigid.velocity.normalized;
-		if (rigid.velocity.magnitude <= minSpeed) rigid.velocity = Vector3.zero;
 
-		//rigid.velocity = Vector3.up * 12f;
+		if (baseVelocity.magnitude > maxSpeed) baseVelocity = maxSpeed * baseVelocity.normalized;
+		if (baseVelocity.magnitude <= minSpeed) rigid.velocity = Vector3.zero;
+
+		Vector3 boostVelocity = Vector3.zero;
+
+		float dot = Vector3.Dot(transform.forward, baseVelocity.normalized);
+		boostVelocity = dot * alignmentEffect * baseVelocity;
+
+		rigid.velocity = baseVelocity + boostVelocity;
 
 	}
 }
