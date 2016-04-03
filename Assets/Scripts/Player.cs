@@ -11,13 +11,13 @@ public class Player : HealthSystem
 
     [Header("Player Weapon Config")]
     public GameObject[] weapons;
-	public int selectedWeapon = 0;
+    public int selectedWeapon = 0;
 
-	public Transform[] turretTransforms;
-	private Controls controls;
+    public Transform[] turretTransforms;
+    private Controls controls;
 
-	public float rateOfFire = 10f;
-	private float timeSinceShot = 0f;
+    public float rateOfFire = 10f;
+    private float timeSinceShot = 0f;
 
     [Header("Player Respawn Config")]
     public Transform respawnLocation;
@@ -27,26 +27,29 @@ public class Player : HealthSystem
     private Vector3 respawnLocationVector;
 
     protected override void OnAwake()
-	{
-		List<Transform> turrets = new List<Transform>();
-		foreach (Transform child in transform) {
-			if (child.name == "Turret") {
-				Transform barrel = child.Find("Barrel");
-				if (barrel == null) {
-					print("Turret has no barrel :(");
-					return;
-				}
-				turrets.Add(barrel);
-			}
-		}
-		turretTransforms = turrets.ToArray();
+    {
+        List<Transform> turrets = new List<Transform>();
+        foreach (Transform child in transform)
+        {
+            if (child.name == "Turret")
+            {
+                Transform barrel = child.Find("Barrel");
+                if (barrel == null)
+                {
+                    print("Turret has no barrel :(");
+                    return;
+                }
+                turrets.Add(barrel);
+            }
+        }
+        turretTransforms = turrets.ToArray();
 
-		controls = GetComponent<Controls>();
+        controls = GetComponent<Controls>();
 
         currDelayTime = respawnDelayTime;
         respawnLocationVector = respawnLocation.position;
         currState = State.Normal;
-	}
+    }
 
     protected override void DoOnUpdate()
     {
@@ -80,7 +83,7 @@ public class Player : HealthSystem
 
     public override void DeathProcedure()
     {
-        if(currState != State.Dead)
+        if (currState != State.Dead)
         {
             currState = State.Dead;
             controls.VibrateFor(.5f, .5f);
@@ -121,19 +124,20 @@ public class Player : HealthSystem
         }
     }
 
-    void Fire(GameObject weapon) {
+    void Fire(GameObject weapon)
+    {
 
-		if (timeSinceShot < 1f / rateOfFire) return;
-		
-		foreach (Transform turret in turretTransforms) {
-			GameObject go = Instantiate(weapon) as GameObject;
-			Weapon weaponScript = go.GetComponent<Weapon>();
-			weaponScript.teamNumber = teamNumber;
-			weaponScript.startingVelocity = turret.forward;
-			weaponScript.maxDistance = 50f;
-			go.transform.position = turret.position;
-		}
-		timeSinceShot = 0f;
-	}
+        if (timeSinceShot < 1f / rateOfFire) return;
 
+        foreach (Transform turret in turretTransforms)
+        {
+            GameObject go = Instantiate(weapon) as GameObject;
+            Weapon weaponScript = go.GetComponent<Weapon>();
+            weaponScript.teamNumber = teamNumber;
+            weaponScript.startingVelocity = turret.forward;
+            weaponScript.maxDistance = 50f;
+            go.transform.position = turret.position;
+        }
+        timeSinceShot = 0f;
+    }
 }
