@@ -3,87 +3,24 @@
 public class AI : HealthSystem
 {
 	[Header("AI: Inspector Set Fields")]
-	public int maxHealth = 20;
-	public float damageTimeout = 0.25f;
+	public bool teamSwapDestruction = false;
 
-	[Header("AI: Dynamically Set Fields")]
-	public int currHealth;
-	public int damagePower;
-
-	public bool beingHit;
-	public bool tookDamage;
-	public float elapsedDamageTime;
-
-	protected void BaseAwake()
+	public override void DeathProcedure()
 	{
-		currHealth = maxHealth;
-		damagePower = 0;
-
-		beingHit = false;
-		tookDamage = false;
-		elapsedDamageTime = 0f;
-
-		return;
-	}
-
-	protected void BaseFixedUpdate()
-	{
-		if (!beingHit)
+		if (teamSwapDestruction)
 		{
-			return;
-		}
+			teamNumber = lastTeamToHit;
+			currHealth = maxHealth;
 
-		if (tookDamage)
+			// TODO: Leaves an odd bug.
+			// On destruction/swap, opposing team will
+			// will not be in fire "range".
+			// Need to change RangeFinder?
+		}
+		else
 		{
-			elapsedDamageTime += Time.fixedDeltaTime;
-			if (elapsedDamageTime >= damageTimeout)
-			{
-				elapsedDamageTime = 0f;
-				beingHit = false;
-				tookDamage = false;
-				damagePower = 0;
-			}
-
-			return;
+			base.DeathProcedure();
 		}
-
-		currHealth -= damagePower;
-		if (currHealth <= 0)
-		{
-			// This will likely be changed.
-			Destroy(gameObject);
-		}
-		tookDamage = true;
-
-		return;
-	}
-
-	protected void BaseOnTriggerStay(Collider other)
-	{
-		if (beingHit)
-		{
-			return;
-		}
-
-		Transform parent = other.transform;
-		while (parent.parent != null)
-		{
-			parent = parent.parent;
-		}
-
-		Weapon otherWeapon = parent.GetComponent<Weapon>();
-		if (otherWeapon == null)
-		{
-			return;
-		}
-
-		if (otherWeapon.teamNumber == teamNumber)
-		{
-			return;
-		}
-
-		damagePower = otherWeapon.damagePower;
-		beingHit = true;
 
 		return;
 	}

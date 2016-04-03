@@ -22,6 +22,7 @@ public class HealthSystem : MonoBehaviour {
     public bool beingHit;
     public bool tookDamage;
     public float elapsedDamageTime;
+	public Team lastTeamToHit;
 
     //override this for custom behavior when this object is "killed"
     public virtual void DeathProcedure()
@@ -57,6 +58,7 @@ public class HealthSystem : MonoBehaviour {
         beingHit = false;
         tookDamage = false;
         elapsedDamageTime = 0f;
+		lastTeamToHit = Team.Neutral;
 
         if(HealthBarPrefab != null && enableHealthBar)
         {
@@ -134,6 +136,7 @@ public class HealthSystem : MonoBehaviour {
             return;
         }
 
+		lastTeamToHit = otherWeapon.teamNumber;
         damagePower = otherWeapon.damagePower;
         beingHit = true;
 

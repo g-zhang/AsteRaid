@@ -1,22 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public enum ControlPointBehavior
-{
-	ProximityCapture,
-	DestoryNoCapture,
-	DestroyCapture
-}
-
 public class ControlPoint : MonoBehaviour
 {
-	// Destroy on Capture
-	// Proximity/destroy to capture
-	// Spawn minions - attach current script?
-	// Track turrets - able to change allegiances easily
-
 	[Header("ControlPoint: Inspector Set General Fields")]
-	public ControlPointBehavior behavior = ControlPointBehavior.ProximityCapture;
 	public bool playersCanCapture = true;
 	public bool minionsCanCapture = true;
 
@@ -89,16 +76,6 @@ public class ControlPoint : MonoBehaviour
 	}
 
 	void Update()
-	{
-		if (behavior == ControlPointBehavior.ProximityCapture)
-		{
-			ProximityUpdateCapture();
-		}
-
-		return;
-	}
-
-	void ProximityUpdateCapture()
 	{
 		List<HealthSystem> capturingObjects = new List<HealthSystem>();
 		if (playersCanCapture)
@@ -230,11 +207,6 @@ public class ControlPoint : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (behavior != ControlPointBehavior.ProximityCapture)
-		{
-			return;
-		}
-
 		Transform parent = other.transform;
 		while (parent.parent != null)
 		{
@@ -264,11 +236,6 @@ public class ControlPoint : MonoBehaviour
 
 	void OnTriggerExit(Collider other)
 	{
-		if (behavior != ControlPointBehavior.ProximityCapture)
-		{
-			return;
-		}
-
 		Transform parent = other.transform;
 		while (parent.parent != null)
 		{

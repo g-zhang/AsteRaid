@@ -15,21 +15,18 @@ public class AI_Turret : AI
 
 	public float elapsedFireDelay;
 
-	void Awake()
+	protected override void OnAwake()
 	{
 		range = transform.Find("Range").GetComponent<RangeFinder>();
 		gun = transform.Find("Gun");
 
 		elapsedFireDelay = 0f;
-
-		BaseAwake();
+		
 		return;
 	}
 
-	void Update()
+	protected override void DoOnUpdate()
 	{
-		// TODO: Allow settings to change who it targets.
-
 		if (range.inRange.Count == 0)
 		{
 			elapsedFireDelay = 0f;
@@ -60,18 +57,6 @@ public class AI_Turret : AI
 			weaponComp.teamNumber = teamNumber;
 		}
 
-		return;
-	}
-
-	void FixedUpdate()
-	{
-		BaseFixedUpdate();
-		return;
-	}
-
-	void OnTriggerStay(Collider other)
-	{
-		BaseOnTriggerStay(other);
 		return;
 	}
 }
