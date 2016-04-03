@@ -96,12 +96,12 @@ public class HealthSystem : MonoBehaviour {
                     tookDamage = false;
                     damagePower = 0;
                 }
-
-                return;
             }
-
-            currHealth -= damagePower;
-            tookDamage = true;
+            else
+            {
+                currHealth -= damagePower;
+                tookDamage = true;
+            }
         }
 
         if (currHealth <= 0)
