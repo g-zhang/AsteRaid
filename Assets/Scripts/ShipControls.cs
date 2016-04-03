@@ -19,19 +19,30 @@ public class ShipControls : Swivel {
 	public float friction = 0.01f;
 	public float alignmentEffect = .2f;
 	public float speedLimitLerpSpeed = .2f;
+	public bool backwardPenalty = false;
+
+	private Vector3 lastFrameVelocity = Vector3.zero;
+
+	void Update() {
+		if (lastFrameVelocity.magnitude < maxSpeed && rigid.velocity.magnitude >= maxSpeed) {
+			//enable trails
+
+		}
+		if (lastFrameVelocity.magnitude >= maxSpeed && rigid.velocity.magnitude < maxSpeed) {
+			//disable trails
+		}
+	}
 
 	void FixedUpdate() {
 
 		Vector3 pos = transform.position;
 		pos.y = 0f;
 		transform.position = pos;
-
 		transform.rotation = rotation;
-
 		rigid.velocity *= 1 - friction;
 		float alignment = Vector3.Dot(transform.forward, rigid.velocity.normalized);
+		if (!backwardPenalty && alignment < 0) alignment = 0f;
 		float effectiveMaxSpeed = maxSpeed + alignment * alignmentEffect * maxSpeed;
-
 		Vector3 moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
 		moveControl *= Time.deltaTime * acceleration;
 
