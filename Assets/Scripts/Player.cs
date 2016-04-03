@@ -138,7 +138,6 @@ public class Player : HealthSystem
             Weapon weaponScript = go.GetComponent<Weapon>();
             weaponScript.teamNumber = teamNumber;
             weaponScript.startingVelocity = turret.forward;
-            weaponScript.maxDistance = 50f;
             go.transform.position = turret.position;
         }
 
