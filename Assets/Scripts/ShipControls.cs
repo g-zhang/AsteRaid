@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public enum TranslationMode {
 	GlobalMotion,
@@ -21,24 +21,11 @@ public class ShipControls : Swivel {
 	public float speedLimitLerpSpeed = .2f;
 	public bool backwardPenalty = false;
 
-	private Vector3 lastFrameVelocity = Vector3.zero;
-
-	void Update() {
-		if (lastFrameVelocity.magnitude < maxSpeed && rigid.velocity.magnitude >= maxSpeed) {
-			//enable trails
-
-		}
-		if (lastFrameVelocity.magnitude >= maxSpeed && rigid.velocity.magnitude < maxSpeed) {
-			//disable trails
-		}
-	}
-
-	void FixedUpdate() {
-
+	protected override void FixedUpdate() {
+		base.FixedUpdate();
 		Vector3 pos = transform.position;
 		pos.y = 0f;
 		transform.position = pos;
-		transform.rotation = rotation;
 		rigid.velocity *= 1 - friction;
 		float alignment = Vector3.Dot(transform.forward, rigid.velocity.normalized);
 		if (!backwardPenalty && alignment < 0) alignment = 0f;

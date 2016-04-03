@@ -81,11 +81,11 @@ public class Swivel : MonoBehaviour {
 		Destroy(this);
 	}
 
-	void Update() {
+	protected virtual void Update() {
 		SetRotation();
 	}
 
-	void FixedUpdate() {
+	protected virtual void FixedUpdate() {
 		transform.rotation = rotation;
 	}
 
