@@ -86,7 +86,9 @@ public class Player : HealthSystem
         if (currState != State.Dead)
         {
             currState = State.Dead;
-            controls.VibrateFor(.5f, .5f);
+            tookDamage = false;
+            beingHit = false;
+            controls.VibrateFor(1f, .5f);
         }
     }
 
@@ -95,9 +97,6 @@ public class Player : HealthSystem
         if (currDelayTime > 0)
         {
             currDelayTime -= Time.deltaTime;
-
-            tookDamage = false;
-            beingHit = false;
 
             transform.Find("Mesh1").GetComponent<MeshRenderer>().enabled = false;
             transform.Find("Mesh1").GetComponent<Collider>().enabled = false;
