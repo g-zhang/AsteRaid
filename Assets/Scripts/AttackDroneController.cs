@@ -14,16 +14,19 @@ public class AttackDroneController : AI {
 
 	float currThrusterSpeed;
 
+	public LayerMask raycastMask;
+
 	[Header("AttackDrone: Dynamically Set Fields")]
 	public GameObject CPSpawn;
 	public GameObject enemyBase;
 
 	public float elapsedFireDelay;
 	public NavMeshAgent NMAgent;
-	GameObject navAgentObj;
 	RangeFinder range;
 	Transform mesh;
 	Rigidbody RB;
+
+	bool gotoBaseSet;
 
 	void Start () {
 		range = transform.Find("Range").GetComponent<RangeFinder>();
@@ -31,11 +34,12 @@ public class AttackDroneController : AI {
 		elapsedFireDelay = 0f;
 		RB = GetComponent<Rigidbody> ();
 
-		navAgentObj = transform.Find ("NavAgentObj").gameObject;
-		NMAgent = navAgentObj.GetComponent<NavMeshAgent> ();
+		NMAgent = GetComponent<NavMeshAgent> ();
 
-		GetComponent<PlayerStructure> ().teamNumber = teamNumber;
 		transform.Find ("Range").GetComponent<SphereCollider> ().radius = maxEnemyDistance;
+
+		gotoBase ();
+		gotoBaseSet = false;
 	}
 
 	void Update () {
@@ -45,24 +49,41 @@ public class AttackDroneController : AI {
 			range.inRange.Clear ();
 		}
 
-		spin ();
-
-		if (NMAgent.remainingDistance <= maxEnemyDistance) {
-			rotateToFaceEnemy (enemyBase);
-			thruster ();
-			fireWeapon (enemyBase);
+		// NOT PROPER PLACE
+		if (GetComponent<HealthSystem> ().teamNumber != teamNumber) {
+			GetComponent<HealthSystem> ().teamNumber = teamNumber;	
+			gotoBaseSet = false;
 		}
+
+		spin ();
 
 		// If there is something in range
 		if (range.inRange.Count > 0) {
+			NMAgent.Stop ();
+
+			gotoBaseSet = false;
+
 			rotateToFaceEnemy (range.inRange [0]);	
 			thruster ();
 			fireWeapon (range.inRange [0]);
 		}
 		// Otherwise, go around and do stuff;
 		else {
-			NMAgent.SetDestination (enemyBase.transform.position);
-			followNavAgentObj ();
+			if (NMAgent.remainingDistance <= maxEnemyDistance) {
+
+				NMAgent.Stop ();
+
+				gotoBaseSet = false;
+
+				rotateToFaceEnemy (enemyBase);
+
+				fireWeapon (enemyBase);
+			}
+			else {
+				if (!gotoBaseSet) {
+					gotoBase ();
+				}
+			}
 		}
 	}
 
@@ -109,16 +130,6 @@ public class AttackDroneController : AI {
 		}
 	}
 
-	void followNavAgentObj() {
-		Vector3 NAO_Position = navAgentObj.transform.position;
-		Vector3 NAO_Rotation = navAgentObj.transform.rotation.eulerAngles;
-		Vector3 this_Rotation = transform.rotation.eulerAngles;
-
-		transform.position = new Vector3(NAO_Position.x, transform.position.y, NAO_Position.z);
-
-		transform.rotation = Quaternion.Euler (new Vector3 (this_Rotation.x, NAO_Rotation.y, this_Rotation.z));
-	}
-
 	// Deal with clean up after death
 	void OnDestroy() {
 		if (teamNumber == 1) {
@@ -126,5 +137,24 @@ public class AttackDroneController : AI {
 		} else if (teamNumber == 2) {
 			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedDrones_Team2.Remove (this.gameObject);
 		}
+	}
+
+	void gotoBase() {
+		Vector3 enemyBaseDest = enemyBase.transform.position;
+		Ray rayToEnemyBase = new Ray (transform.position, enemyBaseDest);
+		RaycastHit enemyBaseHitInfo;
+
+		if (Physics.Raycast (rayToEnemyBase, out enemyBaseHitInfo, Mathf.Infinity, raycastMask)) {
+			enemyBaseDest = enemyBaseHitInfo.point;
+		}
+
+		enemyBaseDest = new Vector3 (enemyBaseDest.x, NMAgent.transform.position.y - 0.75f, enemyBaseDest.z);
+
+		Debug.DrawRay (enemyBaseDest, Vector3.up);
+
+		NMAgent.SetDestination (enemyBaseDest);
+		gotoBaseSet = true;
+
+		NMAgent.Resume ();
 	}
 }
