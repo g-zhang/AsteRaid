@@ -15,7 +15,9 @@ public class HealthSystem : MonoBehaviour {
     public GameObject HealthBarPrefab;
     protected HealthBar HPBar;
 
-    [Header("Health Sys: Status")]
+	[Header("Health Sys: Status")]
+	public bool useInvulnTime;
+
     public int currHealth;
     public int damagePower;
 
@@ -52,6 +54,9 @@ public class HealthSystem : MonoBehaviour {
 
     void Awake()
     {
+		useInvulnTime = GameObject.Find("GameManager").
+			GetComponent<GameManager>().useInvulnTime;
+
         currHealth = maxHealth;
         damagePower = 0;
 
@@ -86,60 +91,113 @@ public class HealthSystem : MonoBehaviour {
     void FixedUpdate()
     {
         DoOnFixedUpdate();
-        if (beingHit)
-        {
-            if (tookDamage)
-            {
-                elapsedDamageTime += Time.fixedDeltaTime;
-                if (elapsedDamageTime >= damageTimeout)
-                {
-                    elapsedDamageTime = 0f;
-                    beingHit = false;
-                    tookDamage = false;
-                    damagePower = 0;
-                }
-            }
-            else
-            {
-                currHealth -= damagePower;
-                tookDamage = true;
-            }
-        }
+		
+		if (useInvulnTime)
+		{
+			InvulnHealthFixedUpdate();
+		}
 
-        if (currHealth <= 0)
-        {
-            DeathProcedure();
-        }
+		return;
     }
 
     void OnTriggerStay(Collider other)
     {
-        if (beingHit)
-        {
-            return;
-        }
-
-        Transform parent = other.transform;
-        while (parent.parent != null)
-        {
-            parent = parent.parent;
-        }
-
-        Weapon otherWeapon = parent.GetComponent<Weapon>();
-        if (otherWeapon == null)
-        {
-            return;
-        }
-
-        if (otherWeapon.teamNumber == teamNumber)
-        {
-            return;
-        }
-
-		lastTeamToHit = otherWeapon.teamNumber;
-        damagePower = otherWeapon.damagePower;
-        beingHit = true;
+        if (useInvulnTime)
+		{
+			InvulnHealthTriggerStay(other);
+		}
+		else
+		{
+			ImmediateHealthTriggerStay(other);
+		}
 
         return;
     }
+
+	void InvulnHealthFixedUpdate()
+	{
+		if (beingHit)
+		{
+			if (tookDamage)
+			{
+				elapsedDamageTime += Time.fixedDeltaTime;
+				if (elapsedDamageTime >= damageTimeout)
+				{
+					elapsedDamageTime = 0f;
+					beingHit = false;
+					tookDamage = false;
+					damagePower = 0;
+				}
+			}
+			else
+			{
+				currHealth -= damagePower;
+				tookDamage = true;
+			}
+
+			if (currHealth <= 0)
+			{
+				DeathProcedure();
+			}
+		}
+	}
+
+	void InvulnHealthTriggerStay(Collider other)
+	{
+		if (beingHit)
+		{
+			return;
+		}
+
+		Transform parent = other.transform;
+		while (parent.parent != null)
+		{
+			parent = parent.parent;
+		}
+
+		Weapon otherWeapon = parent.GetComponent<Weapon>();
+		if (otherWeapon == null)
+		{
+			return;
+		}
+
+		if (otherWeapon.teamNumber == teamNumber)
+		{
+			return;
+		}
+
+		lastTeamToHit = otherWeapon.teamNumber;
+		damagePower = otherWeapon.damagePower;
+		beingHit = true;
+	}
+
+	void ImmediateHealthTriggerStay(Collider other)
+	{
+		Transform parent = other.transform;
+		while (parent.parent != null)
+		{
+			parent = parent.parent;
+		}
+
+		Weapon otherWeapon = parent.GetComponent<Weapon>();
+		if (otherWeapon == null)
+		{
+			return;
+		}
+
+		if (otherWeapon.teamNumber == teamNumber)
+		{
+			return;
+		}
+
+		lastTeamToHit = otherWeapon.teamNumber;
+		currHealth -= otherWeapon.damagePower;
+
+		if (currHealth <= 0)
+		{
+			DeathProcedure();
+		}
+
+		return;
+	}
 }

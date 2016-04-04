@@ -9,5 +9,6 @@ public enum Team
 
 public class GameManager : MonoBehaviour
 {
-	
+	[Header("GameManager: Inspector Set Fields")]
+	public bool useInvulnTime = false;
 }
