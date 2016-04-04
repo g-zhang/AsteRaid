@@ -5,12 +5,11 @@ public class RangeFinder : MonoBehaviour
 {
 	[Header("RangeFinder: Dynamically Set Fields")]
 	public List<GameObject> inRange;
-	public Team parentTeamNumber;
+	public HealthSystem parentHealthSystem;
 
 	void Awake()
 	{
 		inRange = new List<GameObject>();
-		parentTeamNumber = 0;
 
 		Transform parent = transform;
 		while (parent.parent != null)
@@ -21,7 +20,7 @@ public class RangeFinder : MonoBehaviour
 		AI parentAI = parent.GetComponent<AI>();
 		if (parent != null)
 		{
-			parentTeamNumber = parentAI.teamNumber;
+			parentHealthSystem = parentAI;
 		}
 
 		return;
@@ -58,14 +57,14 @@ public class RangeFinder : MonoBehaviour
 
 		if (otherPlayer != null)
 		{
-			if (otherPlayer.teamNumber == parentTeamNumber)
+			if (otherPlayer.teamNumber == parentHealthSystem.teamNumber)
 			{
 				return;
 			}
 		}
 		if (otherAI != null)
 		{
-			if (otherAI.teamNumber == parentTeamNumber)
+			if (otherAI.teamNumber == parentHealthSystem.teamNumber)
 			{
 				return;
 			}

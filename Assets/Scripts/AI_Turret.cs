@@ -10,18 +10,17 @@ public class AI_Turret : AI
 	public float weaponMaxDistance = 50f; // See Weapon description.
 
 	[Header("AI_Turret: Dynamically Set Fields")]
-	public RangeFinder range;
 	public Transform gun;
 
 	public float elapsedFireDelay;
 
 	protected override void OnAwake()
 	{
-		range = transform.Find("Range").GetComponent<RangeFinder>();
 		gun = transform.Find("Gun");
 
 		elapsedFireDelay = 0f;
-		
+
+		base.OnAwake();
 		return;
 	}
 

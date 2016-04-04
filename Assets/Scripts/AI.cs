@@ -5,6 +5,15 @@ public class AI : HealthSystem
 	[Header("AI: Inspector Set Fields")]
 	public bool teamSwapDestruction = false;
 
+	[Header("AI: Dynamically Set Fields")]
+	public RangeFinder range;
+
+	protected override void OnAwake()
+	{
+		range = transform.Find("Range").GetComponent<RangeFinder>();
+		return;
+	}
+
 	public override void DeathProcedure()
 	{
 		if (teamSwapDestruction)
@@ -12,10 +21,11 @@ public class AI : HealthSystem
 			teamNumber = lastTeamToHit;
 			currHealth = maxHealth;
 
-			// TODO: Leaves an odd bug.
-			// On destruction/swap, opposing team will
-			// will not be in fire "range".
-			// Need to change RangeFinder?
+			range.inRange.Clear();
+
+			// You are not expected to understand this.
+			range.gameObject.SetActive(false);
+			range.gameObject.SetActive(true);
 		}
 		else
 		{
