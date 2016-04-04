@@ -102,8 +102,8 @@ public class Player : HealthSystem
         {
             currDelayTime -= Time.deltaTime;
 
-            transform.Find("Mesh1").GetComponent<MeshRenderer>().enabled = false;
-            transform.Find("Mesh1").GetComponent<Collider>().enabled = false;
+            transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = false;
+            transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
             transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = false;
             transform.Find("Turret/Barrel").GetComponent<Collider>().enabled = false;
             transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
@@ -118,8 +118,8 @@ public class Player : HealthSystem
             //renable the player
             currState = State.Normal;
             currHealth = maxHealth;
-            transform.Find("Mesh1").GetComponent<MeshRenderer>().enabled = true;
-            transform.Find("Mesh1").GetComponent<Collider>().enabled = true;
+            transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
+            transform.Find("PlayerShip").GetComponent<Collider>().enabled = true;
             transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = true;
             transform.Find("Turret/Barrel").GetComponent<Collider>().enabled = true;
             transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
