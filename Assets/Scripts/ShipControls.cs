@@ -27,10 +27,12 @@ public class ShipControls : MonoBehaviour {
 
 	private Rigidbody rigid;
 	private Controls controls;
+	private ParticleSystem particles;
 
 	void Start() {
 		rigid = GetComponent<Rigidbody>();
 		controls = GetComponent<Controls>();
+		particles = GetComponent<ParticleSystem>();
 	}
 
 	void Update() {
@@ -55,8 +57,12 @@ public class ShipControls : MonoBehaviour {
 		if (controls.BoostButtonIsPressed && boostTime > 0f) {
 			effectiveMaxSpeed *= boostFactor;
 			effectiveAcceleration *= boostFactor;
+			ParticleSystem.EmissionModule em = particles.emission;
+			em.enabled = true;
+		} else {
+			ParticleSystem.EmissionModule em = particles.emission;
+			em.enabled = false;
 		}
-
 
 		Vector3 moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
 		moveControl *= Time.deltaTime * effectiveAcceleration;
