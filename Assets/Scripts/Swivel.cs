@@ -25,9 +25,9 @@ public class Swivel : MonoBehaviour {
     [Header("Spin Attack Config")]
     public float spinTime = .5f;
     public float slerpSpeed = .5f;
-    public float maxSpinSpeed = 3600f;
+    float maxSpinSpeed = 2700f;
     float currSpinSpeed = 0f;
-    bool isSpinning = false;
+    public bool isSpinning = false;
     float currSpinTime = 0f;
 
     public void RotateBy(float degrees) {

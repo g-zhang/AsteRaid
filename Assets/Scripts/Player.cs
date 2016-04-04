@@ -102,6 +102,8 @@ public class Player : HealthSystem
         {
             currDelayTime -= Time.deltaTime;
 
+            GetComponent<ShipTrails>().disableAllTrails();
+            GetComponent<ShipTrails>().enabled = false;
             transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = false;
             transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
             transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = false;
@@ -118,6 +120,7 @@ public class Player : HealthSystem
             //renable the player
             currState = State.Normal;
             currHealth = maxHealth;
+            GetComponent<ShipTrails>().enabled = true;
             transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
             transform.Find("PlayerShip").GetComponent<Collider>().enabled = true;
             transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = true;
