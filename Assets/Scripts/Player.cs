@@ -32,13 +32,7 @@ public class Player : HealthSystem
         {
             if (child.name == "Turret")
             {
-                Transform barrel = child.Find("Barrel");
-                if (barrel == null)
-                {
-                    print("Turret has no barrel :(");
-                    return;
-                }
-                turrets.Add(barrel);
+                turrets.Add(child);
             }
         }
         turretTransforms = turrets.ToArray();
