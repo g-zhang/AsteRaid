@@ -114,6 +114,8 @@ public class AttackDroneController : AI {
 
 			weaponComp.maxDistance = maxEnemyDistance;
 			weaponComp.teamNumber = teamNumber;
+
+			weaponComp.damagePower = 0.5f;
 		}
 	}
 
