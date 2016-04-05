@@ -46,6 +46,12 @@ public class UpdateUI : MonoBehaviour {
 		GameObject wintext = transform.Find ("WinText").gameObject;
 		wintext.SetActive (true);
 
+		if (winningTeam == 1) {
+			wintext.GetComponent<Text> ().color = Color.blue;
+		} else if (winningTeam == 2) {
+			wintext.GetComponent<Text> ().color = Color.red;
+		}
+
 		wintext.GetComponent<Text>().text = "Team " + winningTeam + " WINS";
 	}
 }

@@ -25,14 +25,15 @@ public class GameManager : MonoBehaviour
 	}
 
 	void winManager() {
-		if ((base_team1 == null || base_team2 == null) && win == false) {
+		if ((base_team1.GetComponent<BaseHealth>().isDestroyed || base_team2.GetComponent<BaseHealth>().isDestroyed)
+			&& win == false) {
 			// pause game
 			Time.timeScale = 0;
 
 			// Show WIN UI element
-			if (base_team1 == null) {
+			if (base_team1.GetComponent<BaseHealth>().isDestroyed) {
 				UICanvas.GetComponent<UpdateUI>().displayWin(2);
-			} else if (base_team2 == null) {
+			} else if (base_team2.GetComponent<BaseHealth>().isDestroyed) {
 				UICanvas.GetComponent<UpdateUI>().displayWin(1);
 			}
 
