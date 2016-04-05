@@ -29,12 +29,10 @@ public class DefenseDroneController : AI {
 
 	public float elapsedFireDelay;
 	public NavMeshAgent NMAgent;
-	RangeFinder range;
 	Transform mesh;
 	Rigidbody RB;
 
 	void Start () {
-		range = transform.Find("Range").GetComponent<RangeFinder>();
 		mesh = transform.Find ("Mesh1");
 		elapsedFireDelay = 0f;
 		RB = GetComponent<Rigidbody> ();
@@ -49,16 +47,6 @@ public class DefenseDroneController : AI {
 	}
 
 	void Update () {
-		// Should only happen once
-		if (range.parentTeamNumber != teamNumber) {
-			range.parentTeamNumber = teamNumber;
-			range.inRange.Clear ();
-		}
-
-		// NOT PROPER PLACE
-		if (GetComponent<HealthSystem> ().teamNumber != teamNumber) {
-			GetComponent<HealthSystem> ().teamNumber = teamNumber;
-		}
 
 		spin ();
 

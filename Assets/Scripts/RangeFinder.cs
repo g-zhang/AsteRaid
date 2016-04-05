@@ -27,19 +27,6 @@ public class RangeFinder : MonoBehaviour
 		return;
 	}
 
-	// Change later?
-	// Rough possible fix for player and other object death	
-	void Update() {
-		for (int i = inRange.Count - 1; i >= 0; i--) {
-			if (inRange [i] == null) {
-				inRange.RemoveAt (i);
-			}
-			else if (inRange [i].GetComponent<HealthSystem> ().currHealth <= 0) {
-				inRange.RemoveAt (i);
-			}
-		}
-	}
-
 	void OnTriggerEnter(Collider other)
 	{
 		Transform parent = other.transform;
