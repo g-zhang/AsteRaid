@@ -173,12 +173,12 @@ public class HealthSystem : MonoBehaviour {
 		}
 
 		Transform parent = other.transform;
-		while (parent.parent != null)
-		{
+		Weapon otherWeapon = parent.GetComponent<Weapon>();
+		while (parent.parent != null && otherWeapon == null) {
 			parent = parent.parent;
+			otherWeapon = parent.GetComponent<Weapon>();
 		}
 
-		Weapon otherWeapon = parent.GetComponent<Weapon>();
 		if (otherWeapon == null)
 		{
 			return;
@@ -197,12 +197,14 @@ public class HealthSystem : MonoBehaviour {
 	void ImmediateHealthTriggerStay(Collider other)
 	{
 		Transform parent = other.transform;
-		while (parent.parent != null)
+		Weapon otherWeapon = parent.GetComponent<Weapon>();
+		while (parent.parent != null && otherWeapon == null)
 		{
 			parent = parent.parent;
+			otherWeapon = parent.GetComponent<Weapon>();
 		}
 
-		Weapon otherWeapon = parent.GetComponent<Weapon>();
+		
 		if (otherWeapon == null)
 		{
 			return;
