@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
     //inspector viewing purposes only, use the isPaused property for coding
     public bool PausedGame;
 
+    [Header("GameManager: Settings")]
+    public Color[] teamColors = { Color.green, Color.blue, Color.red };
+
     [Header("GameManager: Players")]
     public GameObject[] playersGO = new GameObject[NUM_PLAYERS];
     private Player[] players = new Player[NUM_PLAYERS];

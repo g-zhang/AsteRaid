@@ -4,6 +4,7 @@
 public class Weapon_Grenade : Weapon
 {
     private float nextTime;
+    private Color tcolor;
 
 	[Header("Weapon_Grenade: Inspector Set Fields")]
 	public float startingSpeed = 5f;
@@ -11,8 +12,6 @@ public class Weapon_Grenade : Weapon
 	public float maxExplosionSize = 10f;
 	public float fudgeValue = 0.1f;
     public float colorFlashSpeed = .25f;
-    public Color color1;
-    public Color color2;
 
 	public Material explosionMat;
 
@@ -35,6 +34,7 @@ public class Weapon_Grenade : Weapon
 		startingVelocity = rigid.velocity;
 
         nextTime = Time.time;
+        tcolor = GameManager.GM.teamColors[(int)teamNumber];
 
 		return;
 	}
@@ -62,7 +62,7 @@ public class Weapon_Grenade : Weapon
                 nextTime += colorFlashSpeed;
                 if(rend.material.color == Color.black)
                 {
-                    rend.material.color = Color.yellow;
+                    rend.material.color = tcolor;
                 } else
                 {
                     rend.material.color = Color.black;
