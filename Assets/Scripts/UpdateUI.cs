@@ -24,9 +24,14 @@ public class UpdateUI : MonoBehaviour {
     public Text Base1Text;
     public Text Base2Text;
 
+	public int maxCountdown;
+	int currCountdown;
+	float loadLevelTime;
+
     // Use this for initialization
     void Start () {
-	
+		currCountdown = maxCountdown;
+		loadLevelTime = Time.unscaledTime;
 	}
 	
 	// Update is called once per frame
@@ -40,6 +45,11 @@ public class UpdateUI : MonoBehaviour {
 
         Base1Text.text = "Blue Base HP: " + Base1.GetComponent<BaseHealth>().currHealth;
         Base2Text.text = "Red Base HP: " + Base2.GetComponent<BaseHealth>().currHealth;
+
+
+		if (currCountdown > 0) {
+			countdown ();
+		}
     }
 
 	public void displayWin(int winningTeam) {
@@ -53,5 +63,18 @@ public class UpdateUI : MonoBehaviour {
 		}
 
 		wintext.GetComponent<Text>().text = "Team " + winningTeam + " WINS";
+	}
+
+	public void countdown() {
+		Time.timeScale = 0;
+
+		currCountdown = (int)Mathf.Ceil (maxCountdown - (Time.unscaledTime - loadLevelTime));
+
+		transform.Find ("CountdownText").gameObject.GetComponent<Text> ().text = currCountdown.ToString();
+
+		if (currCountdown <= 0) {
+			Time.timeScale = 1;
+			transform.Find ("CountdownText").gameObject.SetActive (false);
+		}
 	}
 }

@@ -14,9 +14,13 @@ public class GameManager : MonoBehaviour
 	public bool useInvulnTime = false;
 	public GameObject base_team1, base_team2;
 	public Canvas UICanvas;
+	public int gameStartCountdown = 3;
 	bool win;
 
 	void Start() {
+		UICanvas.GetComponent<UpdateUI> ().maxCountdown = gameStartCountdown;
+		UICanvas.GetComponent<UpdateUI> ().countdown ();
+
 		win = false;
 	}
 
