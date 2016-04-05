@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 public class HealthSystem : MonoBehaviour {
@@ -26,10 +27,13 @@ public class HealthSystem : MonoBehaviour {
     public float elapsedDamageTime;
 	public Team lastTeamToHit;
 
-    //override this for custom behavior when this object is "killed"
-    public virtual void DeathProcedure()
-    {
-        Destroy(gameObject);
+	public event EventHandler OnDeathEvent;
+
+	//override this for custom behavior when this object is "killed"
+	public virtual void DeathProcedure()
+	{
+		OnDeathEvent(this, EventArgs.Empty);
+		Destroy(gameObject);
     }
 
     protected virtual void DoOnFixedUpdate()

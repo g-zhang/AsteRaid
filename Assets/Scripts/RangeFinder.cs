@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class RangeFinder : MonoBehaviour
@@ -47,27 +48,16 @@ public class RangeFinder : MonoBehaviour
 			parent = parent.parent;
 		}
 
-		Player otherPlayer = parent.GetComponent<Player>();
-		AI otherAI = parent.GetComponent<AI>();
+		HealthSystem otherHealthSystem = parent.GetComponent<HealthSystem>();
 
-		if ((otherPlayer == null) && (otherAI == null))
+		if (otherHealthSystem == null)
 		{
 			return;
 		}
 
-		if (otherPlayer != null)
+		if (otherHealthSystem.teamNumber == parentHealthSystem.teamNumber)
 		{
-			if (otherPlayer.teamNumber == parentHealthSystem.teamNumber)
-			{
-				return;
-			}
-		}
-		if (otherAI != null)
-		{
-			if (otherAI.teamNumber == parentHealthSystem.teamNumber)
-			{
-				return;
-			}
+			return;
 		}
 
 		if (inRange.Find(go => go == parent.gameObject) != null)
@@ -76,6 +66,8 @@ public class RangeFinder : MonoBehaviour
 		}
 
 		inRange.Add(parent.gameObject);
+		otherHealthSystem.OnDeathEvent += OnInRangeDeath;
+
 		return;
 	}
 
@@ -87,12 +79,36 @@ public class RangeFinder : MonoBehaviour
 			parent = parent.parent;
 		}
 
-		Player otherPlayer = parent.GetComponent<Player>();
-		AI otherAI = parent.GetComponent<AI>();
+		HealthSystem otherHealthSystem = parent.GetComponent<HealthSystem>();
 
-		if ((otherPlayer == null) && (otherAI == null))
+		if (otherHealthSystem == null)
 		{
 			return;
+		}
+
+		if (inRange.Find(go => go == parent.gameObject) == null)
+		{
+			return;
+		}
+
+		inRange.Remove(parent.gameObject);
+		otherHealthSystem.OnDeathEvent -= OnInRangeDeath;
+
+		return;
+	}
+
+	void OnInRangeDeath(object sender, EventArgs e)
+	{
+		HealthSystem senderHealth = sender as HealthSystem;
+		if (senderHealth == null)
+		{
+			return;
+		}
+
+		Transform parent = senderHealth.transform;
+		while (parent.parent != null)
+		{
+			parent = parent.parent;
 		}
 
 		if (inRange.Find(go => go == parent.gameObject) == null)
