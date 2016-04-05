@@ -26,6 +26,8 @@ public class AI : HealthSystem
 			// You are not expected to understand this.
 			range.gameObject.SetActive(false);
 			range.gameObject.SetActive(true);
+
+			SwapProcedure();
 		}
 		else
 		{

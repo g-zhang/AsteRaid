@@ -41,6 +41,7 @@ public class RangeFinder : MonoBehaviour
 		{
 			return;
 		}
+		otherHealthSystem.OnSwapEvent += OnInRangeSwap;
 
 		if (otherHealthSystem.teamNumber == parentHealthSystem.teamNumber)
 		{
@@ -72,6 +73,7 @@ public class RangeFinder : MonoBehaviour
 		{
 			return;
 		}
+		otherHealthSystem.OnSwapEvent -= OnInRangeSwap;
 
 		if (inRange.Find(go => go == parent.gameObject) == null)
 		{
@@ -92,18 +94,38 @@ public class RangeFinder : MonoBehaviour
 			return;
 		}
 
-		Transform parent = senderHealth.transform;
-		while (parent.parent != null)
-		{
-			parent = parent.parent;
-		}
-
-		if (inRange.Find(go => go == parent.gameObject) == null)
+		if (inRange.Find(go => go == senderHealth.gameObject) == null)
 		{
 			return;
 		}
 
-		inRange.Remove(parent.gameObject);
+		inRange.Remove(senderHealth.gameObject);
+		return;
+	}
+
+	void OnInRangeSwap(object sender, EventArgs e)
+	{
+		HealthSystem senderHealth = sender as HealthSystem;
+		if (senderHealth == null)
+		{
+			return;
+		}
+
+		if (senderHealth.teamNumber == parentHealthSystem.teamNumber)
+		{
+			if (inRange.Find(go => go == senderHealth.gameObject) != null)
+			{
+				inRange.Remove(senderHealth.gameObject);
+			}
+		}
+		else
+		{
+			if (inRange.Find(go => go == senderHealth.gameObject) == null)
+			{
+				inRange.Add(senderHealth.gameObject);
+			}
+		}
+
 		return;
 	}
 }

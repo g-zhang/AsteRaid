@@ -28,6 +28,7 @@ public class HealthSystem : MonoBehaviour {
 	public Team lastTeamToHit;
 
 	public event EventHandler OnDeathEvent;
+	public event EventHandler OnSwapEvent;
 
 	//override this for custom behavior when this object is "killed"
 	public virtual void DeathProcedure()
@@ -37,7 +38,17 @@ public class HealthSystem : MonoBehaviour {
 			OnDeathEvent(this, EventArgs.Empty);
 		}
 		Destroy(gameObject);
+
+		return;
     }
+
+	protected void SwapProcedure()
+	{
+		if (OnSwapEvent != null)
+		{
+			OnSwapEvent(this, EventArgs.Empty);
+		}
+	}
 
     protected virtual void DoOnDamage()
     {
