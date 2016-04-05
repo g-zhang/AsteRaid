@@ -3,11 +3,16 @@
 [RequireComponent(typeof(Rigidbody))]
 public class Weapon_Grenade : Weapon
 {
+    private float nextTime;
+
 	[Header("Weapon_Grenade: Inspector Set Fields")]
 	public float startingSpeed = 5f;
 	public float explosionSpeed = 5f;
 	public float maxExplosionSize = 10f;
 	public float fudgeValue = 0.1f;
+    public float colorFlashSpeed = .25f;
+    public Color color1;
+    public Color color2;
 
 	public Material explosionMat;
 
@@ -29,6 +34,8 @@ public class Weapon_Grenade : Weapon
 		rigid.velocity = startingVelocity * startingSpeed;
 		startingVelocity = rigid.velocity;
 
+        nextTime = Time.time;
+
 		return;
 	}
 
@@ -45,6 +52,24 @@ public class Weapon_Grenade : Weapon
 
 		return;
 	}
+
+    void Update()
+    {
+        if(!isExploding)
+        {
+            if(Time.time > nextTime)
+            {
+                nextTime += colorFlashSpeed;
+                if(rend.material.color == Color.black)
+                {
+                    rend.material.color = Color.yellow;
+                } else
+                {
+                    rend.material.color = Color.black;
+                }
+            }
+        }
+    }
 
 	void OnTriggerEnter(Collider other)
 	{
