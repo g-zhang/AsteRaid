@@ -3,11 +3,18 @@ using System.Collections;
 
 public class BaseHealth : HealthSystem {
 
+    public bool isDestroyed = false;
+
     public override void DeathProcedure()
     {
-        print("Base DESTROYED!");
-        //begin end game stuff
-        Destroy(gameObject);
+        if(!isDestroyed)
+        {
+            print("Base DESTROYED!");
+            //begin end game stuff
+            isDestroyed = true;
+            GetComponent<MeshRenderer>().enabled = false;
+            GetComponent<Collider>().enabled = false;
+        }
     }
 
 }
