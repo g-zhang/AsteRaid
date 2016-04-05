@@ -26,7 +26,7 @@ public class Controls : MonoBehaviour
     {
         get
         {
-            return (ControlsMode == Mode.Controller) ? RStickVector : ArrowKeyVector;
+            return (ControlsMode == Mode.Controller) ? RStickVector : new Vector2(ToMouseVector.x, ToMouseVector.z);
         }
     }
 
@@ -108,6 +108,12 @@ public class Controls : MonoBehaviour
         }
     }
 
+	public Vector3 ToMouseVector {
+		get {
+			return (MousePosition - transform.position).normalized;
+		}
+	}
+
 	public bool FireButtonWasPressed {
 		get {
 			if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
@@ -181,6 +187,8 @@ public class Controls : MonoBehaviour
     }
     #endregion
 
+
+
     #region General Use Properties
     /// <summary>
     /// Returns true if the InControl instance is currently valid.
@@ -250,7 +258,7 @@ public class Controls : MonoBehaviour
         }
     }
 
-    void Start()
+	void Start()
     {
         inputDevice = UpdateState();
         ControlsFBCheck();
