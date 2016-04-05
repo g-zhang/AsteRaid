@@ -131,6 +131,8 @@ public class Player : HealthSystem
             weaponScript.teamNumber = teamNumber;
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
+			// causes player hitbox to extend to the laserbeam
+			// if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
         }
 
 		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
