@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AttackDroneController : AI {
+public class DefenseDroneController : AI {
 
-	[Header("AttackDrone: Inspector Set Fields")]
+	[Header("DefenseDrone: Inspector Set Fields")]
 	public float spinSpeed;
 	public float rotationSpeed;
 	public float thrusterSpeed;
@@ -11,36 +11,54 @@ public class AttackDroneController : AI {
 	public GameObject weaponPrefab;
 	public float delayBetweenShots = 0.5f;
 	public float maxEnemyDistance = 10f;
+	public float angleChange = 0.5f;
+	public float angleOffset = 0.05f;
+
+	public float radius = 3f;
+	public float radiusOffset = 0.2f;
 
 	float currThrusterSpeed;
 
 	public LayerMask raycastMask;
 
-	[Header("AttackDrone: Dynamically Set Fields")]
+	[Header("DefenseDrone: Dynamically Set Fields")]
 	public GameObject CPSpawn;
 	public GameObject enemyBase;
+	public float currRadius;
+	public float currAngle;
 
 	public float elapsedFireDelay;
 	public NavMeshAgent NMAgent;
+	RangeFinder range;
 	Transform mesh;
 	Rigidbody RB;
 
-	bool gotoBaseSet;
-
 	void Start () {
+		range = transform.Find("Range").GetComponent<RangeFinder>();
 		mesh = transform.Find ("Mesh1");
 		elapsedFireDelay = 0f;
 		RB = GetComponent<Rigidbody> ();
 
 		NMAgent = GetComponent<NavMeshAgent> ();
 
-		range.GetComponent<SphereCollider> ().radius = maxEnemyDistance;
+		transform.Find ("Range").GetComponent<SphereCollider> ().radius = maxEnemyDistance;
+		currRadius = radius;
+		currAngle = 0f;
 
-		gotoBase ();
-		gotoBaseSet = false;
+		circleCP ();
 	}
 
 	void Update () {
+		// Should only happen once
+		if (range.parentTeamNumber != teamNumber) {
+			range.parentTeamNumber = teamNumber;
+			range.inRange.Clear ();
+		}
+
+		// NOT PROPER PLACE
+		if (GetComponent<HealthSystem> ().teamNumber != teamNumber) {
+			GetComponent<HealthSystem> ().teamNumber = teamNumber;
+		}
 
 		spin ();
 
@@ -48,29 +66,13 @@ public class AttackDroneController : AI {
 		if (range.inRange.Count > 0) {
 			NMAgent.Stop ();
 
-			gotoBaseSet = false;
-
 			rotateToFaceEnemy (range.inRange [0]);	
 			thruster ();
 			fireWeapon (range.inRange [0]);
 		}
 		// Otherwise, go around and do stuff;
 		else {
-			if (NMAgent.remainingDistance <= maxEnemyDistance) {
-
-				NMAgent.Stop ();
-
-				gotoBaseSet = false;
-
-				rotateToFaceEnemy (enemyBase);
-
-				fireWeapon (enemyBase);
-			}
-			else {
-				if (!gotoBaseSet) {
-					gotoBase ();
-				}
-			}
+			circleCP ();
 		}
 	}
 
@@ -120,28 +122,29 @@ public class AttackDroneController : AI {
 	// Deal with clean up after death
 	void OnDestroy() {
 		if (teamNumber == Team.Team1) {
-			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedADrones_Team1.Remove (this.gameObject);
+			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedDDrones_Team1.Remove (this.gameObject);
 		} else if (teamNumber == Team.Team2) {
-			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedADrones_Team2.Remove (this.gameObject);
+			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedDDrones_Team2.Remove (this.gameObject);
 		}
 	}
 
-	void gotoBase() {
-		Vector3 enemyBaseDest = enemyBase.transform.position;
-		Ray rayToEnemyBase = new Ray (transform.position, enemyBaseDest);
-		RaycastHit enemyBaseHitInfo;
-
-		if (Physics.Raycast (rayToEnemyBase, out enemyBaseHitInfo, Mathf.Infinity, raycastMask)) {
-			enemyBaseDest = enemyBaseHitInfo.point;
-		}
-
-		enemyBaseDest = new Vector3 (enemyBaseDest.x, NMAgent.transform.position.y - 0.75f, enemyBaseDest.z);
-
-		Debug.DrawRay (enemyBaseDest, Vector3.up);
-
-		NMAgent.SetDestination (enemyBaseDest);
-		gotoBaseSet = true;
-
+	void circleCP() {
 		NMAgent.Resume ();
+		if (NMAgent.remainingDistance <= 0.1f) {
+			Vector3 cpPos = CPSpawn.transform.position;
+			float offsetX, offsetZ;
+			float newAngle = currAngle + Random.Range(angleChange - angleOffset, angleChange + angleOffset);
+			float newRadius = Random.Range (radius - radiusOffset, radius + radiusOffset);
+
+			offsetX = newRadius * Mathf.Cos (newAngle);
+			offsetZ = newRadius * Mathf.Sin (newAngle);
+
+			Vector3 newPos = new Vector3 (cpPos.x + offsetX, transform.position.y, cpPos.z + offsetZ);
+
+			NMAgent.SetDestination( newPos);
+
+			currAngle = newAngle;
+			currRadius = newRadius;
+		}
 	}
 }

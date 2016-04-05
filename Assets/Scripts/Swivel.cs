@@ -44,9 +44,6 @@ public class Swivel : MonoBehaviour {
 
 	public void SetRotation() {
 		switch (swivelMode) {
-			case (RotationMode.PointAtMouse):
-				PointAlongVector(ToMouseVector);
-				break;
 			case (RotationMode.YawOnMoveStick):
 				RotateBy(Time.deltaTime * yawSpeed * controls.MoveStick.x);
 				break;
@@ -126,9 +123,4 @@ public class Swivel : MonoBehaviour {
 		transform.rotation = rotation;
 	}
 
-	public Vector3 ToMouseVector {
-		get {
-			return controls.MousePosition - transform.position;
-		}
-	}
 }

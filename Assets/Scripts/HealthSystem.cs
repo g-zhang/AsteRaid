@@ -36,6 +36,11 @@ public class HealthSystem : MonoBehaviour {
 		Destroy(gameObject);
     }
 
+    protected virtual void DoOnDamage()
+    {
+
+    }
+
     protected virtual void DoOnFixedUpdate()
     {
 
@@ -196,8 +201,9 @@ public class HealthSystem : MonoBehaviour {
 
 		lastTeamToHit = otherWeapon.teamNumber;
 		currHealth -= otherWeapon.damagePower;
+        DoOnDamage();
 
-		if (currHealth <= 0)
+        if (currHealth <= 0)
 		{
 			DeathProcedure();
 		}
