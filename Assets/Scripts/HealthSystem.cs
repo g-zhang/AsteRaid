@@ -6,7 +6,7 @@ public class HealthSystem : MonoBehaviour {
 
     [Header("Health Sys: Config")]
     public Team teamNumber = Team.Neutral;
-    public int maxHealth = 50;
+    public float maxHealth = 50f;
     public float damageTimeout = 0.25f;
 
     [Header("Health Bar: Config")]
@@ -19,8 +19,8 @@ public class HealthSystem : MonoBehaviour {
 	[Header("Health Sys: Status")]
 	public bool useInvulnTime;
 
-    public int currHealth;
-    public int damagePower;
+    public float currHealth;
+    public float damagePower;
 
     public bool beingHit;
     public bool tookDamage;
@@ -32,7 +32,10 @@ public class HealthSystem : MonoBehaviour {
 	//override this for custom behavior when this object is "killed"
 	public virtual void DeathProcedure()
 	{
-		OnDeathEvent(this, EventArgs.Empty);
+		if (OnDeathEvent != null)
+		{
+			OnDeathEvent(this, EventArgs.Empty);
+		}
 		Destroy(gameObject);
     }
 
