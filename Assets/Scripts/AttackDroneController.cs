@@ -119,11 +119,17 @@ public class AttackDroneController : AI {
 
 	// Deal with clean up after death
 	void OnDestroy() {
-		if (teamNumber == Team.Team1) {
-			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedADrones_Team1.Remove (this.gameObject);
-		} else if (teamNumber == Team.Team2) {
-			CPSpawn.GetComponent<CPSpawnDrone> ().spawnedADrones_Team2.Remove (this.gameObject);
-		}
+        if(CPSpawn != null)
+        {
+            if (teamNumber == Team.Team1)
+            {
+                CPSpawn.GetComponent<CPSpawnDrone>().spawnedADrones_Team1.Remove(this.gameObject);
+            }
+            else if (teamNumber == Team.Team2)
+            {
+                CPSpawn.GetComponent<CPSpawnDrone>().spawnedADrones_Team2.Remove(this.gameObject);
+            }
+        }
 	}
 
 	void gotoBase() {
