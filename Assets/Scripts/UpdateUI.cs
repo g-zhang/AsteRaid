@@ -66,14 +66,13 @@ public class UpdateUI : MonoBehaviour {
 	}
 
 	public void countdown() {
-		Time.timeScale = 0;
-
 		currCountdown = (int)Mathf.Ceil (maxCountdown - (Time.unscaledTime - loadLevelTime));
 
-		transform.Find ("CountdownText").gameObject.GetComponent<Text> ().text = currCountdown.ToString();
+        transform.Find("CountdownText").gameObject.SetActive(true);
+        transform.Find ("CountdownText").gameObject.GetComponent<Text> ().text = currCountdown.ToString();
 
 		if (currCountdown <= 0) {
-			Time.timeScale = 1;
+            GameManager.GM.StartTheGame();
 			transform.Find ("CountdownText").gameObject.SetActive (false);
 		}
 	}

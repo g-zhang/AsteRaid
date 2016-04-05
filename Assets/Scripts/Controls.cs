@@ -174,6 +174,42 @@ public class Controls : MonoBehaviour
         }
     }
 
+    public bool StartWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Start).WasPressed;
+            return Input.GetKeyDown(KeyCode.Return);
+        }
+    }
+
+    public bool StartIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Start).IsPressed;
+            return Input.GetKey(KeyCode.Return);
+        }
+    }
+
+    public bool SelectWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Back).WasPressed;
+            return Input.GetKeyDown(KeyCode.Backspace);
+        }
+    }
+
+    public bool SelectIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Back).IsPressed;
+            return Input.GetKey(KeyCode.Backspace);
+        }
+    }
+
     public void VibrateFor(float intensity, float time)
     {
         VibrateFor(intensity, intensity, time);
@@ -227,8 +263,8 @@ public class Controls : MonoBehaviour
         //fallback to M+KB when controller not detected
         if (!isActive && ControlsMode == Mode.Controller)
         {
-            print("Controller(" + playerNum + ") not detected, "
-                + "Falling back on M+KB Controls.");
+            //print("Controller(" + playerNum + ") not detected, "
+            //    + "Falling back on M+KB Controls.");
             ControlsMode = Mode.MouseKeyboard;
             fallbackMode = true;
         }
@@ -262,6 +298,16 @@ public class Controls : MonoBehaviour
     {
         inputDevice = UpdateState();
         ControlsFBCheck();
+    }
+
+    void Update()
+    {
+        if(GameManager.GM.isPaused)
+        {
+            inputDevice = UpdateState();
+            ControlsFBCheck();
+            UpdateVibration();
+        }
     }
 
     void FixedUpdate()
