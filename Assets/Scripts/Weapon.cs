@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+public enum WeaponName { Bullet = 0, Laser, Bomb }
+
 public class Weapon : MonoBehaviour
 {
 	[Header("Weapon: Inspector Set Fields")]

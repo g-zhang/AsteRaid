@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log(ES + "Game state is not InGame!" +
+            Debug.LogError(ES + "Game state is not InGame!" +
                 " Current State is " + currstate + "!");
         }
     }
@@ -117,12 +117,12 @@ public class GameManager : MonoBehaviour
         {
             if (playersGO[i] == null)
             {
-                Debug.Log(ES + "Player(" + i + ") is null!");
+                Debug.LogError(ES + "Player(" + i + ") is null!");
             }
             players[i] = playersGO[i].GetComponent<Player>();
             if (players[i] == null)
             {
-                Debug.Log(ES + "All GOs must have a Player component!");
+                Debug.LogError(ES + "All GOs must have a Player component!");
             }
         }
     }
