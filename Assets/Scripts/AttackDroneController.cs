@@ -123,11 +123,11 @@ public class AttackDroneController : AI {
         {
             if (teamNumber == Team.Team1)
             {
-                CPSpawn.GetComponent<CPSpawnDrone>().spawnedADrones_Team1.Remove(this.gameObject);
+                CPSpawn.GetComponent<SpawnDrone>().spawnedADrones_Team1.Remove(this.gameObject);
             }
             else if (teamNumber == Team.Team2)
             {
-                CPSpawn.GetComponent<CPSpawnDrone>().spawnedADrones_Team2.Remove(this.gameObject);
+                CPSpawn.GetComponent<SpawnDrone>().spawnedADrones_Team2.Remove(this.gameObject);
             }
         }
 	}

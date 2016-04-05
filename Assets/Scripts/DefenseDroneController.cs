@@ -113,11 +113,11 @@ public class DefenseDroneController : AI {
         {
             if (teamNumber == Team.Team1)
             {
-                CPSpawn.GetComponent<CPSpawnDrone>().spawnedDDrones_Team1.Remove(this.gameObject);
+                CPSpawn.GetComponent<SpawnDrone>().spawnedDDrones_Team1.Remove(this.gameObject);
             }
             else if (teamNumber == Team.Team2)
             {
-                CPSpawn.GetComponent<CPSpawnDrone>().spawnedDDrones_Team2.Remove(this.gameObject);
+                CPSpawn.GetComponent<SpawnDrone>().spawnedDDrones_Team2.Remove(this.gameObject);
             }
         }
 	}
