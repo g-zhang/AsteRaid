@@ -71,12 +71,9 @@ public class Player : HealthSystem
 		}
     }
 
-    protected override void DoOnFixedUpdate()
+    protected override void DoOnDamage()
     {
-        if (tookDamage)
-        {
-            controls.VibrateFor(.25f, .1f);
-        }
+        controls.VibrateFor(.25f, .2f);
     }
 
     public override void DeathProcedure()
@@ -100,8 +97,7 @@ public class Player : HealthSystem
             GetComponent<ShipTrails>().enabled = false;
             transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = false;
             transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
-            transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = false;
-            transform.Find("Turret/Barrel").GetComponent<Collider>().enabled = false;
+            transform.Find("Turret").gameObject.SetActive(false);
             transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
         }
         else
@@ -117,8 +113,7 @@ public class Player : HealthSystem
             GetComponent<ShipTrails>().enabled = true;
             transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
             transform.Find("PlayerShip").GetComponent<Collider>().enabled = true;
-            transform.Find("Turret/Barrel").GetComponent<MeshRenderer>().enabled = true;
-            transform.Find("Turret/Barrel").GetComponent<Collider>().enabled = true;
+            transform.Find("Turret").gameObject.SetActive(true);
             transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
             currDelayTime = respawnDelayTime;
         }
