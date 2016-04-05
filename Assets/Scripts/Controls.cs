@@ -302,7 +302,8 @@ public class Controls : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.GM.isPaused)
+        if((GameManager.GM != null && GameManager.GM.isPaused) ||
+           (GameManager.GM == null && Time.timeScale == 0f)) 
         {
             inputDevice = UpdateState();
             ControlsFBCheck();
