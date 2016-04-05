@@ -19,6 +19,11 @@ public class MenuManager : MonoBehaviour {
             {
                 SceneManager.LoadScene("CameraTest");
             }
+            if (player.GetComponent<Controls>().BoostButtonWasPressed)
+            {
+                print("quit");
+                Application.Quit();
+            }
         }
     }
 }

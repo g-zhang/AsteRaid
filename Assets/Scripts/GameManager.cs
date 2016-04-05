@@ -148,6 +148,17 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        if(isPaused)
+        {
+            foreach (GameObject player in playersGO)
+            {
+                if (player.GetComponent<Controls>().SelectWasPressed)
+                {
+                    SceneManager.LoadScene("Menu");
+                }
+            }
+        }
 	}
 
     void DisableAllVibration()
