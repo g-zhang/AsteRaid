@@ -15,8 +15,8 @@ SketchUpImporter:
   fileUnit: 0
   sketchUpImportData:
     defaultCamera:
-      position: {x: 15366.257, y: -323.43723, z: 184225.86}
-      lookAt: {x: 17136.395, y: -1699.6039, z: 162543.2}
+      position: {x: 3.0732512, y: -0.064687446, z: 36.845173}
+      lookAt: {x: 3.427279, y: -0.33992076, z: 32.50864}
       up: {x: 0.0051368927, y: 0.9980052, z: -0.06292252}
       fov: 35
       aspectRatio: 0
@@ -30,6 +30,7 @@ SketchUpImporter:
     2300000: //RootNode
     3300000: //RootNode
     4300000: Mesh DefenseDrone
+    6400000: //RootNode
   materials:
     importMaterials: 1
     materialName: 2
@@ -56,7 +57,7 @@ SketchUpImporter:
     lODScreenPercentages: []
     globalScale: 0.02
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
