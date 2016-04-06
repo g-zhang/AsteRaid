@@ -14,6 +14,8 @@ public class ControlPoint : MonoBehaviour
 
 	public Team startingTeam = Team.Neutral;
 
+    private GameObject captureBars;
+
 	[Header("ControlPoint: Inspector Set Proximity Capture Fields")]
 	public float captureAbsValue = 10f;
 	public bool captureFlatTime = false;
@@ -34,6 +36,7 @@ public class ControlPoint : MonoBehaviour
 
 	void Awake()
 	{
+        captureBars = transform.Find("CaptureBar").gameObject;
 		mat = GetComponent<Renderer>().material;
 		neutralAreaColor.a = areaAlpha;
 		team1AreaColor.a = areaAlpha;
@@ -201,9 +204,15 @@ public class ControlPoint : MonoBehaviour
 		{
 			mat.color = neutralAreaColor;
 		}
+        UpdateBar();
 
-		return;
+        return;
 	}
+
+    void UpdateBar()
+    {
+        captureBars.GetComponent<CaptureBar>().currVal = 1f - ((captureSpectrum + captureAbsValue) / (2f * captureAbsValue));
+    }
 
 	void OnTriggerEnter(Collider other)
 	{
