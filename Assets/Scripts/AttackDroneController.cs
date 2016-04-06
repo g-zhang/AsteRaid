@@ -79,6 +79,7 @@ public class AttackDroneController : AI {
 	}
 
 	void rotateToFaceEnemy(GameObject enemy) {
+		if (enemy == null) return;
 		Vector3 direction =
 			enemy.transform.position - transform.position;
 

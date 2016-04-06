@@ -36,6 +36,8 @@ public class LaserWallController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
+		if (other == null) return;
+
 		Transform parent = other.transform;
 		while (parent.parent != null)
 		{
@@ -48,8 +50,10 @@ public class LaserWallController : MonoBehaviour {
 		}
 
 		HealthSystem otherHS = parent.GetComponent<HealthSystem> ();
+		if (parent.GetComponent<ShipControls>() == null) return; 
 
 		if (otherHS != null) {
+
 			if (otherHS.teamNumber != teamNumber && parent.GetComponent<ShipControls>().remainingStunTime <= 0f) {
 				otherHS.currHealth -= enemyDamage;
 

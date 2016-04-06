@@ -53,6 +53,8 @@ public class AI_Turret : AI
 			return;
 		}
 
+		if (range.inRange[0] == null) return;
+
 		Vector3 direction =
 			range.inRange[0].transform.position - transform.position;
 		Quaternion targetRotation =
