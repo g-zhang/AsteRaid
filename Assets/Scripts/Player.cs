@@ -149,16 +149,16 @@ public class Player : HealthSystem
 	}
 
 	void baseRegenHealth() {
-		float distToBase = float.MaxValue;
+		float distToRespawn = float.MaxValue;
 
 		if (teamNumber == Team.Team1) {
-			distToBase = Vector3.Distance (transform.position, GameManager.GM.base_team1.transform.position);
+			distToRespawn = Vector3.Distance (transform.position, GameManager.GM.base_team1.transform.Find("RespawnPoint").transform.position);
 		} 
 		else if (teamNumber == Team.Team2) {
-			distToBase = Vector3.Distance (transform.position, GameManager.GM.base_team2.transform.position);
+			distToRespawn = Vector3.Distance (transform.position, GameManager.GM.base_team2.transform.Find("RespawnPoint").transform.position);
 		}
 
-		if (distToBase <= GameManager.GM.regenRadius && currHealth < maxHealth) {
+		if (distToRespawn <= GameManager.GM.regenRadius && currHealth < maxHealth) {
 			currHealth += GameManager.GM.regenRate * Time.fixedDeltaTime;
 			if (currHealth > maxHealth)
 				currHealth = maxHealth;
