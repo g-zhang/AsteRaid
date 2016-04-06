@@ -15,6 +15,17 @@ public class LaserWallController : MonoBehaviour {
 
 	void Start() {
 		teamNumber = gTurret1.GetComponent<HealthSystem> ().teamNumber;
+
+		Color teamColor = Color.green;
+		if (teamNumber == Team.Team1) {
+			teamColor = GameManager.GM.teamColors [(int)Team.Team1];
+			teamColor.a = 0.5f;
+		}
+		if (teamNumber == Team.Team2) {
+			teamColor = GameManager.GM.teamColors [(int)Team.Team2];
+			teamColor.a = 0.5f;
+		}
+		GetComponent<Renderer> ().material.color = teamColor;
 	}
 
 	// Update is called once per frame
