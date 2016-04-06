@@ -100,6 +100,8 @@ public class Player : HealthSystem
 
             GetComponent<ShipTrails>().disableAllTrails();
             GetComponent<ShipTrails>().enabled = false;
+            GetComponent<ShipControls>().enabled = false;
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
             transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = false;
             transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
             transform.Find("Turret").gameObject.SetActive(false);
@@ -116,6 +118,7 @@ public class Player : HealthSystem
             currState = State.Normal;
             currHealth = maxHealth;
             GetComponent<ShipTrails>().enabled = true;
+            GetComponent<ShipControls>().enabled = true;
             transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
             transform.Find("PlayerShip").GetComponent<Collider>().enabled = true;
             transform.Find("Turret").gameObject.SetActive(true);

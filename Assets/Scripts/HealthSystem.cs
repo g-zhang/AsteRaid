@@ -120,7 +120,11 @@ public class HealthSystem : MonoBehaviour {
 			InvulnHealthFixedUpdate();
 		}
 
-		return;
+        if (currHealth <= 0 || Mathf.Approximately(currHealth, 0f))
+        {
+            DeathProcedure();
+        }
+        return;
     }
 
     void OnTriggerStay(Collider other)
@@ -156,11 +160,6 @@ public class HealthSystem : MonoBehaviour {
 			{
 				currHealth -= damagePower;
 				tookDamage = true;
-			}
-
-			if (currHealth <= 0 || Mathf.Approximately(currHealth, 0f))
-			{
-				DeathProcedure();
 			}
 		}
 	}
@@ -218,11 +217,6 @@ public class HealthSystem : MonoBehaviour {
 		lastTeamToHit = otherWeapon.teamNumber;
 		currHealth -= otherWeapon.damagePower;
         DoOnDamage();
-
-        if (currHealth <= 0)
-		{
-			DeathProcedure();
-		}
 
 		return;
 	}
