@@ -8,6 +8,7 @@ public class LaserWallController : MonoBehaviour {
 	public GameObject gTurret2;
 	public float enemyDamage;
 	public float ejectForce = 1f;
+	public float ejectStunTime = 0.8f;
 
 	[Header("LaserWall: Dynamic Set Fields")]
 	public Team teamNumber;
@@ -19,7 +20,7 @@ public class LaserWallController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (gTurret1 == null && gTurret2 == null) {
-			Destroy (this);
+			Destroy (this.gameObject);
 		}
 	}
 
@@ -33,14 +34,14 @@ public class LaserWallController : MonoBehaviour {
 		HealthSystem otherHS = parent.GetComponent<HealthSystem> ();
 
 		if (otherHS != null) {
-			if (otherHS.teamNumber != teamNumber) {
+			if (otherHS.teamNumber != teamNumber && parent.GetComponent<ShipControls>().remainingStunTime <= 0f) {
 				otherHS.currHealth -= 20f;
-				if (otherHS.currHealth < 0f)
-					otherHS.currHealth = 0f;
-				
-				parent.GetComponent<Rigidbody> ().AddForce (transform.forward * ejectForce);
+
+				print ("I damaged a guy");
+
+				parent.GetComponent<ShipControls> ().remainingStunTime = ejectStunTime;
+				parent.GetComponent<Rigidbody> ().AddForce (transform.forward * ejectForce, ForceMode.Impulse);
 			}
-		} else
-			print (")):");
+		}
 	}
 }
