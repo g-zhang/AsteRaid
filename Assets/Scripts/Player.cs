@@ -89,6 +89,7 @@ public class Player : HealthSystem
             tookDamage = false;
             beingHit = false;
             controls.VibrateFor(1f, .5f);
+            BroadcastDeathEvent();
         }
     }
 

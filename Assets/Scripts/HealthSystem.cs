@@ -33,16 +33,20 @@ public class HealthSystem : MonoBehaviour {
 	//override this for custom behavior when this object is "killed"
 	public virtual void DeathProcedure()
 	{
-		if (OnDeathEvent != null)
-		{
-			OnDeathEvent(this, EventArgs.Empty);
-		}
-		Destroy(gameObject);
-
+        BroadcastDeathEvent();
+        Destroy(gameObject);
 		return;
     }
 
-	protected void SwapProcedure()
+    protected void BroadcastDeathEvent()
+    {
+        if (OnDeathEvent != null)
+        {
+            OnDeathEvent(this, EventArgs.Empty);
+        }
+    }
+
+    protected void SwapProcedure()
 	{
 		if (OnSwapEvent != null)
 		{

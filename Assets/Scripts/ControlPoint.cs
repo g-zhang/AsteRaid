@@ -81,6 +81,17 @@ public class ControlPoint : MonoBehaviour
 	void Update()
 	{
 		List<HealthSystem> capturingObjects = new List<HealthSystem>();
+        if(capturingPlayers.Count > 0)
+        {
+            for(int i = capturingPlayers.Count - 1; i >= 0; i--)
+            {
+                if(capturingPlayers[i].currState == Player.State.Dead)
+                {
+                    capturingPlayers.RemoveAt(i);
+                }
+            }
+        }
+
 		if (playersCanCapture)
 		{
 			foreach (Player p in capturingPlayers)
