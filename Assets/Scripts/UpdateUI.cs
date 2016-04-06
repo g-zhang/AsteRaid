@@ -21,7 +21,18 @@ public class UpdateUI : MonoBehaviour {
     public Text Player3Text;
 
 
-    public Text Base1Text;
+	public Slider Player0Boost;
+	public Slider Player1Boost;
+	public Slider Player2Boost;
+	public Slider Player3Boost;
+
+	public ShipControls Player0SC;
+	public ShipControls Player1SC;
+	public ShipControls Player2SC;
+	public ShipControls Player3SC;
+
+
+	public Text Base1Text;
     public Text Base2Text;
 
 	public int maxCountdown;
@@ -30,8 +41,20 @@ public class UpdateUI : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
 		currCountdown = maxCountdown;
 		loadLevelTime = Time.unscaledTime;
+
+		Player0SC = Player0.GetComponent<ShipControls>();
+		Player1SC = Player1.GetComponent<ShipControls>();
+		Player2SC = Player2.GetComponent<ShipControls>();
+		Player3SC = Player3.GetComponent<ShipControls>();
+
+		Player0Boost.maxValue = Player0SC.maxBoostTime;
+		Player1Boost.maxValue = Player1SC.maxBoostTime;
+		Player2Boost.maxValue = Player2SC.maxBoostTime;
+		Player3Boost.maxValue = Player3SC.maxBoostTime;
+
 	}
 	
 	// Update is called once per frame
@@ -42,10 +65,13 @@ public class UpdateUI : MonoBehaviour {
         Player2Text.text = "P3: " + (WeaponName)Player2.GetComponent<Player>().selectedWeapon;
         Player3Text.text = "P4: " + (WeaponName)Player3.GetComponent<Player>().selectedWeapon;
 
-
-        Base1Text.text = "Blue Base HP: " + Base1.GetComponent<BaseHealth>().currHealth;
+		Base1Text.text = "Blue Base HP: " + Base1.GetComponent<BaseHealth>().currHealth;
         Base2Text.text = "Red Base HP: " + Base2.GetComponent<BaseHealth>().currHealth;
 
+		Player0Boost.value = Player0SC.boostTime;
+		Player1Boost.value = Player1SC.boostTime;
+		Player2Boost.value = Player2SC.boostTime;
+		Player3Boost.value = Player3SC.boostTime;
 
 		if (currCountdown > 0) {
 			countdown ();

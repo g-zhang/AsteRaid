@@ -130,28 +130,28 @@ public class Controls : MonoBehaviour
 
 	public bool CycleButtonWasPressed {
 		get {
-			if (ControlsMode == Mode.Controller) return ID.Action1.WasPressed;
+			if (ControlsMode == Mode.Controller) return ID.RightStickButton.WasPressed;
 			return Input.GetMouseButtonDown(1);
 		}
 	}
 
 	public bool CycleButtonIsPressed {
 		get {
-			if (ControlsMode == Mode.Controller) return ID.Action1.IsPressed;
+			if (ControlsMode == Mode.Controller) return ID.RightStickButton.IsPressed;
 			return Input.GetMouseButton(1);
 		}
 	}
 
 	public bool BoostButtonWasPressed {
 		get {
-			if (ControlsMode == Mode.Controller) return ID.Action2.WasPressed;
+			if (ControlsMode == Mode.Controller) return ID.LeftStickButton.WasPressed || ID.LeftBumper.WasPressed;
 			return Input.GetKeyDown(KeyCode.LeftShift);
 		}
 	}
 
 	public bool BoostButtonIsPressed {
 		get {
-			if (ControlsMode == Mode.Controller) return ID.Action2.IsPressed;
+			if (ControlsMode == Mode.Controller) return ID.LeftStickButton.IsPressed || ID.LeftBumper.IsPressed;
 			return Input.GetKey(KeyCode.LeftShift);
 		}
 	}
@@ -160,7 +160,7 @@ public class Controls : MonoBehaviour
     {
         get
         {
-            if (ControlsMode == Mode.Controller) return ID.LeftBumper.WasPressed;
+            if (ControlsMode == Mode.Controller) return ID.RightBumper.WasPressed;
             return Input.GetKeyDown(KeyCode.Z);
         }
     }
@@ -169,7 +169,7 @@ public class Controls : MonoBehaviour
     {
         get
         {
-            if (ControlsMode == Mode.Controller) return ID.LeftBumper.IsPressed;
+            if (ControlsMode == Mode.Controller) return ID.RightBumper.IsPressed;
             return Input.GetKey(KeyCode.Z);
         }
     }
