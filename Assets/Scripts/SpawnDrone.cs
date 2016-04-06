@@ -44,14 +44,17 @@ public class SpawnDrone : MonoBehaviour {
 
 			Team currTeam = whichTeam ();
 
-			if ((currTeam == Team.Team1 && (spawnedADrones_Team1.Count) < maxDrones) 
-				|| (currTeam == Team.Team2 && (spawnedADrones_Team2.Count) < maxDrones)) {
-				spawnAttackDrone (currTeam);
-			}
+			// If CP is not being contested, spawn drones
+			if (CP.captureSpectrum == CP.driftPoint) {
+				if ((currTeam == Team.Team1 && (spawnedADrones_Team1.Count) < maxDrones)
+				   || (currTeam == Team.Team2 && (spawnedADrones_Team2.Count) < maxDrones)) {
+					spawnAttackDrone (currTeam);
+				}
 
-			if ((currTeam == Team.Team1 && (spawnedDDrones_Team1.Count) < maxDrones) 
-				|| (currTeam == Team.Team2 && (spawnedDDrones_Team2.Count) < maxDrones)) {
-				spawnDefenseDrone (currTeam);
+				if ((currTeam == Team.Team1 && (spawnedDDrones_Team1.Count) < maxDrones)
+				   || (currTeam == Team.Team2 && (spawnedDDrones_Team2.Count) < maxDrones)) {
+					spawnDefenseDrone (currTeam);
+				}
 			}
 		}
 	}
