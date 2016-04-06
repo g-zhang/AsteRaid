@@ -1,0 +1,36 @@
+Tutorial / game script notes:
+Shorten whats on there, to be similar to what we were talking about today in class
+
+Game notes:
+Letting know the ccotrols, holding down trigger
+"How do i change weapons"
+The shadows are confusing
+Boosting bad button, remap
+"Way too many bullets"
+Showing healzone?
+alot of things going on
+Camping behind base still works, need to fix guardians turrets / base placement?
+Dominant strategy is still to make a b-line for the base
+ - take down the turrets, to bring down the walls
+ - Domnion LoL  - when capturing turrets stop attacking/ reduce number of bulletse
+Mercenaary turrets kill stealing - "bullshit"
+shouldn't collide with your own minions
+reduce overall bullets, opt for higher damage bullets
+You can't tell you're capturing, color change is too subtle, need a better indicator
+Can't capture base while minions keep spawning, maybe stop spawn when itse contested
+Indicate for weapon cooldown
+moving the camera after death is "weird"
+easier to capture a point
+"feels really slow" 
+Shadows - def remove for bullets / ships, maybe for stage
+Make minions weaker/spawn slower
+add inhibotors/ sheilds for base
+
+Form notes:
+2nd question too early, good q tho
+add inhibotors/ sheilds
+change a few into multiple choice
+make most into long text form
+general:
+    reorder the questions, from easy/short to long/hard
+    

@@ -9,11 +9,12 @@ public class BaseHealth : HealthSystem {
     {
         if(!isDestroyed)
         {
-            print("Base DESTROYED!");
-            //begin end game stuff
             isDestroyed = true;
             GetComponent<MeshRenderer>().enabled = false;
             GetComponent<Collider>().enabled = false;
+
+            //begin end game stuff
+            GameManager.GM.EndTheGame();
         }
     }
 

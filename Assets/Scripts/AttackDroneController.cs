@@ -105,7 +105,7 @@ public class AttackDroneController : AI {
 			weapon.transform.position = transform.position;
 
 			// make bullets tiny lol
-			weapon.transform.localScale = new Vector3 (0.15f, 0.15f, 0.15f);
+			weapon.transform.localScale = new Vector3 (0.3f, 0.3f, 0.3f);
 
 			Weapon weaponComp = weapon.GetComponent<Weapon>();
 
@@ -114,6 +114,8 @@ public class AttackDroneController : AI {
 
 			weaponComp.maxDistance = maxEnemyDistance;
 			weaponComp.teamNumber = teamNumber;
+
+			weaponComp.damagePower = 0.5f;
 		}
 	}
 
@@ -123,11 +125,11 @@ public class AttackDroneController : AI {
         {
             if (teamNumber == Team.Team1)
             {
-                CPSpawn.GetComponent<CPSpawnDrone>().spawnedADrones_Team1.Remove(this.gameObject);
+                CPSpawn.GetComponent<SpawnDrone>().spawnedADrones_Team1.Remove(this.gameObject);
             }
             else if (teamNumber == Team.Team2)
             {
-                CPSpawn.GetComponent<CPSpawnDrone>().spawnedADrones_Team2.Remove(this.gameObject);
+                CPSpawn.GetComponent<SpawnDrone>().spawnedADrones_Team2.Remove(this.gameObject);
             }
         }
 	}

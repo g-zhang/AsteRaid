@@ -71,6 +71,11 @@ public class Player : HealthSystem
 		}
     }
 
+	protected override void DoOnFixedUpdate() {
+		baseRegenHealth ();
+		base.DoOnFixedUpdate ();
+	}
+
     protected override void DoOnDamage()
     {
         controls.VibrateFor(.25f, .2f);
@@ -131,6 +136,8 @@ public class Player : HealthSystem
             weaponScript.teamNumber = teamNumber;
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
+			// causes player hitbox to extend to the laserbeam
+			if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
         }
 
 		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
@@ -139,5 +146,22 @@ public class Player : HealthSystem
 	void CycleWeapon() {
 		selectedWeapon++;
 		selectedWeapon %= weapons.Length;
+	}
+
+	void baseRegenHealth() {
+		float distToBase = float.MaxValue;
+
+		if (teamNumber == Team.Team1) {
+			distToBase = Vector3.Distance (transform.position, GameManager.GM.base_team1.transform.position);
+		} 
+		else if (teamNumber == Team.Team2) {
+			distToBase = Vector3.Distance (transform.position, GameManager.GM.base_team2.transform.position);
+		}
+
+		if (distToBase <= GameManager.GM.regenRadius && currHealth < maxHealth) {
+			currHealth += GameManager.GM.regenRate * Time.fixedDeltaTime;
+			if (currHealth > maxHealth)
+				currHealth = maxHealth;
+		}
 	}
 }

@@ -16,6 +16,8 @@ public class Weapon_Bullet : Weapon
 		startPosition = transform.position;
 		rigid.velocity = startingVelocity * speed;
 
+        GetComponent<Renderer>().material.color = GameManager.GM.teamColors[(int)teamNumber];
+
 		return;
 	}
 
