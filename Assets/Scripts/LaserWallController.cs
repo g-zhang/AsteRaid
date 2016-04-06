@@ -31,13 +31,16 @@ public class LaserWallController : MonoBehaviour {
 			parent = parent.parent;
 		}
 
+		if (other.GetComponent<Weapon> () != null) {
+			Destroy (other.gameObject);
+			return;
+		}
+
 		HealthSystem otherHS = parent.GetComponent<HealthSystem> ();
 
 		if (otherHS != null) {
 			if (otherHS.teamNumber != teamNumber && parent.GetComponent<ShipControls>().remainingStunTime <= 0f) {
-				otherHS.currHealth -= 20f;
-
-				print ("I damaged a guy");
+				otherHS.currHealth -= enemyDamage;
 
 				parent.GetComponent<ShipControls> ().remainingStunTime = ejectStunTime;
 				parent.GetComponent<Rigidbody> ().AddForce (transform.forward * ejectForce, ForceMode.Impulse);
