@@ -1,0 +1,18 @@
+too many bullets - make them fewer + more powerful
+collisions with drones disorienting
+shadows confusing
+enders game strat dominant?
+boost on b - can't use right stick while boost
+jeremy won by base camping
+weapon selection bug is broken
+base HP is nonobvious, is a float, and isn't visible to opposite team
+capture progress is not obvious - use a progress bar
+disable minion spawn while point contested?
+fast spawn at CPs is frustrating
+stage looks small due to camera symmetry
+separate indicator for capturing
+show cooldown, boost recharge
+wall that breaks when the turrets do, or something to block progress past live turrets
+feels slow - speed up ships
+drone capturing
+layer to make minimap more obvious - see progress. Layer above player cameras, visible to orthographic map camera.
