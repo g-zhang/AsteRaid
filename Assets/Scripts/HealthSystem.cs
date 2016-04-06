@@ -158,7 +158,7 @@ public class HealthSystem : MonoBehaviour {
 				tookDamage = true;
 			}
 
-			if (currHealth <= 0)
+			if (currHealth <= 0 || Mathf.Approximately(currHealth, 0f))
 			{
 				DeathProcedure();
 			}
