@@ -9,6 +9,8 @@ JS speed up movement and make more snappy
 AH diable minion CP capture
 DK remove neutral turrets so no KS
 JS bullets are smaller
+JS nerf turret range
+JS minions don't collide with players
 
 In-flight:
 GZ CP capture progress bar
@@ -17,8 +19,6 @@ AH players spawn and respawn at same location, which is in a behind-base area
 To-do:
 guard turrets get a laser gate
 minimap contrast improved
-minions don't collide with players
 boost meters
 cooldown meters
-nerf turret range
 teleport home feature
