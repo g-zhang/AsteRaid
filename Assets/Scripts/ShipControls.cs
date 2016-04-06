@@ -24,6 +24,7 @@ public class ShipControls : MonoBehaviour {
 	public float boostTime = 2f;
 	public float boostFactor = 2f;
 	public float boostRefillTime = 5f;
+	public float remainingStunTime = 0f;
 
 	private Rigidbody rigid;
 	private Controls controls;
@@ -42,6 +43,8 @@ public class ShipControls : MonoBehaviour {
 		else boostTime += Time.deltaTime * maxBoostTime / boostRefillTime;
 		if (boostTime < 0f) boostTime = 0f;
 		if (boostTime > maxBoostTime) boostTime = maxBoostTime;
+		if (remainingStunTime > 0f) remainingStunTime -= Time.deltaTime;
+		if (remainingStunTime < 0f) remainingStunTime = 0f;
 	}
 
 	void FixedUpdate() {
@@ -49,8 +52,6 @@ public class ShipControls : MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos.y = 0f;
 		transform.position = pos;
-
-		rigid.velocity *= 1 - friction;
 
 		float alignment = Vector3.Dot(transform.forward, rigid.velocity.normalized);
 		if (!backwardPenalty && alignment < 0) alignment = 0f;
@@ -67,6 +68,13 @@ public class ShipControls : MonoBehaviour {
 		Vector3 moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
 		moveControl *= Time.deltaTime * effectiveAcceleration;
 
+		if (remainingStunTime > 0f) {
+			if (rigid.velocity.magnitude > effectiveMaxSpeed) rigid.velocity *= 1 - speedLimitLerpSpeed;
+			if (rigid.velocity.magnitude <= minSpeed) rigid.velocity *= 1 + speedLimitLerpSpeed;
+			return;
+		}
+
+		rigid.velocity *= 1 - friction;
 		switch (shipTranslationMode) {
 			case TranslationMode.GlobalMotion:
 				rigid.velocity += moveControl;
