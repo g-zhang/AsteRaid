@@ -8,6 +8,7 @@ public class AI_WallTurret : AI_Turret {
 
     public override void DeathProcedure()
     {
+        BroadcastDeathEvent();
         gameObject.SetActive(false);
         isDestroyed = true;
     }
