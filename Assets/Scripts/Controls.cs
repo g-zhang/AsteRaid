@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using InControl;
+using System;
 
 public class Controls : MonoBehaviour
 {
@@ -108,53 +109,67 @@ public class Controls : MonoBehaviour
         }
     }
 
-	public Vector3 ToMouseVector {
-		get {
-			return (MousePosition - transform.position).normalized;
-		}
-	}
+    public Vector3 ToMouseVector
+    {
+        get
+        {
+            return (MousePosition - transform.position).normalized;
+        }
+    }
 
-	public bool FireButtonWasPressed {
-		get {
-			if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
-			return Input.GetMouseButtonDown(0);
-		}
-	}
+    public bool FireButtonWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
+            return Input.GetMouseButtonDown(0);
+        }
+    }
 
-	public bool FireButtonIsPressed {
-		get {
-			if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
-			return Input.GetMouseButton(0);
-		}
-	}
+    public bool FireButtonIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
+            return Input.GetMouseButton(0);
+        }
+    }
 
-	public bool CycleButtonWasPressed {
-		get {
-			if (ControlsMode == Mode.Controller) return ID.RightStickButton.WasPressed;
-			return Input.GetMouseButtonDown(1);
-		}
-	}
+    public bool CycleButtonWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.RightStickButton.WasPressed;
+            return Input.GetMouseButtonDown(1);
+        }
+    }
 
-	public bool CycleButtonIsPressed {
-		get {
-			if (ControlsMode == Mode.Controller) return ID.RightStickButton.IsPressed;
-			return Input.GetMouseButton(1);
-		}
-	}
+    public bool CycleButtonIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.RightStickButton.IsPressed;
+            return Input.GetMouseButton(1);
+        }
+    }
 
-	public bool BoostButtonWasPressed {
-		get {
-			if (ControlsMode == Mode.Controller) return ID.LeftStickButton.WasPressed || ID.LeftBumper.WasPressed;
-			return Input.GetKeyDown(KeyCode.LeftShift);
-		}
-	}
+    public bool BoostButtonWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.LeftStickButton.WasPressed || ID.LeftBumper.WasPressed;
+            return Input.GetKeyDown(KeyCode.LeftShift);
+        }
+    }
 
-	public bool BoostButtonIsPressed {
-		get {
-			if (ControlsMode == Mode.Controller) return ID.LeftStickButton.IsPressed || ID.LeftBumper.IsPressed;
-			return Input.GetKey(KeyCode.LeftShift);
-		}
-	}
+    public bool BoostButtonIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.LeftStickButton.IsPressed || ID.LeftBumper.IsPressed;
+            return Input.GetKey(KeyCode.LeftShift);
+        }
+    }
 
     public bool SpinButtonWasPressed
     {
@@ -210,6 +225,24 @@ public class Controls : MonoBehaviour
         }
     }
 
+    public bool Invulnerable
+    {
+        get
+        {
+            return ((Input.GetKeyDown(ParseEnum<KeyCode>("Alpha" + (playerNum + 1).ToString())))
+                && (Input.GetKey(KeyCode.I))) || (ControlsMode == Mode.Controller && KonamiActivated);
+        }
+    }
+
+    public bool Vulnerable
+    {
+        get
+        {
+            return ((Input.GetKeyDown(ParseEnum<KeyCode>("Alpha" + (playerNum + 1).ToString())))
+                && (Input.GetKey(KeyCode.O))) || (ControlsMode == Mode.Controller && !KonamiActivated);
+        }
+    }
+
     public void VibrateFor(float intensity, float time)
     {
         VibrateFor(intensity, intensity, time);
@@ -222,8 +255,6 @@ public class Controls : MonoBehaviour
         currVibrationTime = time;
     }
     #endregion
-
-
 
     #region General Use Properties
     /// <summary>
@@ -241,6 +272,11 @@ public class Controls : MonoBehaviour
     public InputDevice ID
     {
         get { return inputDevice; }
+    }
+
+    public static T ParseEnum<T>(string value)
+    {   // stackoverflow.com/questions/16100
+        return (T)Enum.Parse(typeof(T), value, true);
     }
     #endregion
 
@@ -278,11 +314,11 @@ public class Controls : MonoBehaviour
         }
     }
 
-    void UpdateVibration()
+    void UpdateVibration(float dtime)
     {
         if (currVibrationTime > 0f)
         {
-            currVibrationTime -= Time.deltaTime;
+            currVibrationTime -= dtime;
             if (isActive) ID.Vibrate(leftMotorInt, rightMotorInt);
         }
         else
@@ -294,7 +330,7 @@ public class Controls : MonoBehaviour
         }
     }
 
-	void Start()
+    void Start()
     {
         inputDevice = UpdateState();
         ControlsFBCheck();
@@ -302,12 +338,16 @@ public class Controls : MonoBehaviour
 
     void Update()
     {
-        if((GameManager.GM != null && GameManager.GM.isPaused) ||
-           (GameManager.GM == null && Time.timeScale == 0f)) 
+        if ((GameManager.GM != null && GameManager.GM.isPaused) ||
+           (GameManager.GM == null && Time.timeScale == 0f))
         {
             inputDevice = UpdateState();
             ControlsFBCheck();
-            UpdateVibration();
+            UpdateVibration(Time.deltaTime);
+        }
+        if (isActive)
+        {
+            KonamiCodeUpdate();
         }
     }
 
@@ -315,7 +355,158 @@ public class Controls : MonoBehaviour
     {
         inputDevice = UpdateState();
         ControlsFBCheck();
-        UpdateVibration();
+        UpdateVibration(Time.fixedDeltaTime);
+    }
+    #endregion
+
+    #region Konami Code
+    private bool KonamiActivated = false;
+    private enum KonamiCode { Begin = 0, U1, U2, D1, D2, L1, R1, L2, R2, B, A, size }
+    private KonamiCode kcstate = KonamiCode.Begin;
+    private float kcButtonPressCooldown = 1f;
+    private float currKCPressTime = 0f;
+
+    void KonamiCodeUpdate()
+    {
+        if (!KonamiActivated)
+        {
+            if (kcstate == KonamiCode.Begin && ID.DPad.Up.WasPressed)
+            {
+                kcstate = KonamiCode.U1;
+                currKCPressTime = kcButtonPressCooldown;
+            }
+            else if (currKCPressTime > 0f)
+            {
+                currKCPressTime -= Time.deltaTime;
+                switch (kcstate)
+                {
+                    case KonamiCode.U1:
+                        if (ID.DPad.Up.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad.Down.WasPressed)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+
+                    case KonamiCode.U2:
+                        if (ID.DPad.Down.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad.Up.WasPressed)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+
+                    case KonamiCode.D1:
+                        if (ID.DPad.Down.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad.Up.WasPressed)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+
+                    case KonamiCode.D2:
+                        if (ID.DPad.Left.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad.Right.WasPressed)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+
+                    case KonamiCode.L1:
+                        if (ID.DPad.Right.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad.Left.WasPressed)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+                    case KonamiCode.R1:
+                        if (ID.DPad.Left.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad.Right.WasPressed)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+                    case KonamiCode.L2:
+                        if (ID.DPad.Right.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad.Left.WasPressed)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+                    case KonamiCode.R2:
+                        if (ID.Action2.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+                    case KonamiCode.B:
+                        if (ID.Action1.WasPressed)
+                        {
+                            kcstate++;
+                            currKCPressTime += kcButtonPressCooldown;
+                        }
+                        else if (ID.DPad)
+                        {
+                            currKCPressTime -= kcButtonPressCooldown;
+                        }
+                        break;
+                    case KonamiCode.A:
+                        //Debug.Log("Player(" + playerNum + ") has activated the Konami code!");
+                        KonamiActivated = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                kcstate = KonamiCode.Begin;
+                currKCPressTime = 0f;
+            }
+        }
+        else //KonamiActivated
+        {
+            if (ID.LeftStickButton.WasPressed && ID.RightStickButton.WasPressed)
+            {
+                //Debug.Log("Player(" + playerNum + ") has de-activated the Konami code!");
+                kcstate = KonamiCode.Begin;
+                currKCPressTime = 0f;
+                KonamiActivated = false;
+            }
+        }
     }
     #endregion
 }

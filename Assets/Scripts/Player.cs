@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Controls))]
 public class Player : HealthSystem
 {
-    public enum State { Normal = 0, Dead, size };
+    public enum State { Normal = 0, Dead, Invuln, size };
 
     [Header("Player: Status")]
     public State currState = State.Normal;
@@ -15,8 +15,8 @@ public class Player : HealthSystem
 
     public Transform[] turretTransforms;
     private Controls controls;
-	
-	private float coolDownTimeRemaining = 0f;
+
+    private float coolDownTimeRemaining = 0f;
 
     [Header("Player Respawn Config")]
     public Transform respawnLocation;
@@ -47,14 +47,16 @@ public class Player : HealthSystem
     protected override void DoOnUpdate()
     {
         coolDownTimeRemaining -= Time.deltaTime;
-		if (coolDownTimeRemaining < 0f) coolDownTimeRemaining = 0f;
+        if (coolDownTimeRemaining < 0f) coolDownTimeRemaining = 0f;
 
         switch (currState)
         {
             case State.Normal:
-                if (controls.FireButtonIsPressed && weapons.Length > selectedWeapon)
+                baseRegenHealth();
+                if (controls.Invulnerable)
                 {
-                    Fire(weapons[selectedWeapon]);
+                    Debug.Log("Player(" + controls.playerNum + ") is invulnerable!");
+                    currState = State.Invuln;
                 }
                 break;
 
@@ -62,19 +64,36 @@ public class Player : HealthSystem
                 ManageDeadState();
                 break;
 
+            case State.Invuln:
+                currHealth = maxHealth;
+                if (controls.Vulnerable)
+                {
+                    Debug.Log("Player(" + controls.playerNum + ") stopped cheating!");
+                    currState = State.Normal;
+                }
+                break;
+
             default:
                 break;
         }
 
-		if (controls.CycleButtonWasPressed) {
-			CycleWeapon();
-		}
+
     }
 
-	protected override void DoOnFixedUpdate() {
-		baseRegenHealth ();
-		base.DoOnFixedUpdate ();
-	}
+    protected override void DoOnFixedUpdate()
+    {
+        if (currState != State.Dead)
+        {
+            if (controls.FireButtonIsPressed && weapons.Length > selectedWeapon)
+            {
+                Fire(weapons[selectedWeapon]);
+            }
+        }
+        if (controls.CycleButtonWasPressed)
+        {
+            CycleWeapon();
+        }
+    }
 
     protected override void DoOnDamage()
     {
@@ -89,6 +108,7 @@ public class Player : HealthSystem
             tookDamage = false;
             beingHit = false;
             controls.VibrateFor(1f, .5f);
+            DisableShip();
             BroadcastDeathEvent();
         }
     }
@@ -98,40 +118,48 @@ public class Player : HealthSystem
         if (currDelayTime > 0)
         {
             currDelayTime -= Time.deltaTime;
-
-            GetComponent<ShipTrails>().disableAllTrails();
-            GetComponent<ShipTrails>().enabled = false;
-            GetComponent<ShipControls>().enabled = false;
             GetComponent<Rigidbody>().velocity = Vector3.zero;
-            transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = false;
-            transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
-            transform.Find("Turret").gameObject.SetActive(false);
-            transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
         }
         else
         {
-            transform.position = new Vector3(respawnLocationVector.x
-                                             + Random.Range(-maxRandomOffset, maxRandomOffset),
-                                             transform.position.y,
-                                             respawnLocationVector.z
-                                             + Random.Range(-maxRandomOffset, maxRandomOffset));
-            //renable the player
-            currState = State.Normal;
-            currHealth = maxHealth;
-            GetComponent<ShipTrails>().enabled = true;
-            GetComponent<ShipControls>().enabled = true;
-            transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
-            transform.Find("PlayerShip").GetComponent<Collider>().enabled = true;
-            transform.Find("Turret").gameObject.SetActive(true);
-            transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
-            currDelayTime = respawnDelayTime;
+            RespawnShip();
         }
+    }
+
+    void DisableShip()
+    {
+        GetComponent<ShipTrails>().disableAllTrails();
+        GetComponent<ShipTrails>().enabled = false;
+        GetComponent<ShipControls>().enabled = false;
+        transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = false;
+        transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
+        transform.Find("Turret").gameObject.SetActive(false);
+        transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
+    }
+
+    void RespawnShip()
+    {
+        transform.position = new Vector3(respawnLocationVector.x
+                                 + Random.Range(-maxRandomOffset, maxRandomOffset),
+                                 transform.position.y,
+                                 respawnLocationVector.z
+                                 + Random.Range(-maxRandomOffset, maxRandomOffset));
+        //renable the player
+        currState = State.Normal;
+        currHealth = maxHealth;
+        GetComponent<ShipTrails>().enabled = true;
+        GetComponent<ShipControls>().enabled = true;
+        transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
+        transform.Find("PlayerShip").GetComponent<Collider>().enabled = true;
+        transform.Find("Turret").gameObject.SetActive(true);
+        transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
+        currDelayTime = respawnDelayTime;
     }
 
     void Fire(GameObject weapon)
     {
 
-		if (coolDownTimeRemaining > 0f) return;
+        if (coolDownTimeRemaining > 0f) return;
 
         foreach (Transform turret in turretTransforms)
         {
@@ -140,32 +168,37 @@ public class Player : HealthSystem
             weaponScript.teamNumber = teamNumber;
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
-			// causes player hitbox to extend to the laserbeam
-			if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
+            // causes player hitbox to extend to the laserbeam
+            if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
         }
 
-		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+        coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
     }
 
-	void CycleWeapon() {
-		selectedWeapon++;
-		selectedWeapon %= weapons.Length;
-	}
+    void CycleWeapon()
+    {
+        selectedWeapon++;
+        selectedWeapon %= weapons.Length;
+    }
 
-	void baseRegenHealth() {
-		float distToRespawn = float.MaxValue;
+    void baseRegenHealth()
+    {
+        float distToRespawn = float.MaxValue;
 
-		if (teamNumber == Team.Team1) {
-			distToRespawn = Vector3.Distance (transform.position, GameManager.GM.base_team1.transform.Find("RespawnPoint").transform.position);
-		} 
-		else if (teamNumber == Team.Team2) {
-			distToRespawn = Vector3.Distance (transform.position, GameManager.GM.base_team2.transform.Find("RespawnPoint").transform.position);
-		}
+        if (teamNumber == Team.Team1)
+        {
+            distToRespawn = Vector3.Distance(transform.position, GameManager.GM.base_team1.transform.Find("RespawnPoint").transform.position);
+        }
+        else if (teamNumber == Team.Team2)
+        {
+            distToRespawn = Vector3.Distance(transform.position, GameManager.GM.base_team2.transform.Find("RespawnPoint").transform.position);
+        }
 
-		if (distToRespawn <= GameManager.GM.regenRadius && currHealth < maxHealth) {
-			currHealth += GameManager.GM.regenRate * Time.fixedDeltaTime;
-			if (currHealth > maxHealth)
-				currHealth = maxHealth;
-		}
-	}
+        if (distToRespawn <= GameManager.GM.regenRadius && currHealth < maxHealth)
+        {
+            currHealth += GameManager.GM.regenRate * Time.fixedDeltaTime;
+            if (currHealth > maxHealth)
+                currHealth = maxHealth;
+        }
+    }
 }
