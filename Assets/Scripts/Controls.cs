@@ -225,21 +225,37 @@ public class Controls : MonoBehaviour
         }
     }
 
-    public bool Invulnerable
+    public bool InvincibliltyOn
     {
         get
         {
-            return ((Input.GetKeyDown(ParseEnum<KeyCode>("Alpha" + (playerNum + 1).ToString())))
-                && (Input.GetKey(KeyCode.I))) || (ControlsMode == Mode.Controller && KonamiActivated);
+            if (((Input.GetKeyDown(ParseEnum<KeyCode>("Alpha" + (playerNum + 1).ToString())))
+                && (Input.GetKey(KeyCode.I))) || (ControlsMode == Mode.Controller && KonamiActivated))
+            {
+                KonamiActivated = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
-    public bool Vulnerable
+    public bool InvincibliltyOff
     {
         get
         {
-            return ((Input.GetKeyDown(ParseEnum<KeyCode>("Alpha" + (playerNum + 1).ToString())))
-                && (Input.GetKey(KeyCode.O))) || (ControlsMode == Mode.Controller && !KonamiActivated);
+            if (((Input.GetKeyDown(ParseEnum<KeyCode>("Alpha" + (playerNum + 1).ToString())))
+                && (Input.GetKey(KeyCode.O))) || (ControlsMode == Mode.Controller && !KonamiActivated))
+            {
+                ResetKonamiState();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
@@ -501,12 +517,17 @@ public class Controls : MonoBehaviour
         {
             if (ID.LeftStickButton.WasPressed && ID.RightStickButton.WasPressed)
             {
-                //Debug.Log("Player(" + playerNum + ") has de-activated the Konami code!");
-                kcstate = KonamiCode.Begin;
-                currKCPressTime = 0f;
-                KonamiActivated = false;
+                ResetKonamiState();
             }
         }
+    }
+
+    void ResetKonamiState()
+    {
+        //Debug.Log("Player(" + playerNum + ") has de-activated the Konami code!");
+        kcstate = KonamiCode.Begin;
+        currKCPressTime = 0f;
+        KonamiActivated = false;
     }
     #endregion
 }

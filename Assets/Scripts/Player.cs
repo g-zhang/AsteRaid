@@ -53,7 +53,7 @@ public class Player : HealthSystem
         {
             case State.Normal:
                 baseRegenHealth();
-                if (controls.Invulnerable)
+                if (controls.InvincibliltyOn)
                 {
                     Debug.Log("Player(" + controls.playerNum + ") is invulnerable!");
                     currState = State.Invuln;
@@ -66,7 +66,7 @@ public class Player : HealthSystem
 
             case State.Invuln:
                 currHealth = maxHealth;
-                if (controls.Vulnerable)
+                if (controls.InvincibliltyOff)
                 {
                     Debug.Log("Player(" + controls.playerNum + ") stopped cheating!");
                     currState = State.Normal;
@@ -76,8 +76,6 @@ public class Player : HealthSystem
             default:
                 break;
         }
-
-
     }
 
     protected override void DoOnFixedUpdate()
