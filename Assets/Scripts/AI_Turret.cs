@@ -19,9 +19,13 @@ public class AI_Turret : AI
 	public Renderer bodyRend;
 	public Renderer gunRend;
 	public Team rendTeam;
+	public bool canChangeTeam = false;
 
 	protected override void OnAwake()
 	{
+
+		SetTeamLayer();
+
 		gun = transform.Find("Gun");
 		coolDownRemaining = startFiringDelay;
 
@@ -79,6 +83,8 @@ public class AI_Turret : AI
 
 	void ChangeColor()
 	{
+		SetTeamLayer();
+
 		switch (teamNumber)
 		{
 		case Team.Neutral:
@@ -105,5 +111,38 @@ public class AI_Turret : AI
 
 		rendTeam = teamNumber;
 		return;
+	}
+
+
+
+	void SetTeamLayer() {
+
+		if (teamNumber == Team.Team1) {
+			gameObject.layer = LayerMask.NameToLayer("BlueTurret");
+			foreach (Transform tr in transform) {
+				if (tr.gameObject.name == "Range")
+					tr.gameObject.layer = LayerMask.NameToLayer("BlueWeapon");
+				else {
+					tr.gameObject.layer = LayerMask.NameToLayer("BlueTurret");
+					foreach (Transform tr2 in tr) {
+						tr2.gameObject.layer = LayerMask.NameToLayer("BlueTurret");
+					}
+				}
+			}
+		}
+
+		if (teamNumber == Team.Team2) {
+			gameObject.layer = LayerMask.NameToLayer("RedTurret");
+			foreach (Transform tr in transform) {
+				if (tr.gameObject.name == "Range")
+					tr.gameObject.layer = LayerMask.NameToLayer("RedWeapon");
+				else {
+					tr.gameObject.layer = LayerMask.NameToLayer("RedTurret");
+					foreach (Transform tr2 in tr) {
+						tr2.gameObject.layer = LayerMask.NameToLayer("RedTurret");
+					}
+				}
+			}
+		}
 	}
 }

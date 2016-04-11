@@ -27,7 +27,22 @@ public class Player : HealthSystem
 
     protected override void OnAwake()
     {
-        List<Transform> turrets = new List<Transform>();
+
+		if (teamNumber == Team.Team1) {
+			gameObject.layer = LayerMask.NameToLayer("BluePlayer");
+			foreach (Transform tr in transform) {
+				tr.gameObject.layer = LayerMask.NameToLayer("BluePlayer");
+			}
+		}
+
+		if (teamNumber == Team.Team2) {
+			gameObject.layer = LayerMask.NameToLayer("RedPlayer");
+			foreach (Transform tr in transform) {
+				tr.gameObject.layer = LayerMask.NameToLayer("RedPlayer");
+			}
+		}
+
+		List<Transform> turrets = new List<Transform>();
         foreach (Transform child in transform)
         {
             if (child.name == "Turret")
@@ -166,11 +181,19 @@ public class Player : HealthSystem
             weaponScript.teamNumber = teamNumber;
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
-            // causes player hitbox to extend to the laserbeam
             if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
-        }
 
-        coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+			if (teamNumber == Team.Team1) {
+				go.layer = LayerMask.NameToLayer("BlueWeapon");
+			}
+
+			if (teamNumber == Team.Team2) {
+				go.layer = LayerMask.NameToLayer("RedWeapon");
+			}
+
+		}
+
+		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
     }
 
     void CycleWeapon()

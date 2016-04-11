@@ -33,6 +33,27 @@ public class DefenseDroneController : AI {
 	Rigidbody RB;
 
 	void Start () {
+
+		if (teamNumber == Team.Team1) {
+			gameObject.layer = LayerMask.NameToLayer("BlueDrone");
+			foreach (Transform tr in transform) {
+				if (tr.gameObject.name == "Range")
+					tr.gameObject.layer = LayerMask.NameToLayer("BlueWeapon");
+				else
+					tr.gameObject.layer = LayerMask.NameToLayer("BlueDrone");
+			}
+		}
+			
+		if (teamNumber == Team.Team2) {
+			gameObject.layer = LayerMask.NameToLayer("RedDrone");
+			foreach (Transform tr in transform) {
+				if (tr.gameObject.name == "Range")
+					tr.gameObject.layer = LayerMask.NameToLayer("RedWeapon");
+				else
+					tr.gameObject.layer = LayerMask.NameToLayer("RedDrone");
+			}
+		}
+
 		mesh = transform.Find ("Mesh1");
 		elapsedFireDelay = 0f;
 		RB = GetComponent<Rigidbody> ();
