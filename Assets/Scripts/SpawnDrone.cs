@@ -44,6 +44,8 @@ public class SpawnDrone : MonoBehaviour {
 
 			Team currTeam = whichTeam ();
 
+			print ("CP " + name + " belongs to team " + currTeam);
+
 			// If CP is not being contested, spawn drones
 			if (type == spawnType.Base || CP.captureSpectrum == CP.driftPoint) {
 				if ((currTeam == Team.Team1 && (spawnedADrones_Team1.Count) < maxDrones)
