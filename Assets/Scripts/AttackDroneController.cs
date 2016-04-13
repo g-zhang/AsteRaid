@@ -134,7 +134,7 @@ public class AttackDroneController : AI {
 			weaponComp.startingVelocity.Normalize();
 
 			weaponComp.maxDistance = maxEnemyDistance;
-			weaponComp.teamNumber = teamNumber;
+			weaponComp.originator = this;
 
 			weaponComp.damagePower = 0.5f;
 		}

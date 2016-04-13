@@ -115,6 +115,8 @@ public class Player : HealthSystem
 
     public override void DeathProcedure()
     {
+		HealAttacker();
+
         if (currState != State.Dead)
         {
             currState = State.Dead;
@@ -178,7 +180,7 @@ public class Player : HealthSystem
         {
             GameObject go = Instantiate(weapon) as GameObject;
             Weapon weaponScript = go.GetComponent<Weapon>();
-            weaponScript.teamNumber = teamNumber;
+            weaponScript.originator = this;
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
             if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;

@@ -16,9 +16,11 @@ public class AI : HealthSystem
 
 	public override void DeathProcedure()
 	{
+		HealAttacker();
+
 		if (teamSwapDestruction)
 		{
-			teamNumber = lastTeamToHit;
+			teamNumber = lastAttacker.teamNumber;
 			currHealth = maxHealth;
 
 			range.inRange.Clear();

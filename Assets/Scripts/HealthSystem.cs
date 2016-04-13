@@ -8,6 +8,7 @@ public class HealthSystem : MonoBehaviour {
     public Team teamNumber = Team.Neutral;
     public float maxHealth = 50f;
     public float damageTimeout = 0.25f;
+	public float deathHealAmount = 1f;
 
     [Header("Health Bar: Config")]
     public bool enableHealthBar = true;
@@ -25,7 +26,7 @@ public class HealthSystem : MonoBehaviour {
     public bool beingHit;
     public bool tookDamage;
     public float elapsedDamageTime;
-	public Team lastTeamToHit;
+	public HealthSystem lastAttacker;
 
 	public event EventHandler OnDeathEvent;
 	public event EventHandler OnSwapEvent;
@@ -37,6 +38,22 @@ public class HealthSystem : MonoBehaviour {
         Destroy(gameObject);
 		return;
     }
+
+	protected void HealAttacker()
+	{
+		Player playerToHeal = lastAttacker as Player;
+		if (playerToHeal != null)
+		{
+			if (playerToHeal.currState != Player.State.Dead)
+			{
+				playerToHeal.currHealth += deathHealAmount;
+				if (playerToHeal.currHealth > playerToHeal.maxHealth)
+				{
+					playerToHeal.currHealth = playerToHeal.maxHealth;
+				}
+			}
+		}
+	}
 
     protected void BroadcastDeathEvent()
     {
@@ -90,7 +107,7 @@ public class HealthSystem : MonoBehaviour {
         beingHit = false;
         tookDamage = false;
         elapsedDamageTime = 0f;
-		lastTeamToHit = Team.Neutral;
+		lastAttacker = null;
 
         if(HealthBarPrefab != null && enableHealthBar)
         {
@@ -187,12 +204,12 @@ public class HealthSystem : MonoBehaviour {
 			return;
 		}
 
-		if (otherWeapon.teamNumber == teamNumber)
+		if (otherWeapon.originator.teamNumber == teamNumber)
 		{
 			return;
 		}
 
-		lastTeamToHit = otherWeapon.teamNumber;
+		lastAttacker = otherWeapon.originator;
 		damagePower = otherWeapon.damagePower;
 		beingHit = true;
 	}
@@ -213,12 +230,12 @@ public class HealthSystem : MonoBehaviour {
 			return;
 		}
 
-		if (otherWeapon.teamNumber == teamNumber)
+		if (otherWeapon.originator.teamNumber == teamNumber)
 		{
 			return;
 		}
 
-		lastTeamToHit = otherWeapon.teamNumber;
+		lastAttacker = otherWeapon.originator;
 		currHealth -= otherWeapon.damagePower;
         DoOnDamage();
 
