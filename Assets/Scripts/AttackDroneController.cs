@@ -75,24 +75,18 @@ public class AttackDroneController : AI {
 			thruster ();
 			fireWeapon (range.inRange [0]);
 		}
-		// Otherwise, go around and do stuff;
-		else {
-			if (NMAgent.remainingDistance <= maxEnemyDistance) {
-
+		// If the base is in range
+		else if (NMAgent.remainingDistance <= maxEnemyDistance) {
 				NMAgent.Stop ();
-
 				gotoBaseSet = false;
-
 				rotateToFaceEnemy (enemyBase);
-
 				fireWeapon (enemyBase);
-			}
-			else {
-				if (!gotoBaseSet) {
-					gotoBase ();
-				}
-			}
 		}
+		// Otherwise, just head to the base
+		else if (!gotoBaseSet) {
+			gotoBase ();
+		}
+
 	}
 
 	void spin() {
@@ -128,6 +122,11 @@ public class AttackDroneController : AI {
 
 			// make bullets tiny lol
 			weapon.transform.localScale = new Vector3 (0.3f, 0.3f, 0.3f);
+			if (teamNumber == Team.Team1) {
+				weapon.layer = LayerMask.NameToLayer ("BlueWeapon");
+			} else if (teamNumber == Team.Team1) {
+				weapon.layer = LayerMask.NameToLayer ("RedWeapon");
+			}
 
 			Weapon weaponComp = weapon.GetComponent<Weapon>();
 

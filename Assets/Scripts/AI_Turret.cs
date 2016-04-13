@@ -71,6 +71,12 @@ public class AI_Turret : AI
 			GameObject weapon = Instantiate(weaponPrefab);
 			weapon.transform.position = gun.position;
 
+			if (teamNumber == Team.Team1) {
+				weapon.layer = LayerMask.NameToLayer ("BlueWeapon");
+			} else if (teamNumber == Team.Team2) {
+				weapon.layer = LayerMask.NameToLayer ("RedWeapon");
+			}
+
 			Weapon weaponComp = weapon.GetComponent<Weapon>();
 			weaponComp.startingVelocity = gun.forward;
 			weaponComp.teamNumber = teamNumber;

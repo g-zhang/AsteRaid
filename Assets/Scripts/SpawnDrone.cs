@@ -44,8 +44,6 @@ public class SpawnDrone : MonoBehaviour {
 
 			Team currTeam = whichTeam ();
 
-			print ("CP " + name + " belongs to team " + currTeam);
-
 			// If CP is not being contested, spawn drones
 			if (type == spawnType.Base || CP.captureSpectrum == CP.driftPoint) {
 				if ((currTeam == Team.Team1 && (spawnedADrones_Team1.Count) < maxDrones)
@@ -76,38 +74,30 @@ public class SpawnDrone : MonoBehaviour {
 			return Team.Neutral;
 		}
 		// if base
-		else {
-			return (GetComponent<BaseHealth> ().teamNumber);
-		}
+		return (GetComponent<BaseHealth> ().teamNumber);
 	}
 
 	void spawnAttackDrone(Team teamNum) {
-		GameObject aDrone = Instantiate(attackDrone);
+		GameObject aDrone = Instantiate(attackDrone, transform.position, Quaternion.identity) as GameObject;
 		aDrone.GetComponent<AttackDroneController> ().teamNumber = teamNum;
 		aDrone.GetComponent<AttackDroneController> ().CPSpawn = this.gameObject;
-		aDrone.transform.position = transform.position;
 
 		if (teamNum == Team.Team1) {
 			aDrone.GetComponent<AttackDroneController> ().enemyBase = team2Base;
 			spawnedADrones_Team1.Add (aDrone);
-
-			//aDrone.transform.Find ("Mesh1").GetComponent<Renderer> ().materials [1] = Team1Mat;
 			aDrone.transform.Find ("Mesh1").GetComponent<Renderer> ().material = Team1Mat;
 		}
 		else if (teamNum == Team.Team2) {
 			aDrone.GetComponent<AttackDroneController> ().enemyBase = team1Base;
 			spawnedADrones_Team2.Add (aDrone);
-
-			//aDrone.transform.Find ("Mesh1").GetComponent<Renderer> ().materials [1] = Team2Mat;
 			aDrone.transform.Find ("Mesh1").GetComponent<Renderer> ().material = Team2Mat;
 		}
 	}
 
 	void spawnDefenseDrone(Team teamNum) {
-		GameObject dDrone = Instantiate (defenseDrone);
+		GameObject dDrone = Instantiate (defenseDrone, transform.position, Quaternion.identity) as GameObject;
 		dDrone.GetComponent<DefenseDroneController> ().teamNumber = teamNum;
 		dDrone.GetComponent<DefenseDroneController> ().CPSpawn = this.gameObject;
-		dDrone.transform.position = transform.position;
 
 		if (type == spawnType.Base) {
 			dDrone.GetComponent<DefenseDroneController> ().radius = 6f;

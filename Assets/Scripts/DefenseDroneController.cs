@@ -119,6 +119,12 @@ public class DefenseDroneController : AI {
 			// make bullets tiny lol
 			weapon.transform.localScale = new Vector3 (0.3f, 0.3f, 0.3f);
 
+			if (teamNumber == Team.Team1) {
+				weapon.layer = LayerMask.NameToLayer ("BlueWeapon");
+			} else if (teamNumber == Team.Team2) {
+				weapon.layer = LayerMask.NameToLayer ("RedWeapon");
+			}
+
 			Weapon weaponComp = weapon.GetComponent<Weapon>();
 
 			weaponComp.startingVelocity = transform.forward;
