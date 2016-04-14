@@ -92,11 +92,14 @@ public class UpdateUI : MonoBehaviour {
 		Player2Boost.value = Player2SC.boostTime;
 		Player3Boost.value = Player3SC.boostTime;
 
+		respawnCheck ();
 
 		Player0Ult.value = Player0.GetComponent<Player>().ultCharges;
 		Player1Ult.value = Player1.GetComponent<Player>().ultCharges;
 		Player2Ult.value = Player2.GetComponent<Player>().ultCharges;
 		Player3Ult.value = Player3.GetComponent<Player>().ultCharges;
+
+
 
 		if (currCountdown > 0) {
 			countdown ();
@@ -126,5 +129,42 @@ public class UpdateUI : MonoBehaviour {
             GameManager.GM.StartTheGame();
 			transform.Find ("CountdownText").gameObject.SetActive (false);
 		}
+	}
+
+	void respawnCheck() {
+
+		GameObject P1Text = transform.Find ("RespawnP1").gameObject;
+		GameObject P2Text = transform.Find ("RespawnP2").gameObject;
+		GameObject P3Text = transform.Find ("RespawnP3").gameObject;
+		GameObject P4Text = transform.Find ("RespawnP4").gameObject;
+
+		if (Player0.GetComponent<Player> ().currState == Player.State.Dead) {
+			respawnCountdown (P1Text, Player0);
+		} else if (P1Text.activeSelf == true) {
+			P1Text.SetActive (false);
+		}
+
+		if (Player1.GetComponent<Player> ().currState == Player.State.Dead) {
+			respawnCountdown (P2Text, Player1);
+		} else if (P2Text.activeSelf == true) {
+			P2Text.SetActive (false);
+		}
+
+		if (Player2.GetComponent<Player> ().currState == Player.State.Dead) {
+			respawnCountdown (P3Text, Player2);
+		} else if (P3Text.activeSelf == true) {
+			P3Text.SetActive (false);
+		}
+
+		if (Player3.GetComponent<Player> ().currState == Player.State.Dead) {
+			respawnCountdown (P4Text, Player3);
+		}else if (P4Text.activeSelf == true) {
+			P4Text.SetActive (false);
+		}
+	}
+
+	void respawnCountdown(GameObject respawnText, GameObject player) {
+		respawnText.SetActive (true);
+		respawnText.GetComponent<Text> ().text = "Respawn in:\n" + Mathf.Ceil(player.GetComponent<Player> ().currDelayTime);
 	}
 }
