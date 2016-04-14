@@ -73,8 +73,6 @@ public class DefenseDroneController : AI {
 		if (range.inRange.Count > 0) {
 			NMAgent.Stop ();
 
-			print ("Something is in range");
-
 			rotateToFaceEnemy (GetTarget(range.inRange));	
 			thruster ();
 			fireWeapon (GetTarget(range.inRange));
