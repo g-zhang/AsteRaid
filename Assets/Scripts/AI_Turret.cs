@@ -52,7 +52,7 @@ public class AI_Turret : AI
 		}
 
         GameObject target = null;
-        if(range.inRange.Count > 0) GetTarget(range.inRange);
+        if(range.inRange.Count > 0) target = GetTarget(range.inRange);
         if (target == null)
         {
             coolDownRemaining = startFiringDelay;
