@@ -51,16 +51,16 @@ public class AI_Turret : AI
 			coolDownRemaining = 0f;
 		}
 
-		if (range.inRange.Count == 0)
-		{
-			coolDownRemaining = startFiringDelay;
-			return;
-		}
+        GameObject target = null;
+        if(range.inRange.Count > 0) target = GetTarget(range.inRange);
+        if (target == null)
+        {
+            coolDownRemaining = startFiringDelay;
+            return;
+        }
 
-		if (range.inRange[0] == null) return;
-
-		Vector3 direction =
-			range.inRange[0].transform.position - transform.position;
+        Vector3 direction =
+			target.transform.position - transform.position;
 		Quaternion targetRotation =
 			Quaternion.LookRotation(direction, Vector3.up);
 		gun.rotation = Quaternion.Slerp(
