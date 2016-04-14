@@ -26,6 +26,11 @@ public class UpdateUI : MonoBehaviour {
 	public Slider Player2Boost;
 	public Slider Player3Boost;
 
+	public Slider Player0Ult;
+	public Slider Player1Ult;
+	public Slider Player2Ult;
+	public Slider Player3Ult;
+
 	public ShipControls Player0SC;
 	public ShipControls Player1SC;
 	public ShipControls Player2SC;
@@ -55,6 +60,16 @@ public class UpdateUI : MonoBehaviour {
 		Player2Boost.maxValue = Player2SC.maxBoostTime;
 		Player3Boost.maxValue = Player3SC.maxBoostTime;
 
+		Player p0 = Player0.GetComponent<Player> ();
+		Player p1 = Player1.GetComponent<Player> ();
+		Player p2 = Player2.GetComponent<Player> ();
+		Player p3 = Player3.GetComponent<Player> ();
+
+		Player0Ult.maxValue = p0.chargesNeededForUlt;
+		Player1Ult.maxValue = p1.chargesNeededForUlt;
+		Player2Ult.maxValue = p2.chargesNeededForUlt;
+		Player3Ult.maxValue = p3.chargesNeededForUlt;
+
 	}
 	
 	// Update is called once per frame
@@ -67,6 +82,12 @@ public class UpdateUI : MonoBehaviour {
 		Player1Boost.value = Player1SC.boostTime;
 		Player2Boost.value = Player2SC.boostTime;
 		Player3Boost.value = Player3SC.boostTime;
+
+
+		Player0Ult.value = Player0.GetComponent<Player>().ultCharges;
+		Player1Ult.value = Player1.GetComponent<Player>().ultCharges;
+		Player2Ult.value = Player2.GetComponent<Player>().ultCharges;
+		Player3Ult.value = Player3.GetComponent<Player>().ultCharges;
 
 		if (currCountdown > 0) {
 			countdown ();

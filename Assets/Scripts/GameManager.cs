@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public enum Team
 {
-	Neutral,
-	Team1,
-	Team2
+    Neutral,
+    Team1,
+    Team2
 }
 
 public class GameManager : MonoBehaviour
@@ -35,19 +35,39 @@ public class GameManager : MonoBehaviour
     public GameObject[] playersGO = new GameObject[NUM_PLAYERS];
     private Player[] players = new Player[NUM_PLAYERS];
 
-	[Header("GameManager: Inspector Set Fields")]
-	public bool useInvulnTime = false;
-	public GameObject base_team1, base_team2;
-	public Canvas UICanvas;
-	public int gameStartCountdown = 3;
-	public float regenRate;
-	public float regenRadius;
+    [Header("GameManager: Inspector Set Fields")]
+    public bool useInvulnTime = false;
+    public GameObject base_team1, base_team2;
+    public Canvas UICanvas;
+    public int gameStartCountdown = 3;
+    public float regenRate;
+    public float regenRadius;
     #endregion
 
     #region Public Properties + Methods
     public static GameManager GM
     {
         get { return Singleton; }
+    }
+
+    public GameObject GetPlayerGO(int playerNum)
+    {
+        GameObject ret = null;
+        if (playerNum < NUM_PLAYERS && playerNum >= 0)
+        {
+            ret = playersGO[playerNum];
+        }
+        return ret;
+    }
+
+    public Player GetPlayer(int playerNum)
+    {
+        Player ret = null;
+        if (playerNum < NUM_PLAYERS && playerNum >= 0)
+        {
+            ret = players[playerNum];
+        }
+        return ret;
     }
 
     public bool isPaused
@@ -81,7 +101,7 @@ public class GameManager : MonoBehaviour
 
     public void EndTheGame()
     {
-        if(currstate == State.InGame)
+        if (currstate == State.InGame)
         {
             currstate = State.EndGame;
 
@@ -112,7 +132,8 @@ public class GameManager : MonoBehaviour
         Singleton = this;
     }
 
-	void Start() {
+    void Start()
+    {
         StartCountDown();
 
         for (int i = 0; i < NUM_PLAYERS; i++)
@@ -129,29 +150,31 @@ public class GameManager : MonoBehaviour
         }
     }
 
-	void Update() {
+    void Update()
+    {
         PausedGame = isPaused;
 
-        if(currstate == State.Countdown || currstate == State.EndGame)
+        if (currstate == State.Countdown || currstate == State.EndGame)
         {
             PauseGame();
-        } else
+        }
+        else
         {
             UnPauseGame();
         }
 
-        if(currstate == State.EndGame)
+        if (currstate == State.EndGame)
         {
             foreach (GameObject player in playersGO)
             {
-                if(player.GetComponent<Controls>().StartWasPressed)
+                if (player.GetComponent<Controls>().StartWasPressed)
                 {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
             }
         }
 
-        if(isPaused)
+        if (isPaused)
         {
             foreach (GameObject player in playersGO)
             {
@@ -161,7 +184,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-	}
+    }
 
     void DisableAllVibration()
     {
