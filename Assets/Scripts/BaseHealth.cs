@@ -5,7 +5,7 @@ public class BaseHealth : HealthSystem {
 
     public bool isDestroyed = false;
 
-	public void OnAwake(){
+	protected override void OnAwake(){
 		if (teamNumber == Team.Team1)
 			gameObject.layer = LayerMask.NameToLayer ("BlueBase");
 		if (teamNumber == Team.Team2)
@@ -24,5 +24,4 @@ public class BaseHealth : HealthSystem {
             GameManager.GM.EndTheGame();
         }
     }
-
 }

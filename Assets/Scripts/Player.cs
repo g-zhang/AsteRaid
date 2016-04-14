@@ -18,6 +18,7 @@ public class Player : HealthSystem
 	public int ultCharges = 0;
 	public List<Transform> turretTransforms;
 	private float coolDownTimeRemaining = 0f;
+	private float grenadeCooldownRemaining = 0f;
 
     [Header("Player Respawn Config")]
     public Transform respawnLocation;
@@ -55,9 +56,11 @@ public class Player : HealthSystem
     }
 
     protected override void DoOnUpdate()
-    {
-        coolDownTimeRemaining -= Time.deltaTime;
-        if (coolDownTimeRemaining < 0f) coolDownTimeRemaining = 0f;
+	{
+		coolDownTimeRemaining -= Time.deltaTime;
+		if (coolDownTimeRemaining < 0f) coolDownTimeRemaining = 0f;
+		grenadeCooldownRemaining -= Time.deltaTime;
+		if (grenadeCooldownRemaining < 0f) grenadeCooldownRemaining = 0f;
 
         switch (currState)
         {
@@ -166,7 +169,8 @@ public class Player : HealthSystem
     void Fire(GameObject weapon)
     {
 
-        if (coolDownTimeRemaining > 0f) return;
+		if (weapon == primaryWeapon && coolDownTimeRemaining > 0f) return;
+		if (weapon == secondaryWeapon && grenadeCooldownRemaining > 0f) return;
 
         foreach (Transform turret in turretTransforms) {
             GameObject go = Instantiate(weapon) as GameObject;
@@ -190,7 +194,11 @@ public class Player : HealthSystem
 				}
 			}
 		}
-		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+		if (weapon == primaryWeapon)
+			coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+		if (weapon == secondaryWeapon)
+			grenadeCooldownRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+		
     }
 	
     void baseRegenHealth()
