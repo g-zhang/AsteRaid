@@ -124,7 +124,7 @@ public class AttackDroneController : AI {
 			weapon.transform.localScale = new Vector3 (0.3f, 0.3f, 0.3f);
 			if (teamNumber == Team.Team1) {
 				weapon.layer = LayerMask.NameToLayer ("BlueWeapon");
-			} else if (teamNumber == Team.Team1) {
+			} else if (teamNumber == Team.Team2) {
 				weapon.layer = LayerMask.NameToLayer ("RedWeapon");
 			}
 

@@ -245,11 +245,6 @@ public class HealthSystem : MonoBehaviour {
 			return;
 		}
 
-		if (otherWeapon.originator.teamNumber == teamNumber)
-		{
-			return;
-		}
-
 		lastAttacker = otherWeapon.originator;
 		Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
 		lastAttackWasUlt = (laser != null);
