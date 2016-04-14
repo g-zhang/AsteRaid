@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class SpawnDrone : MonoBehaviour {
@@ -10,8 +9,11 @@ public class SpawnDrone : MonoBehaviour {
 	public spawnType type;
 	public GameObject attackDrone;
 	public GameObject defenseDrone;
-	public float spawnRate;
-	public int maxDrones;
+
+	public float attackSpawnRate = 5;
+	public float defenseSpawnRate = 5;
+	public int attackMaxDrones = 3;
+	public int defenseMaxDrones = 3;
 
 	public Material Team1Mat, Team2Mat;
 
@@ -27,7 +29,8 @@ public class SpawnDrone : MonoBehaviour {
 	public List<GameObject> spawnedDDrones_Team1;
 	public List<GameObject> spawnedDDrones_Team2;
 
-	float elapsedSpawnDelay;
+	float attackElapsedSpawnDelay;
+	float defenseElapsedSpawnDelay;
 
 	void Start () {
 		if (type == spawnType.CP) {
@@ -37,26 +40,61 @@ public class SpawnDrone : MonoBehaviour {
 		team2Base = GameManager.GM.base_team2;
 	}
 
-	void Update () {
-		elapsedSpawnDelay += Time.deltaTime;
-		if (elapsedSpawnDelay >= spawnRate) {
-			elapsedSpawnDelay = 0f;
-
-			Team currTeam = whichTeam ();
-
-			// If CP is not being contested, spawn drones
-			if (type == spawnType.Base || CP.captureSpectrum == CP.driftPoint) {
-				if ((currTeam == Team.Team1 && (spawnedADrones_Team1.Count) < maxDrones)
-				   || (currTeam == Team.Team2 && (spawnedADrones_Team2.Count) < maxDrones)) {
-					spawnAttackDrone (currTeam);
-				}
-
-				if ((currTeam == Team.Team1 && (spawnedDDrones_Team1.Count) < maxDrones)
-				   || (currTeam == Team.Team2 && (spawnedDDrones_Team2.Count) < maxDrones)) {
-					spawnDefenseDrone (currTeam);
-				}
-			}
+	void Update()
+	{
+		if ((type != spawnType.Base) && (CP.captureSpectrum != CP.driftPoint))
+		{
+			return;
 		}
+
+		AttackDroneUpdate();
+		DefenseDroneUpdate();
+
+		return;
+	}
+
+	private void AttackDroneUpdate()
+	{
+		attackElapsedSpawnDelay += Time.deltaTime;
+		if (attackElapsedSpawnDelay < attackSpawnRate)
+		{
+			return;
+		}
+		attackElapsedSpawnDelay -= attackSpawnRate;
+
+		Team currTeam = whichTeam();
+		if ((currTeam == Team.Team1) && (spawnedADrones_Team1.Count < attackMaxDrones))
+		{
+			spawnAttackDrone(currTeam);
+		}
+		else if ((currTeam == Team.Team2) && (spawnedADrones_Team2.Count < attackMaxDrones))
+		{
+			spawnAttackDrone(currTeam);
+		}
+
+		return;
+	}
+
+	private void DefenseDroneUpdate()
+	{
+		defenseElapsedSpawnDelay += Time.deltaTime;
+		if (defenseElapsedSpawnDelay < defenseSpawnRate)
+		{
+			return;
+		}
+		defenseElapsedSpawnDelay -= defenseSpawnRate;
+
+		Team currTeam = whichTeam();
+		if ((currTeam == Team.Team1) && (spawnedDDrones_Team1.Count < defenseMaxDrones))
+		{
+			spawnDefenseDrone(currTeam);
+		}
+		else if ((currTeam == Team.Team2) && (spawnedDDrones_Team2.Count < defenseMaxDrones))
+		{
+			spawnDefenseDrone(currTeam);
+		}
+
+		return;
 	}
 
 	// Returns: 0 - Neutral, 1 - Team1, 2 - Team2
