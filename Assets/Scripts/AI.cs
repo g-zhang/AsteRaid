@@ -16,10 +16,16 @@ public class AI : HealthSystem
 
 	public override void DeathProcedure()
 	{
-		HealAttacker();
+		KillHealAndCharge();
 
 		if (teamSwapDestruction)
 		{
+			if (lastAttacker == null)
+			{
+				// This shouldn't happen, but....
+				return;
+			}
+
 			teamNumber = lastAttacker.teamNumber;
 			currHealth = maxHealth;
 

@@ -26,6 +26,8 @@ public class HealthSystem : MonoBehaviour {
     public bool beingHit;
     public bool tookDamage;
     public float elapsedDamageTime;
+
+	public bool lastAttackWasUlt;
 	public HealthSystem lastAttacker;
 
 	public event EventHandler OnDeathEvent;
@@ -39,20 +41,24 @@ public class HealthSystem : MonoBehaviour {
 		return;
     }
 
-	protected void HealAttacker()
+	protected void KillHealAndCharge()
 	{
-		Player playerToHeal = lastAttacker as Player;
-		if (playerToHeal != null)
+		Player player = lastAttacker as Player;
+		if (player != null)
 		{
-			if (playerToHeal.currState != Player.State.Dead)
+			if (player.currState != Player.State.Dead)
 			{
-				playerToHeal.currHealth += deathHealAmount;
-				if (playerToHeal.currHealth > playerToHeal.maxHealth)
+				player.currHealth += deathHealAmount;
+				if (player.currHealth > player.maxHealth)
 				{
-					playerToHeal.currHealth = playerToHeal.maxHealth;
+					player.currHealth = player.maxHealth;
 				}
+
+				
 			}
 		}
+
+		return;
 	}
 
     protected void BroadcastDeathEvent()
@@ -210,6 +216,9 @@ public class HealthSystem : MonoBehaviour {
 		}
 
 		lastAttacker = otherWeapon.originator;
+		Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
+		lastAttackWasUlt = (laser != null);
+
 		damagePower = otherWeapon.damagePower;
 		beingHit = true;
 	}
@@ -236,6 +245,9 @@ public class HealthSystem : MonoBehaviour {
 		}
 
 		lastAttacker = otherWeapon.originator;
+		Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
+		lastAttackWasUlt = (laser != null);
+
 		currHealth -= otherWeapon.damagePower;
         DoOnDamage();
 
