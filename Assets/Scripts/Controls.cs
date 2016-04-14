@@ -115,43 +115,43 @@ public class Controls : MonoBehaviour
         {
             return (MousePosition - transform.position).normalized;
         }
-    }
+	}
 
-    public bool FireButtonWasPressed
-    {
-        get
-        {
-            if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
-            return Input.GetMouseButtonDown(0);
-        }
-    }
+	public bool FireButtonWasPressed
+	{
+		get
+		{
+			if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
+			return Input.GetMouseButtonDown(0);
+		}
+	}
 
-    public bool FireButtonIsPressed
-    {
-        get
-        {
-            if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
-            return Input.GetMouseButton(0);
-        }
-    }
+	public bool FireButtonIsPressed
+	{
+		get
+		{
+			if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
+			return Input.GetMouseButton(0);
+		}
+	}
 
-    public bool CycleButtonWasPressed
-    {
-        get
-        {
-            if (ControlsMode == Mode.Controller) return ID.RightStickButton.WasPressed;
-            return Input.GetMouseButtonDown(1);
-        }
-    }
+	public bool SecondFireButtonWasPressed
+	{
+		get
+		{
+			if (ControlsMode == Mode.Controller) return ID.LeftTrigger.WasPressed;
+			return Input.GetMouseButtonDown(1);
+		}
+	}
 
-    public bool CycleButtonIsPressed
-    {
-        get
-        {
-            if (ControlsMode == Mode.Controller) return ID.RightStickButton.IsPressed;
-            return Input.GetMouseButton(1);
-        }
-    }
+	public bool SecondFireButtonIsPressed
+	{
+		get
+		{
+			if (ControlsMode == Mode.Controller) return ID.LeftTrigger.IsPressed;
+			return Input.GetMouseButton(1);
+		}
+	}
 
     public bool BoostButtonWasPressed
     {
@@ -171,7 +171,7 @@ public class Controls : MonoBehaviour
         }
     }
 
-    public bool SpinButtonWasPressed
+    public bool UltButtonWasPressed
     {
         get
         {
@@ -180,7 +180,7 @@ public class Controls : MonoBehaviour
         }
     }
 
-    public bool SpinButtonIsPressed
+    public bool UltButtonIsPressed
     {
         get
         {

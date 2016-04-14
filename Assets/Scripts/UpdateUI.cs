@@ -60,11 +60,6 @@ public class UpdateUI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        Player0Text.text = "P1: " + (WeaponName)Player0.GetComponent<Player>().selectedWeapon;
-        Player1Text.text = "P2: " + (WeaponName)Player1.GetComponent<Player>().selectedWeapon;
-        Player2Text.text = "P3: " + (WeaponName)Player2.GetComponent<Player>().selectedWeapon;
-        Player3Text.text = "P4: " + (WeaponName)Player3.GetComponent<Player>().selectedWeapon;
-
 		Base1Text.text = "Blue Base HP: " + Base1.GetComponent<BaseHealth>().currHealth;
         Base2Text.text = "Red Base HP: " + Base2.GetComponent<BaseHealth>().currHealth;
 
