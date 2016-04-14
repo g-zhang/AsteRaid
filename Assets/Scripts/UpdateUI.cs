@@ -31,6 +31,9 @@ public class UpdateUI : MonoBehaviour {
 	public Slider Player2Ult;
 	public Slider Player3Ult;
 
+	public Slider Base1HP;
+	public Slider Base2HP;
+
 	public ShipControls Player0SC;
 	public ShipControls Player1SC;
 	public ShipControls Player2SC;
@@ -70,6 +73,9 @@ public class UpdateUI : MonoBehaviour {
 		Player2Ult.maxValue = p2.chargesNeededForUlt;
 		Player3Ult.maxValue = p3.chargesNeededForUlt;
 
+		Base1HP.maxValue = Base1.GetComponent<BaseHealth> ().maxHealth;
+		Base2HP.maxValue = Base2.GetComponent<BaseHealth> ().maxHealth;
+
 	}
 	
 	// Update is called once per frame
@@ -77,6 +83,9 @@ public class UpdateUI : MonoBehaviour {
 
 		Base1Text.text = "Blue Base HP: " + Base1.GetComponent<BaseHealth>().currHealth;
         Base2Text.text = "Red Base HP: " + Base2.GetComponent<BaseHealth>().currHealth;
+
+		Base1HP.value = Base1.GetComponent<BaseHealth> ().currHealth;
+		Base2HP.value = Base2.GetComponent<BaseHealth> ().currHealth;
 
 		Player0Boost.value = Player0SC.boostTime;
 		Player1Boost.value = Player1SC.boostTime;
