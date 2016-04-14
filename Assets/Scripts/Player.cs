@@ -139,6 +139,9 @@ public class Player : HealthSystem
         if (currRespawnDelayTime - currDelayTime <= respawnIncrement)
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
+        } else
+        {
+            GetComponent<ShipControls>().enabled = true;
         }
 
         if (currDelayTime > 0)
@@ -155,7 +158,7 @@ public class Player : HealthSystem
     {
         GetComponent<ShipTrails>().disableAllTrails();
         GetComponent<ShipTrails>().enabled = false;
-        //GetComponent<ShipControls>().enabled = false;
+        GetComponent<ShipControls>().enabled = false;
         transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = false;
         transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
         transform.Find("Turret").gameObject.SetActive(false);
@@ -164,6 +167,7 @@ public class Player : HealthSystem
 
     void RespawnShip()
     {
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
         transform.position = new Vector3(respawnLocationVector.x
                                  + Random.Range(-maxRandomOffset, maxRandomOffset),
                                  transform.position.y,

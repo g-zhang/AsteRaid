@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(UnityStandardAssets.ImageEffects.Grayscale))]
 public class PlayerCamera : MonoBehaviour {
 
     [Header("Config")]
@@ -8,10 +9,21 @@ public class PlayerCamera : MonoBehaviour {
     public bool rotateWithPlayer = false;
 
     private Transform target;
+    private Player player;
+    private Player.State prevState;
+    private UnityStandardAssets.ImageEffects.Grayscale grayscale;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         target = playerToFollow.GetComponent<Transform>();
+        player = playerToFollow.GetComponent<Player>();
+        grayscale = GetComponent<UnityStandardAssets.ImageEffects.Grayscale>();
+        if (target == null || player == null)
+        {
+            Debug.LogError("Target player isn't a player!");
+            Destroy(this);
+        }
+        prevState = player.currState;
 	}
 	
 	// Update is called once per frame
@@ -29,6 +41,19 @@ public class PlayerCamera : MonoBehaviour {
                                               transform.rotation.eulerAngles.z);
                 transform.rotation = rot;
             }
+        }
+
+        if(prevState != player.currState)
+        {
+            if(player.currState == Player.State.Dead)
+            {
+                grayscale.enabled = true;
+            }
+            else
+            {
+                grayscale.enabled = false;
+            }
+            prevState = player.currState;
         }
 	}
 }
