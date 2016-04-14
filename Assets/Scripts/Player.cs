@@ -106,7 +106,7 @@ public class Player : HealthSystem
 
     public override void DeathProcedure()
     {
-		HealAttacker();
+		KillHealAndCharge();
 
         if (currState != State.Dead)
         {

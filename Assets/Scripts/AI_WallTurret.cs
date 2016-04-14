@@ -8,7 +8,7 @@ public class AI_WallTurret : AI_Turret {
 
     public override void DeathProcedure()
     {
-		HealAttacker();
+		KillHealAndCharge();
 
         BroadcastDeathEvent();
         gameObject.SetActive(false);

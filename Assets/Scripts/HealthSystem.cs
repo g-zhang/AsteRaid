@@ -8,7 +8,9 @@ public class HealthSystem : MonoBehaviour {
     public Team teamNumber = Team.Neutral;
     public float maxHealth = 50f;
     public float damageTimeout = 0.25f;
+
 	public float deathHealAmount = 1f;
+	public int deathUltChargeAmount = 1;
 
     [Header("Health Bar: Config")]
     public bool enableHealthBar = true;
@@ -26,6 +28,8 @@ public class HealthSystem : MonoBehaviour {
     public bool beingHit;
     public bool tookDamage;
     public float elapsedDamageTime;
+
+	public bool lastAttackWasUlt;
 	public HealthSystem lastAttacker;
 
 	public event EventHandler OnDeathEvent;
@@ -39,20 +43,28 @@ public class HealthSystem : MonoBehaviour {
 		return;
     }
 
-	protected void HealAttacker()
+	protected void KillHealAndCharge()
 	{
-		Player playerToHeal = lastAttacker as Player;
-		if (playerToHeal != null)
+		Player player = lastAttacker as Player;
+		if (player != null)
 		{
-			if (playerToHeal.currState != Player.State.Dead)
+			if (player.currState != Player.State.Dead)
 			{
-				playerToHeal.currHealth += deathHealAmount;
-				if (playerToHeal.currHealth > playerToHeal.maxHealth)
+				player.currHealth += deathHealAmount;
+				if (player.currHealth > player.maxHealth)
 				{
-					playerToHeal.currHealth = playerToHeal.maxHealth;
+					player.currHealth = player.maxHealth;
+				}
+
+				player.ultCharges += deathUltChargeAmount;
+				if (player.ultCharges > player.chargesNeededForUlt)
+				{
+					player.ultCharges = player.chargesNeededForUlt;
 				}
 			}
 		}
+
+		return;
 	}
 
     protected void BroadcastDeathEvent()
@@ -210,6 +222,9 @@ public class HealthSystem : MonoBehaviour {
 		}
 
 		lastAttacker = otherWeapon.originator;
+		Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
+		lastAttackWasUlt = (laser != null);
+
 		damagePower = otherWeapon.damagePower;
 		beingHit = true;
 	}
@@ -236,6 +251,9 @@ public class HealthSystem : MonoBehaviour {
 		}
 
 		lastAttacker = otherWeapon.originator;
+		Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
+		lastAttackWasUlt = (laser != null);
+
 		currHealth -= otherWeapon.damagePower;
         DoOnDamage();
 
