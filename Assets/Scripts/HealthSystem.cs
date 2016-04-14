@@ -2,15 +2,16 @@
 using UnityEngine;
 using System.Collections;
 
-public class HealthSystem : MonoBehaviour {
+public class HealthSystem : MonoBehaviour
+{
 
     [Header("Health Sys: Config")]
     public Team teamNumber = Team.Neutral;
     public float maxHealth = 50f;
     public float damageTimeout = 0.25f;
 
-	public float deathHealAmount = 1f;
-	public int deathUltChargeAmount = 1;
+    public float deathHealAmount = 1f;
+    public int deathUltChargeAmount = 1;
 
     [Header("Health Bar: Config")]
     public bool enableHealthBar = true;
@@ -19,8 +20,8 @@ public class HealthSystem : MonoBehaviour {
     public GameObject HealthBarPrefab;
     protected HealthBar HPBar;
 
-	[Header("Health Sys: Status")]
-	public bool useInvulnTime;
+    [Header("Health Sys: Status")]
+    public bool useInvulnTime;
 
     public float currHealth;
     public float damagePower;
@@ -29,43 +30,43 @@ public class HealthSystem : MonoBehaviour {
     public bool tookDamage;
     public float elapsedDamageTime;
 
-	public bool lastAttackWasUlt;
-	public HealthSystem lastAttacker;
+    public bool lastAttackWasUlt;
+    public HealthSystem lastAttacker;
 
-	public event EventHandler OnDeathEvent;
-	public event EventHandler OnSwapEvent;
+    public event EventHandler OnDeathEvent;
+    public event EventHandler OnSwapEvent;
 
-	//override this for custom behavior when this object is "killed"
-	public virtual void DeathProcedure()
-	{
+    //override this for custom behavior when this object is "killed"
+    public virtual void DeathProcedure()
+    {
         BroadcastDeathEvent();
         Destroy(gameObject);
-		return;
+        return;
     }
 
-	protected void KillHealAndCharge()
-	{
-		Player player = lastAttacker as Player;
-		if (player != null)
-		{
-			if (player.currState != Player.State.Dead)
-			{
-				player.currHealth += deathHealAmount;
-				if (player.currHealth > player.maxHealth)
-				{
-					player.currHealth = player.maxHealth;
-				}
+    protected void KillHealAndCharge()
+    {
+        Player player = lastAttacker as Player;
+        if (player != null)
+        {
+            if (player.currState != Player.State.Dead)
+            {
+                player.currHealth += deathHealAmount;
+                if (player.currHealth > player.maxHealth)
+                {
+                    player.currHealth = player.maxHealth;
+                }
 
-				player.ultCharges += deathUltChargeAmount;
-				if (player.ultCharges > player.chargesNeededForUlt)
-				{
-					player.ultCharges = player.chargesNeededForUlt;
-				}
-			}
-		}
+                player.ultCharges += deathUltChargeAmount;
+                if (player.ultCharges > player.chargesNeededForUlt)
+                {
+                    player.ultCharges = player.chargesNeededForUlt;
+                }
+            }
+        }
 
-		return;
-	}
+        return;
+    }
 
     protected void BroadcastDeathEvent()
     {
@@ -76,12 +77,12 @@ public class HealthSystem : MonoBehaviour {
     }
 
     protected void SwapProcedure()
-	{
-		if (OnSwapEvent != null)
-		{
-			OnSwapEvent(this, EventArgs.Empty);
-		}
-	}
+    {
+        if (OnSwapEvent != null)
+        {
+            OnSwapEvent(this, EventArgs.Empty);
+        }
+    }
 
     protected virtual void DoOnDamage()
     {
@@ -110,8 +111,8 @@ public class HealthSystem : MonoBehaviour {
 
     void Awake()
     {
-		useInvulnTime = GameObject.Find("GameManager").
-			GetComponent<GameManager>().useInvulnTime;
+        useInvulnTime = GameObject.Find("GameManager").
+            GetComponent<GameManager>().useInvulnTime;
 
         currHealth = maxHealth;
         damagePower = 0;
@@ -119,9 +120,9 @@ public class HealthSystem : MonoBehaviour {
         beingHit = false;
         tookDamage = false;
         elapsedDamageTime = 0f;
-		lastAttacker = null;
+        lastAttacker = null;
 
-        if(HealthBarPrefab != null && enableHealthBar)
+        if (HealthBarPrefab != null && enableHealthBar)
         {
             GameObject hpobj = Instantiate(HealthBarPrefab);
             hpobj.transform.position = gameObject.transform.position + healthBarOffset;
@@ -147,11 +148,11 @@ public class HealthSystem : MonoBehaviour {
     void FixedUpdate()
     {
         DoOnFixedUpdate();
-		
-		if (useInvulnTime)
-		{
-			InvulnHealthFixedUpdate();
-		}
+
+        if (useInvulnTime)
+        {
+            InvulnHealthFixedUpdate();
+        }
 
         if (currHealth <= 0 || Mathf.Approximately(currHealth, 0f))
         {
@@ -163,113 +164,103 @@ public class HealthSystem : MonoBehaviour {
     void OnTriggerStay(Collider other)
     {
         if (useInvulnTime)
-		{
-			InvulnHealthTriggerStay(other);
-		}
-		else
-		{
-			ImmediateHealthTriggerStay(other);
-		}
+        {
+            InvulnHealthTriggerStay(other);
+        }
+        else
+        {
+            ImmediateHealthTriggerStay(other);
+        }
 
         return;
     }
 
-	void InvulnHealthFixedUpdate()
-	{
-		if (beingHit)
-		{
-			if (tookDamage)
-			{
-				elapsedDamageTime += Time.fixedDeltaTime;
-				if (elapsedDamageTime >= damageTimeout)
-				{
-					elapsedDamageTime = 0f;
-					beingHit = false;
-					tookDamage = false;
-					damagePower = 0;
-				}
-			}
-			else
-			{
-				currHealth -= damagePower;
-				tookDamage = true;
-			}
-		}
-	}
+    void InvulnHealthFixedUpdate()
+    {
+        if (beingHit)
+        {
+            if (tookDamage)
+            {
+                elapsedDamageTime += Time.fixedDeltaTime;
+                if (elapsedDamageTime >= damageTimeout)
+                {
+                    elapsedDamageTime = 0f;
+                    beingHit = false;
+                    tookDamage = false;
+                    damagePower = 0;
+                }
+            }
+            else
+            {
+                currHealth -= damagePower;
+                tookDamage = true;
+            }
+        }
+    }
 
-	void InvulnHealthTriggerStay(Collider other)
-	{
-		if (beingHit)
-		{
-			return;
-		}
+    void InvulnHealthTriggerStay(Collider other)
+    {
+        if (beingHit)
+        {
+            return;
+        }
 
-		Transform parent = other.transform;
-		Weapon otherWeapon = parent.GetComponent<Weapon>();
-		while (parent.parent != null && otherWeapon == null) {
-			parent = parent.parent;
-			otherWeapon = parent.GetComponent<Weapon>();
-		}
+        Transform parent = other.transform;
+        Weapon otherWeapon = parent.GetComponent<Weapon>();
+        while (parent.parent != null && otherWeapon == null)
+        {
+            parent = parent.parent;
+            otherWeapon = parent.GetComponent<Weapon>();
+        }
 
-		if (otherWeapon == null)
-		{
-			return;
-		}
+        if (otherWeapon == null)
+        {
+            return;
+        }
 
-		if (otherWeapon.originator.teamNumber == teamNumber)
-		{
-			return;
-		}
+        if (otherWeapon.originator.teamNumber == teamNumber)
+        {
+            return;
+        }
 
-		lastAttacker = otherWeapon.originator;
-		Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
-		lastAttackWasUlt = (laser != null);
+        lastAttacker = otherWeapon.originator;
+        Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
+        lastAttackWasUlt = (laser != null);
 
-		damagePower = otherWeapon.damagePower;
-		beingHit = true;
-	}
+        damagePower = otherWeapon.damagePower;
+        beingHit = true;
+    }
 
-	void ImmediateHealthTriggerStay(Collider other)
-	{
-		Transform parent = other.transform;
-		Weapon otherWeapon = parent.GetComponent<Weapon>();
-		while (parent.parent != null && otherWeapon == null)
-		{
-			parent = parent.parent;
-			otherWeapon = parent.GetComponent<Weapon>();
-		}
+    void ImmediateHealthTriggerStay(Collider other)
+    {
+        Transform parent = other.transform;
+        Weapon otherWeapon = parent.GetComponent<Weapon>();
+        while (parent.parent != null && otherWeapon == null)
+        {
+            parent = parent.parent;
+            otherWeapon = parent.GetComponent<Weapon>();
+        }
 
+        if ((gameObject.layer == LayerMask.NameToLayer("RedBase")
+            && parent.gameObject.layer == LayerMask.NameToLayer("RedWeapon")) ||
+            (gameObject.layer == LayerMask.NameToLayer("BlueBase")
+            && parent.gameObject.layer == LayerMask.NameToLayer("BlueWeapon")))
+        {
+            return;
+        }
 
+        if (otherWeapon == null)
+        {
+            return;
+        }
 
+        lastAttacker = otherWeapon.originator;
+        Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
+        lastAttackWasUlt = (laser != null);
 
-		if (
-			(
-				gameObject.layer == LayerMask.NameToLayer ("RedBase")
-				&& parent.gameObject.layer == LayerMask.NameToLayer ("RedWeapon")
-			) ||
-			(
-				gameObject.layer == LayerMask.NameToLayer("BlueBase")
-				&& parent.gameObject.layer == LayerMask.NameToLayer("BlueWeapon")
-			)
-		)
-		{
-			//Destroy (other.gameObject);
-			print (other.name);
-			return;
-		}
-
-		if (otherWeapon == null)
-		{
-			return;
-		}
-
-		lastAttacker = otherWeapon.originator;
-		Weapon_LaserBeam laser = otherWeapon as Weapon_LaserBeam;
-		lastAttackWasUlt = (laser != null);
-
-		currHealth -= otherWeapon.damagePower;
+        currHealth -= otherWeapon.damagePower;
         DoOnDamage();
 
-		return;
-	}
+        return;
+    }
 }
