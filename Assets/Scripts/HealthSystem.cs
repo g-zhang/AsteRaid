@@ -239,7 +239,25 @@ public class HealthSystem : MonoBehaviour {
 			otherWeapon = parent.GetComponent<Weapon>();
 		}
 
-		
+
+
+
+		if (
+			(
+				gameObject.layer == LayerMask.NameToLayer ("RedBase")
+				&& parent.gameObject.layer == LayerMask.NameToLayer ("RedWeapon")
+			) ||
+			(
+				gameObject.layer == LayerMask.NameToLayer("BlueBase")
+				&& parent.gameObject.layer == LayerMask.NameToLayer("BlueWeapon")
+			)
+		)
+		{
+			//Destroy (other.gameObject);
+			print (other.name);
+			return;
+		}
+
 		if (otherWeapon == null)
 		{
 			return;
