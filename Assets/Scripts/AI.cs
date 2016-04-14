@@ -57,6 +57,10 @@ public class AI : HealthSystem
 	protected GameObject GetTarget(List<GameObject> potentialTargets)
 	{
 		GameObject target = null;
+		if (potentialTargets.Count == 0)
+		{
+			return target;
+		}
 
 		switch (targetingSystem)
 		{
