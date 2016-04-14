@@ -8,7 +8,9 @@ public class HealthSystem : MonoBehaviour {
     public Team teamNumber = Team.Neutral;
     public float maxHealth = 50f;
     public float damageTimeout = 0.25f;
+
 	public float deathHealAmount = 1f;
+	public int deathUltChargeAmount = 1;
 
     [Header("Health Bar: Config")]
     public bool enableHealthBar = true;
@@ -54,7 +56,11 @@ public class HealthSystem : MonoBehaviour {
 					player.currHealth = player.maxHealth;
 				}
 
-				
+				player.ultCharges += deathUltChargeAmount;
+				if (player.ultCharges > player.chargesNeededForUlt)
+				{
+					player.ultCharges = player.chargesNeededForUlt;
+				}
 			}
 		}
 
