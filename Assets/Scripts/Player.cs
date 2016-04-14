@@ -7,16 +7,17 @@ public class Player : HealthSystem
     public enum State { Normal = 0, Dead, Invuln, size };
 
     [Header("Player: Status")]
-    public State currState = State.Normal;
+	public State currState = State.Normal;
+	public Controls controls;
 
-    [Header("Player Weapon Config")]
-    public GameObject[] weapons;
-    public int selectedWeapon = 0;
-
-    public Transform[] turretTransforms;
-    private Controls controls;
-
-    private float coolDownTimeRemaining = 0f;
+    [Header("Player Weapon Prefabs")]
+	public GameObject primaryWeapon;
+	public GameObject secondaryWeapon;
+	public GameObject ultWeapon;
+	public int chargesNeededForUlt = 5;
+	public int ultCharges = 0;
+	public List<Transform> turretTransforms;
+	private float coolDownTimeRemaining = 0f;
 
     [Header("Player Respawn Config")]
     public Transform respawnLocation;
@@ -42,15 +43,9 @@ public class Player : HealthSystem
 			}
 		}
 
-		List<Transform> turrets = new List<Transform>();
-        foreach (Transform child in transform)
-        {
-            if (child.name == "Turret")
-            {
-                turrets.Add(child);
-            }
+        foreach (Transform child in transform) {
+            if (child.name == "Turret") turretTransforms.Add(child);
         }
-        turretTransforms = turrets.ToArray();
 
         controls = GetComponent<Controls>();
 
@@ -95,17 +90,9 @@ public class Player : HealthSystem
 
     protected override void DoOnFixedUpdate()
     {
-        if (currState != State.Dead)
-        {
-            if (controls.FireButtonIsPressed && weapons.Length > selectedWeapon)
-            {
-                Fire(weapons[selectedWeapon]);
-            }
-        }
-        if (controls.CycleButtonWasPressed)
-        {
-            CycleWeapon();
-        }
+		if (currState == State.Dead) return;
+		if (controls.FireButtonIsPressed) Fire(primaryWeapon);
+		if (controls.SecondFireButtonIsPressed) Fire(secondaryWeapon);
     }
 
     protected override void DoOnDamage()
@@ -174,34 +161,26 @@ public class Player : HealthSystem
 
         if (coolDownTimeRemaining > 0f) return;
 
-        foreach (Transform turret in turretTransforms)
-        {
-            GameObject go = Instantiate(weapon) as GameObject;
-            Weapon weaponScript = go.GetComponent<Weapon>();
-            weaponScript.teamNumber = teamNumber;
-            weaponScript.startingVelocity = turret.forward;
-            go.transform.position = turret.position;
-            if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
+		foreach (Transform turret in turretTransforms) {
+			GameObject go = Instantiate (weapon) as GameObject;
+			Weapon weaponScript = go.GetComponent<Weapon> ();
+			weaponScript.teamNumber = teamNumber;
+			weaponScript.startingVelocity = turret.forward;
+			go.transform.position = turret.position;
+			if (weaponScript is Weapon_LaserBeam)
+				go.transform.parent = transform;
 
 			if (teamNumber == Team.Team1) {
-				go.layer = LayerMask.NameToLayer("BlueWeapon");
+				go.layer = LayerMask.NameToLayer ("BlueWeapon");
 			}
 
 			if (teamNumber == Team.Team2) {
-				go.layer = LayerMask.NameToLayer("RedWeapon");
+				go.layer = LayerMask.NameToLayer ("RedWeapon");
 			}
-
 		}
-
 		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
     }
-
-    void CycleWeapon()
-    {
-        selectedWeapon++;
-        selectedWeapon %= weapons.Length;
-    }
-
+	
     void baseRegenHealth()
     {
         float distToRespawn = float.MaxValue;

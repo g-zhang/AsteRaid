@@ -113,10 +113,6 @@ public class Swivel : MonoBehaviour {
 
 	protected virtual void Update() {
 		SetRotation();
-        if(controls.SpinButtonWasPressed)
-        {
-            isSpinning = true;
-        }
 	}
 
 	protected virtual void FixedUpdate() {
