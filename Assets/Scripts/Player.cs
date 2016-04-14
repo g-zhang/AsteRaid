@@ -111,6 +111,7 @@ public class Player : HealthSystem
         if (currState != State.Dead)
         {
             currState = State.Dead;
+			ultCharges = 0;
             tookDamage = false;
             beingHit = false;
             controls.VibrateFor(1f, .5f);

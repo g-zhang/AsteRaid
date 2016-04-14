@@ -230,11 +230,6 @@ public class HealthSystem : MonoBehaviour {
 			return;
 		}
 
-		if (otherWeapon.originator.teamNumber == teamNumber)
-		{
-			return;
-		}
-
 		lastAttacker = otherWeapon.originator;
 		currHealth -= otherWeapon.damagePower;
         DoOnDamage();
