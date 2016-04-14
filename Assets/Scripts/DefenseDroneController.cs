@@ -10,7 +10,6 @@ public class DefenseDroneController : AI {
 	public float drag;
 	public GameObject weaponPrefab;
 	public float delayBetweenShots = 0.5f;
-	public float maxEnemyDistance = 10f;
 	public float angleChange = 0.5f;
 	public float angleOffset = 0.05f;
 
@@ -59,8 +58,7 @@ public class DefenseDroneController : AI {
 		RB = GetComponent<Rigidbody> ();
 
 		NMAgent = GetComponent<NavMeshAgent> ();
-
-		transform.Find ("Range").GetComponent<SphereCollider> ().radius = maxEnemyDistance;
+		
 		currRadius = radius;
 		currAngle = 0f;
 
@@ -129,8 +127,6 @@ public class DefenseDroneController : AI {
 
 			weaponComp.startingVelocity = transform.forward;
 			weaponComp.startingVelocity.Normalize();
-
-			weaponComp.maxDistance = maxEnemyDistance;
 			weaponComp.originator = this;
 
 			weaponComp.damagePower = 0.5f;

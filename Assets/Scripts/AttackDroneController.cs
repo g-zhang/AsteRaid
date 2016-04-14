@@ -55,8 +55,6 @@ public class AttackDroneController : AI {
 
 		NMAgent = GetComponent<NavMeshAgent> ();
 
-		range.GetComponent<SphereCollider> ().radius = maxEnemyDistance;
-
 		gotoBase ();
 		gotoBaseSet = false;
 	}
@@ -132,8 +130,6 @@ public class AttackDroneController : AI {
 
 			weaponComp.startingVelocity = transform.forward;
 			weaponComp.startingVelocity.Normalize();
-
-			weaponComp.maxDistance = maxEnemyDistance;
 			weaponComp.originator = this;
 
 			weaponComp.damagePower = 0.5f;
