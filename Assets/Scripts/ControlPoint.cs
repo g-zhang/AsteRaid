@@ -91,6 +91,7 @@ public class ControlPoint : MonoBehaviour
                 if(capturingPlayers[i].currState == Player.State.Dead)
                 {
                     capturingPlayers.RemoveAt(i);
+					continue;
                 }
 
                 if (captureSpectrum >= captureAbsValue) // blue
