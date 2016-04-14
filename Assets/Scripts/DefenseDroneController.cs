@@ -73,6 +73,8 @@ public class DefenseDroneController : AI {
 		if (range.inRange.Count > 0) {
 			NMAgent.Stop ();
 
+			print ("Something is in range");
+
 			rotateToFaceEnemy (GetTarget(range.inRange));	
 			thruster ();
 			fireWeapon (GetTarget(range.inRange));
@@ -150,10 +152,16 @@ public class DefenseDroneController : AI {
 
 	void circleCP() {
 		NMAgent.Resume ();
+
+		//Debug.DrawRay (NMAgent.destination, 10f*Vector3.up, Color.red, 1f);
+
 		if (NMAgent.remainingDistance <= 0.1f) {
+
+			//Debug.DrawRay (NMAgent.destination, 10f * Vector3.up, Color.cyan, 1f);
+
 			Vector3 cpPos = CPSpawn.transform.position;
 			float offsetX, offsetZ;
-			float newAngle = currAngle + Random.Range(angleChange - angleOffset, angleChange + angleOffset);
+			float newAngle = currAngle + Random.Range (angleChange - angleOffset, angleChange + angleOffset);
 			float newRadius = Random.Range (radius - radiusOffset, radius + radiusOffset);
 
 			offsetX = newRadius * Mathf.Cos (newAngle);
@@ -161,10 +169,14 @@ public class DefenseDroneController : AI {
 
 			Vector3 newPos = new Vector3 (cpPos.x + offsetX, transform.position.y, cpPos.z + offsetZ);
 
-			NMAgent.SetDestination( newPos);
+			NMAgent.SetDestination (newPos);
 
 			currAngle = newAngle;
 			currRadius = newRadius;
+		} else {
+			//Debug.DrawRay (transform.position, 10f * Vector3.up, Color.green, 1f);
+			// Keep drones from getting stuck near base for some reason
+			thruster ();
 		}
 	}
 }
