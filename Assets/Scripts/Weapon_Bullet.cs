@@ -20,12 +20,12 @@ public class Weapon_Bullet : Weapon
 		rigid.velocity = startingVelocity * speed;
         currLingerTime = lingerTime;
 
-        GetComponent<Renderer>().material.color = GameManager.GM.teamColors[(int)teamNumber];
+        GetComponent<Renderer>().material.color = GameManager.GM.teamColors[(int)originator.teamNumber];
 
         TrailRenderer trail = GetComponent<TrailRenderer>();
         if (trail != null)
         {
-            Color teamColor = GameManager.GM.teamColors[(int)teamNumber];
+            Color teamColor = GameManager.GM.teamColors[(int)originator.teamNumber];
             //trail.material.SetColor("_Color", new Color(teamColor.r, teamColor.b, teamColor.g, 1f));
             trail.material.SetColor("_EmissionColor", teamColor);
         }
@@ -73,14 +73,14 @@ public class Weapon_Bullet : Weapon
 		}
 		if (otherPlayer != null)
 		{
-			if (otherPlayer.teamNumber == teamNumber)
+			if (otherPlayer.teamNumber == originator.teamNumber)
 			{
 				return;
 			}
 		}
 		if (otherAI != null)
 		{
-			if (otherAI.teamNumber == teamNumber)
+			if (otherAI.teamNumber == originator.teamNumber)
 			{
 				return;
 			}

@@ -22,7 +22,7 @@ public class Weapon_LaserBeam : Weapon
 
 		timeElapsed = 0f;
 
-        GetComponent<Renderer>().material.color = GameManager.GM.teamColors[(int)teamNumber];
+        GetComponent<Renderer>().material.color = GameManager.GM.teamColors[(int)originator.teamNumber];
 
         return;
 	}

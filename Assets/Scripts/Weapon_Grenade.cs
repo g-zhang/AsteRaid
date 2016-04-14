@@ -34,7 +34,7 @@ public class Weapon_Grenade : Weapon
 		startingVelocity = rigid.velocity;
 
         nextTime = Time.time;
-        tcolor = GameManager.GM.teamColors[(int)teamNumber];
+        tcolor = GameManager.GM.teamColors[(int)originator.teamNumber];
 
 		return;
 	}
@@ -94,14 +94,14 @@ public class Weapon_Grenade : Weapon
 		}
 		if (otherPlayer != null)
 		{
-			if (otherPlayer.teamNumber == teamNumber)
+			if (otherPlayer.teamNumber == originator.teamNumber)
 			{
 				return;
 			}
 		}
 		if (otherAI != null)
 		{
-			if (otherAI.teamNumber == teamNumber)
+			if (otherAI.teamNumber == originator.teamNumber)
 			{
 				return;
 			}
@@ -115,6 +115,8 @@ public class Weapon_Grenade : Weapon
 
 	void Explode()
 	{
+		rigid.velocity = Vector3.zero;
+
 		if (transform.localScale.x >= maxExplosionSize)
 		{
 			Destroy(gameObject);

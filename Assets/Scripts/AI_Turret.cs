@@ -79,7 +79,7 @@ public class AI_Turret : AI
 
 			Weapon weaponComp = weapon.GetComponent<Weapon>();
 			weaponComp.startingVelocity = gun.forward;
-			weaponComp.teamNumber = teamNumber;
+			weaponComp.originator = this;
 
 			coolDownRemaining += weaponComp.coolDownTime;
 		}

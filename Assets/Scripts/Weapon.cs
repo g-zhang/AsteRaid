@@ -10,6 +10,6 @@ public class Weapon : MonoBehaviour
 	public float maxDistance;
 
 	[Header("Weapon: Externally Set Fields")]
-	public Team teamNumber;
+	public HealthSystem originator;
 	public Vector3 startingVelocity;
 }
