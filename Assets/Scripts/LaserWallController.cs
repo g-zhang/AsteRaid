@@ -44,10 +44,9 @@ public class LaserWallController : MonoBehaviour {
 			parent = parent.parent;
 		}
 			
-		if (other.GetComponent<Weapon> () != null) {
-			if (other.GetComponent<Weapon> () is Weapon_LaserBeam) return;
-			Destroy (other.gameObject);
-			return;
+		foreach (Transform tr in parent.transform) {
+			foreach (Weapon w in tr.GetComponentsInChildren<Weapon>())
+				if (w is Weapon_LaserBeam) return;
 		}
 
 		HealthSystem otherHS = parent.GetComponent<HealthSystem> ();

@@ -96,7 +96,7 @@ public class Player : HealthSystem
 		if (currState == State.Dead) return;
 		if (controls.FireButtonIsPressed) Fire(primaryWeapon);
 		if (controls.SecondFireButtonIsPressed) Fire(secondaryWeapon);
-		if (controls.UltButtonIsPressed && ultCharges >= chargesNeededForUlt) {
+		if (controls.UltButtonWasPressed && ultCharges >= chargesNeededForUlt) {
 			Fire(ultWeapon);
 			ultCharges = 0;
 		}
