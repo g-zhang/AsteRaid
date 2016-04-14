@@ -115,6 +115,8 @@ public class Weapon_Grenade : Weapon
 
 	void Explode()
 	{
+		rigid.velocity = Vector3.zero;
+
 		if (transform.localScale.x >= maxExplosionSize)
 		{
 			Destroy(gameObject);
