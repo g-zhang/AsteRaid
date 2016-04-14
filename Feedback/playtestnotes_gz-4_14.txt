@@ -1,0 +1,24 @@
+video:
+starting with the four split screen game is confusing, start with single screen first.
+then add four screens
+the rotation make it slower
+
+
+game:
+when the screen is gray, cant see you team
+seems like it strat is to sit far and snipe
+grenade doesn;t go far enough
+minions too strong, don't make them convert mercenary turrets
+bug: ultimate lets you go thru the gate wall
+how is my boost going down when im dead
+once a single position is won, the game is over
+maybe make turrets do more damage to minions
+no reason for increasing respawn
+still seems pre determined since the beginning
+ultimate laser is good
+grenades faster, explosion is instant, and fades
+make explosions push players back
+respawn, longer for players farther away from game, shorter for short dist
+higher instantenous damage, shorter range make it feel better
+make minions melee, triple the speed of bullets
+idea: more instantenous laser/bullets 
