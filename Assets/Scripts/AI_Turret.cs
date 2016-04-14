@@ -128,7 +128,7 @@ public class AI_Turret : AI
 			foreach (Transform tr in transform) {
 				if (tr.gameObject.name == "Range")
 					tr.gameObject.layer = LayerMask.NameToLayer("BlueWeapon");
-				else {
+				else if(tr.name != "HealthBar(Clone)") {
 					tr.gameObject.layer = LayerMask.NameToLayer("BlueTurret");
 					foreach (Transform tr2 in tr) {
 						tr2.gameObject.layer = LayerMask.NameToLayer("BlueTurret");
@@ -142,7 +142,7 @@ public class AI_Turret : AI
 			foreach (Transform tr in transform) {
 				if (tr.gameObject.name == "Range")
 					tr.gameObject.layer = LayerMask.NameToLayer("RedWeapon");
-				else {
+				else if (tr.name != "HealthBar(Clone)") {
 					tr.gameObject.layer = LayerMask.NameToLayer("RedTurret");
 					foreach (Transform tr2 in tr) {
 						tr2.gameObject.layer = LayerMask.NameToLayer("RedTurret");
