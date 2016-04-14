@@ -15,6 +15,8 @@ public class SpawnDrone : MonoBehaviour {
 	public int attackMaxDrones = 3;
 	public int defenseMaxDrones = 3;
 
+	public Vector3 attackRandomSpawnOffset = Vector3.zero;
+
 	public Material Team1Mat, Team2Mat;
 
 	[Header("Dynamically Set Fields")]
@@ -116,7 +118,10 @@ public class SpawnDrone : MonoBehaviour {
 	}
 
 	void spawnAttackDrone(Team teamNum) {
-		GameObject aDrone = Instantiate(attackDrone, transform.position, Quaternion.identity) as GameObject;
+		Vector3 pos = Vector3.Lerp(transform.position + attackRandomSpawnOffset,
+			transform.position - attackRandomSpawnOffset, Random.value);
+
+		GameObject aDrone = Instantiate(attackDrone, pos, Quaternion.identity) as GameObject;
 		aDrone.GetComponent<AttackDroneController> ().teamNumber = teamNum;
 		aDrone.GetComponent<AttackDroneController> ().CPSpawn = this.gameObject;
 

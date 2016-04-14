@@ -102,14 +102,13 @@ public class Player : HealthSystem
 
     protected override void DoOnFixedUpdate()
     {
-        if (currState == State.Dead) return;
-        if (controls.FireButtonIsPressed) Fire(primaryWeapon);
-        if (controls.SecondFireButtonIsPressed) Fire(secondaryWeapon);
-        if (controls.UltButtonIsPressed && ultCharges >= chargesNeededForUlt)
-        {
-            Fire(ultWeapon);
-            ultCharges = 0;
-        }
+		if (currState == State.Dead) return;
+		if (controls.FireButtonIsPressed) Fire(primaryWeapon);
+		if (controls.SecondFireButtonIsPressed) Fire(secondaryWeapon);
+		if (controls.UltButtonWasPressed && ultCharges >= chargesNeededForUlt) {
+			Fire(ultWeapon);
+			ultCharges = 0;
+		}
     }
 
     protected override void DoOnDamage()
