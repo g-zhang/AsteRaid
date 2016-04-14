@@ -71,9 +71,9 @@ public class AttackDroneController : AI {
 
 			gotoBaseSet = false;
 
-			rotateToFaceEnemy (range.inRange [0]);	
+			rotateToFaceEnemy (GetTarget(range.inRange));	
 			thruster ();
-			fireWeapon (range.inRange [0]);
+			fireWeapon (GetTarget(range.inRange));
 		}
 		// If the base is in range
 		else if (NMAgent.remainingDistance <= maxEnemyDistance) {

@@ -75,9 +75,9 @@ public class DefenseDroneController : AI {
 		if (range.inRange.Count > 0) {
 			NMAgent.Stop ();
 
-			rotateToFaceEnemy (range.inRange [0]);	
+			rotateToFaceEnemy (GetTarget(range.inRange));	
 			thruster ();
-			fireWeapon (range.inRange [0]);
+			fireWeapon (GetTarget(range.inRange));
 		}
 		// Otherwise, go around and do stuff;
 		else {
