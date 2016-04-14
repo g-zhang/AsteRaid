@@ -5,6 +5,13 @@ public class BaseHealth : HealthSystem {
 
     public bool isDestroyed = false;
 
+	public void OnAwake(){
+		if (teamNumber == Team.Team1)
+			gameObject.layer = LayerMask.NameToLayer ("BlueBase");
+		if (teamNumber == Team.Team2)
+			gameObject.layer = LayerMask.NameToLayer ("RedBase");
+	}
+
     public override void DeathProcedure()
     {
         if(!isDestroyed)
