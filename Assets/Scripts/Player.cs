@@ -137,7 +137,7 @@ public class Player : HealthSystem
 
     void ManageDeadState()
     {
-        if (currRespawnDelayTime - currDelayTime <= respawnIncrement * 2)
+        if (currRespawnDelayTime - currDelayTime <= respawnIncrement)
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
