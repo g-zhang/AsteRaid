@@ -16,7 +16,8 @@ public class Weapon_Grenade : Weapon
 	public Material explosionMat;
 
 	[Header("Weapon_Grenade: Dynamically Set Fields")]
-	public Rigidbody rigid;
+    public float currFlashSpeed = 0f;
+    public Rigidbody rigid;
 	public Renderer rend;
 
 	public Vector3 startPosition;
@@ -48,6 +49,14 @@ public class Weapon_Grenade : Weapon
 		else
 		{
 			Move();
+            Controls playerControls = originator.gameObject.GetComponent<Controls>();
+            if (playerControls != null)
+            {
+                if (playerControls.SecondFireButtonWasPressed)
+                {
+                    InitExplode();
+                }
+            }
 		}
 
 		return;
@@ -59,8 +68,8 @@ public class Weapon_Grenade : Weapon
         {
             if(Time.time > nextTime)
             {
-                nextTime += colorFlashSpeed;
-                if(rend.material.color == Color.black)
+                nextTime += currFlashSpeed;
+                if (rend.material.color == Color.black)
                 {
                     rend.material.color = tcolor;
                 } else
@@ -107,10 +116,8 @@ public class Weapon_Grenade : Weapon
 			}
 		}
 
-		rend.material = explosionMat;
-		isExploding = true;
-
-		return;
+        InitExplode();
+        return;
 	}
 
 	void Explode()
@@ -136,12 +143,20 @@ public class Weapon_Grenade : Weapon
 			Vector3.Magnitude(transform.position - startPosition);
 		if (currentDistance >= (maxDistance - fudgeValue))
 		{
-			rend.material = explosionMat;
-			isExploding = true;
-		}
+            InitExplode();
+        }
 
 		rigid.velocity = Vector3.Lerp(
 			startingVelocity, Vector3.zero, currentDistance / maxDistance);
-		return;
+
+        currFlashSpeed = colorFlashSpeed * (1f - (currentDistance / maxDistance)) + .05f;
+
+        return;
 	}
+
+    void InitExplode()
+    {
+        if(rend != null) rend.material = explosionMat;
+        isExploding = true;
+    }
 }
