@@ -93,6 +93,10 @@ public class Player : HealthSystem
 		if (currState == State.Dead) return;
 		if (controls.FireButtonIsPressed) Fire(primaryWeapon);
 		if (controls.SecondFireButtonIsPressed) Fire(secondaryWeapon);
+		if (controls.UltButtonIsPressed && ultCharges >= chargesNeededForUlt) {
+			Fire(ultWeapon);
+			ultCharges = 0;
+		}
     }
 
     protected override void DoOnDamage()
@@ -163,21 +167,15 @@ public class Player : HealthSystem
 
         if (coolDownTimeRemaining > 0f) return;
 
-        foreach (Transform turret in turretTransforms)
-        {
+        foreach (Transform turret in turretTransforms) {
             GameObject go = Instantiate(weapon) as GameObject;
             Weapon weaponScript = go.GetComponent<Weapon>();
             weaponScript.originator = this;
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
             if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
-			if (teamNumber == Team.Team1) {
-				go.layer = LayerMask.NameToLayer ("BlueWeapon");
-			}
-
-			if (teamNumber == Team.Team2) {
-				go.layer = LayerMask.NameToLayer ("RedWeapon");
-			}
+			if (teamNumber == Team.Team1) go.layer = LayerMask.NameToLayer ("BlueWeapon");
+			if (teamNumber == Team.Team2) go.layer = LayerMask.NameToLayer ("RedWeapon");
 		}
 		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
     }
