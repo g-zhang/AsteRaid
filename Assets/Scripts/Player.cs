@@ -175,8 +175,20 @@ public class Player : HealthSystem
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
             if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
-			if (teamNumber == Team.Team1) go.layer = LayerMask.NameToLayer ("BlueWeapon");
-			if (teamNumber == Team.Team2) go.layer = LayerMask.NameToLayer ("RedWeapon");
+
+			if (teamNumber == Team.Team1) {
+				go.layer = LayerMask.NameToLayer("BlueWeapon");
+				foreach (Transform tr in go.transform) {
+					tr.gameObject.layer = LayerMask.NameToLayer("BlueWeapon");
+				}
+			}
+
+			if (teamNumber == Team.Team2) {
+				go.layer = LayerMask.NameToLayer("RedWeapon");
+				foreach (Transform tr in go.transform) {
+					tr.gameObject.layer = LayerMask.NameToLayer("RedWeapon");
+				}
+			}
 		}
 		coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
     }

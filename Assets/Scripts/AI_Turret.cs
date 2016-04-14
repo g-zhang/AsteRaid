@@ -57,10 +57,10 @@ public class AI_Turret : AI
 			return;
 		}
 
-		if (range.inRange[0] == null) return;
+		GameObject target = GetTarget(range.inRange);
 
 		Vector3 direction =
-			range.inRange[0].transform.position - transform.position;
+			target.transform.position - transform.position;
 		Quaternion targetRotation =
 			Quaternion.LookRotation(direction, Vector3.up);
 		gun.rotation = Quaternion.Slerp(
