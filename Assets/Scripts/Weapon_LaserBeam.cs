@@ -14,6 +14,9 @@ public class Weapon_LaserBeam : Weapon
 	{
 		laser = transform.Find ("laser");
 		if (laser == null) print ("FU");
+		laser.gameObject.GetComponent<Renderer>().material.color =
+			GameManager.GM.teamColors[(int)originator.teamNumber];
+		
 		laser.gameObject.SetActive (false);
 		startingVelocity.Normalize();
 
@@ -27,8 +30,6 @@ public class Weapon_LaserBeam : Weapon
 
 		timeElapsed = 0f;
 
-		laser.GetComponent<Renderer>().material.color =
-			GameManager.GM.teamColors[(int)originator.teamNumber];
 
         return;
 	}
