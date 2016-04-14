@@ -118,8 +118,15 @@ public class SpawnDrone : MonoBehaviour {
 	}
 
 	void spawnAttackDrone(Team teamNum) {
-		Vector3 pos = Vector3.Lerp(transform.position + attackRandomSpawnOffset,
-			transform.position - attackRandomSpawnOffset, Random.value);
+		Vector3 pos = transform.position;
+		if (Random.Range(0, 2) == 0)
+		{
+			pos += attackRandomSpawnOffset;
+		}
+		else
+		{
+			pos -= attackRandomSpawnOffset;
+		}
 
 		GameObject aDrone = Instantiate(attackDrone, pos, Quaternion.identity) as GameObject;
 		aDrone.GetComponent<AttackDroneController> ().teamNumber = teamNum;
