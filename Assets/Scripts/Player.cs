@@ -194,9 +194,17 @@ public class Player : HealthSystem
             distToRespawn = Vector3.Distance(transform.position, GameManager.GM.base_team2.transform.Find("RespawnPoint").transform.position);
         }
 
-        if (distToRespawn <= GameManager.GM.regenRadius && currHealth < maxHealth)
+        if (distToRespawn <= GameManager.GM.regenRadius)
         {
-            currHealth += GameManager.GM.regenRate * Time.fixedDeltaTime;
+            regenHealth(GameManager.GM.regenRate, Time.deltaTime);
+        }
+    }
+
+    public void regenHealth(float regenRate, float deltaTime)
+    {
+        if(currHealth < maxHealth)
+        {
+            currHealth += regenRate * deltaTime;
             if (currHealth > maxHealth)
                 currHealth = maxHealth;
         }

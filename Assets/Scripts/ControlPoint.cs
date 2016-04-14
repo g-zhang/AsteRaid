@@ -14,6 +14,8 @@ public class ControlPoint : MonoBehaviour
 
 	public Team startingTeam = Team.Neutral;
 
+    public float healthRegenRate = 5f;
+
     private GameObject captureBars;
 
 	[Header("ControlPoint: Inspector Set Proximity Capture Fields")]
@@ -85,9 +87,25 @@ public class ControlPoint : MonoBehaviour
         {
             for(int i = capturingPlayers.Count - 1; i >= 0; i--)
             {
+                //remove dead players
                 if(capturingPlayers[i].currState == Player.State.Dead)
                 {
                     capturingPlayers.RemoveAt(i);
+                }
+
+                if (captureSpectrum >= captureAbsValue) // blue
+                {
+                    if (capturingPlayers[i].teamNumber == Team.Team1)
+                    {
+                        capturingPlayers[i].regenHealth(healthRegenRate, Time.deltaTime);
+                    }
+                }
+                else if(captureSpectrum <= -captureAbsValue)
+                {
+                    if (capturingPlayers[i].teamNumber == Team.Team2) //red
+                    {
+                        capturingPlayers[i].regenHealth(healthRegenRate, Time.deltaTime);
+                    }
                 }
             }
         }
