@@ -10,10 +10,11 @@ public class Weapon_LaserBeam : Weapon
 	public float timeElapsed;
 	public Transform laser;
 
+	Transform firer;
+
 	void Start()
 	{
 		laser = transform.Find ("laser");
-		if (laser == null) print ("FU");
 		laser.gameObject.GetComponent<Renderer>().material.color =
 			GameManager.GM.teamColors[(int)originator.teamNumber];
 		
@@ -27,9 +28,16 @@ public class Weapon_LaserBeam : Weapon
 		Vector3 scale = transform.localScale;
 		scale.y = maxDistance;
 		transform.localScale = scale;
-
 		timeElapsed = 0f;
 
+		firer = transform.parent;
+
+		if (firer == null) {
+			print ("ERROR: Orphaned laser.");
+			Destroy (gameObject);
+		}
+
+		transform.parent = null;
 
         return;
 	}
@@ -45,6 +53,9 @@ public class Weapon_LaserBeam : Weapon
 		{
 			Destroy(gameObject);
 		}
+
+		transform.position = firer.position;
+		transform.rotation = firer.rotation;
 
 		return;
 	}

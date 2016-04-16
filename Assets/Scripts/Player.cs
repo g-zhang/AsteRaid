@@ -198,6 +198,10 @@ public class Player : HealthSystem
             weaponScript.originator = this;
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
+
+			// TODO! This is not enough. laser as a child object prevents distinct collisions
+			// so the player can pass through the laser wall if the laserbeam touched it first!
+			// Laser has to have a "follow" script and be unparented, with its offset defined.
             if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
 
             if (teamNumber == Team.Team1)
