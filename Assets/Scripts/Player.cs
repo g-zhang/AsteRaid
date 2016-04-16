@@ -30,9 +30,9 @@ public class Player : HealthSystem
     public float maxRandomOffset = .5f;
     private Vector3 respawnLocationVector;
 
-    protected override void OnAwake()
-    {
 
+    void SetLayers()
+    {
         if (teamNumber == Team.Team1)
         {
             gameObject.layer = LayerMask.NameToLayer("BluePlayer");
@@ -50,6 +50,12 @@ public class Player : HealthSystem
                 tr.gameObject.layer = LayerMask.NameToLayer("RedPlayer");
             }
         }
+
+        transform.Find("GhostShip").gameObject.layer = LayerMask.NameToLayer("Ghost");
+    }
+    protected override void OnAwake()
+    {
+        SetLayers();
 
         foreach (Transform child in transform)
         {
