@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class RangeFinder : MonoBehaviour
 {
+	[Header("RangeFinder: Inspector Set Fields")]
+	public bool ignoreMercenaries = false;
+
 	[Header("RangeFinder: Dynamically Set Fields")]
 	public List<GameObject> inRange;
 	public HealthSystem parentHealthSystem;
@@ -41,6 +44,16 @@ public class RangeFinder : MonoBehaviour
 		{
 			return;
 		}
+
+		if (ignoreMercenaries)
+		{
+			AI otherAI = otherHealthSystem as AI;
+			if ((otherAI != null) && otherAI.teamSwapDestruction)
+			{
+				return;
+			}
+		}
+
 		otherHealthSystem.OnSwapEvent += OnInRangeSwap;
 
 		if (otherHealthSystem.teamNumber == parentHealthSystem.teamNumber)
