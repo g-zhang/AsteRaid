@@ -53,6 +53,7 @@ public class Player : HealthSystem
 
         transform.Find("GhostShip").gameObject.layer = LayerMask.NameToLayer("Ghost");
     }
+
     protected override void OnAwake()
     {
         SetLayers();
@@ -68,6 +69,17 @@ public class Player : HealthSystem
         currDelayTime = currRespawnDelayTime;
         respawnLocationVector = respawnLocation.position;
         currState = State.Normal;
+    }
+
+    protected override void OnStart()
+    {
+        Color tcolor = GameManager.GM.teamColors[(int)teamNumber];
+        Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .2f);
+        transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
+
+        //Material[] shipMats = transform.Find("PlayerShip").GetComponent<Renderer>().materials;
+        //shipMats[1].color = tcolor;
+
     }
 
     protected override void DoOnUpdate()
@@ -156,6 +168,10 @@ public class Player : HealthSystem
         }
         else
         {
+            //RespawnShip();
+        }
+        if (distanceFromRespawn() <= GameManager.GM.regenRadius)
+        {
             RespawnShip();
         }
     }
@@ -169,19 +185,20 @@ public class Player : HealthSystem
         transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
         transform.Find("Turret").gameObject.SetActive(false);
         transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
+        transform.Find("GhostShip").gameObject.SetActive(true);
     }
 
     void RespawnShip()
     {
         GetComponent<Rigidbody>().velocity = Vector3.zero;
-        transform.position = new Vector3(respawnLocationVector.x
-                                 + Random.Range(-maxRandomOffset, maxRandomOffset),
-                                 transform.position.y,
-                                 respawnLocationVector.z
-                                 + Random.Range(-maxRandomOffset, maxRandomOffset));
+        //transform.position = new Vector3(respawnLocationVector.x
+        //                         + Random.Range(-maxRandomOffset, maxRandomOffset),
+        //                         transform.position.y,
+        //                         respawnLocationVector.z
+        //                         + Random.Range(-maxRandomOffset, maxRandomOffset));
         //renable the player
         currState = State.Normal;
-        currHealth = maxHealth;
+        currHealth = 1f;
         GetComponent<ShipTrails>().enabled = true;
         //GetComponent<ShipControls>().enabled = true;
         transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
@@ -189,6 +206,7 @@ public class Player : HealthSystem
         transform.Find("Turret").gameObject.SetActive(true);
         transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
         currDelayTime = currRespawnDelayTime;
+        transform.Find("GhostShip").gameObject.SetActive(false);
     }
 
     void Fire(GameObject weapon)
@@ -235,17 +253,22 @@ public class Player : HealthSystem
 
     }
 
+    float distanceFromRespawn()
+    {
+        return Vector3.Distance(transform.position, respawnLocation.position);
+    }
+
     void baseRegenHealth()
     {
         float distToRespawn = float.MaxValue;
 
         if (teamNumber == Team.Team1)
         {
-            distToRespawn = Vector3.Distance(transform.position, GameManager.GM.base_team1.transform.Find("RespawnPoint").transform.position);
+            distToRespawn = distanceFromRespawn();
         }
         else if (teamNumber == Team.Team2)
         {
-            distToRespawn = Vector3.Distance(transform.position, GameManager.GM.base_team2.transform.Find("RespawnPoint").transform.position);
+            distToRespawn = distanceFromRespawn();
         }
 
         if (distToRespawn <= GameManager.GM.regenRadius)
