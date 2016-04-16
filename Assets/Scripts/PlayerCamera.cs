@@ -47,11 +47,11 @@ public class PlayerCamera : MonoBehaviour {
         {
             if(player.currState == Player.State.Dead)
             {
-                grayscale.enabled = true;
+                //grayscale.enabled = true;
             }
             else
             {
-                grayscale.enabled = false;
+                //grayscale.enabled = false;
             }
             prevState = player.currState;
         }
