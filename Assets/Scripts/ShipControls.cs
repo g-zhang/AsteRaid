@@ -12,7 +12,9 @@ public enum TranslationMode {
 public class ShipControls : MonoBehaviour {
 
 	[Header("Ship Parameters")]
+
 	public TranslationMode shipTranslationMode = TranslationMode.GlobalMotion;
+
 	public float minSpeed = 1f;
 	public float maxSpeed = 7f;
 	public float acceleration = 6f;
@@ -20,10 +22,19 @@ public class ShipControls : MonoBehaviour {
 	public float alignmentEffect = .2f;
 	public float speedLimitLerpSpeed = .1f;
 	public bool backwardPenalty = false;
+
 	public float maxBoostTime = 2f;
 	public float boostTime = 2f;
 	public float boostFactor = 2f;
 	public float boostRefillTime = 5f;
+
+
+	public float boostDuration = .5f;
+	public float boostTimeRemaining = 0f;
+	public float boostCooldownRemaining = 0f;
+	public float boostCooldownTime = 3f;
+	public bool boostCooldownMode = true;
+
 	public float remainingStunTime = 0f;
 
 	private Rigidbody rigid;
@@ -36,13 +47,31 @@ public class ShipControls : MonoBehaviour {
 		controls = GetComponent<Controls>();
 		particles = GetComponent<ParticleSystem>();
 		if (particles != null) emitter = particles.emission;
+		if (boostCooldownMode) maxBoostTime = boostCooldownTime;
 	}
 
 	void Update() {
-		if (controls.BoostButtonIsPressed) boostTime -= Time.deltaTime;
-		else boostTime += Time.deltaTime * maxBoostTime / boostRefillTime;
-		if (boostTime < 0f) boostTime = 0f;
-		if (boostTime > maxBoostTime) boostTime = maxBoostTime;
+
+		if (boostCooldownMode) {
+			
+			boostCooldownRemaining -= Time.deltaTime;
+			if (boostCooldownRemaining < 0f) boostCooldownRemaining = 0f;
+			boostTimeRemaining -= Time.deltaTime;
+			if (boostTimeRemaining < 0f) boostTimeRemaining = 0f;
+
+			boostTime = boostCooldownRemaining;
+
+			if (controls.BoostButtonWasPressed && boostCooldownRemaining <= 0f) {
+				boostCooldownRemaining = boostCooldownTime;
+				boostTimeRemaining = boostDuration;
+			}
+		} else {
+			if (controls.BoostButtonIsPressed) boostTime -= Time.deltaTime;
+			else boostTime += Time.deltaTime * maxBoostTime / boostRefillTime;
+			if (boostTime < 0f) boostTime = 0f;
+			if (boostTime > maxBoostTime) boostTime = maxBoostTime;
+		}
+
 		if (remainingStunTime > 0f) remainingStunTime -= Time.deltaTime;
 		if (remainingStunTime < 0f) remainingStunTime = 0f;
 	}
@@ -57,12 +86,23 @@ public class ShipControls : MonoBehaviour {
 		if (!backwardPenalty && alignment < 0) alignment = 0f;
 		float effectiveMaxSpeed = maxSpeed + alignment * alignmentEffect * maxSpeed;
 		float effectiveAcceleration = acceleration;
-		if (controls.BoostButtonIsPressed && boostTime > 0f) {
-			effectiveMaxSpeed *= boostFactor;
-			effectiveAcceleration *= boostFactor;
-			emitter.enabled = true;
+
+		if (boostCooldownMode) {
+			if (boostTimeRemaining > 0f){
+				effectiveMaxSpeed *= boostFactor;
+				effectiveAcceleration *= boostFactor;
+				emitter.enabled = true;
+			} else {
+				emitter.enabled = false;
+			}
 		} else {
-			emitter.enabled = false;
+			if (controls.BoostButtonIsPressed && boostTime > 0f) {
+				effectiveMaxSpeed *= boostFactor;
+				effectiveAcceleration *= boostFactor;
+				emitter.enabled = true;
+			} else {
+				emitter.enabled = false;
+			}
 		}
 
 		Vector3 moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
