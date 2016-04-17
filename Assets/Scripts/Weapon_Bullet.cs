@@ -13,6 +13,8 @@ public class Weapon_Bullet : Weapon
     public float currLingerTime = 0f;
     public bool isDead = false;
 
+    private ParticleSystem particles = null;
+
 	void Start()
 	{
 		rigid = GetComponent<Rigidbody>();
@@ -20,14 +22,21 @@ public class Weapon_Bullet : Weapon
 		rigid.velocity = startingVelocity * speed;
         currLingerTime = lingerTime;
 
-        GetComponent<Renderer>().material.color = GameManager.GM.teamColors[(int)originator.teamNumber];
+        Color tcolor = GameManager.GM.teamColors[(int)originator.teamNumber];
+
+        GetComponent<Renderer>().material.color = tcolor;
 
         TrailRenderer trail = GetComponent<TrailRenderer>();
         if (trail != null)
         {
-            Color teamColor = GameManager.GM.teamColors[(int)originator.teamNumber];
             //trail.material.SetColor("_Color", new Color(teamColor.r, teamColor.b, teamColor.g, 1f));
-            trail.material.SetColor("_EmissionColor", teamColor);
+            trail.material.SetColor("_EmissionColor", tcolor);
+        }
+
+        particles = GetComponent<ParticleSystem>();
+        if(particles != null)
+        {
+            particles.startColor = new Color(tcolor.r, tcolor.g, tcolor.b, .75f);
         }
 
 		return;
@@ -47,6 +56,13 @@ public class Weapon_Bullet : Weapon
             GetComponent<Rigidbody>().velocity = Vector3.zero;
             currLingerTime -= Time.deltaTime;
 
+            if(currLingerTime <=  lingerTime / 2f)
+            {
+                if (particles != null && particles.isPlaying)
+                {
+                    particles.Stop();
+                }
+            }
             if(currLingerTime <= 0f)
             {
                 Destroy(gameObject);
@@ -87,6 +103,10 @@ public class Weapon_Bullet : Weapon
 		}
 
         isDead = true;
-		return;
+        if (particles != null && !particles.isPlaying)
+        {
+            particles.Play();
+        }
+        return;
 	}
 }
