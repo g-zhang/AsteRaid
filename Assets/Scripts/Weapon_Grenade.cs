@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 public class Weapon_Grenade : Weapon
 {
     private float nextTime;
@@ -12,6 +13,7 @@ public class Weapon_Grenade : Weapon
 	public float maxExplosionSize = 10f;
 	public float fudgeValue = 0.1f;
     public float colorFlashSpeed = .25f;
+	public float fadeTime = 2.5f;
 
 	public Material explosionMat;
 
@@ -23,6 +25,9 @@ public class Weapon_Grenade : Weapon
 	public Vector3 startPosition;
 	public bool isExploding;
 
+	public bool isFading;
+	public float fadeTimeElapsed;
+
 	void Start()
 	{
 		rigid = GetComponent<Rigidbody>();
@@ -30,6 +35,8 @@ public class Weapon_Grenade : Weapon
 
 		startPosition = transform.position;
 		isExploding = false;
+		isFading = false;
+		fadeTimeElapsed = 0f;
 
 		rigid.velocity = startingVelocity * startingSpeed;
 		startingVelocity = rigid.velocity;
@@ -44,7 +51,14 @@ public class Weapon_Grenade : Weapon
 	{
 		if (isExploding)
 		{
-			Explode();
+			if (isFading)
+			{
+				Fade();
+			}
+			else
+			{
+				Explode();
+			}
 		}
 		else
 		{
@@ -126,7 +140,9 @@ public class Weapon_Grenade : Weapon
 
 		if (transform.localScale.x >= maxExplosionSize)
 		{
-			Destroy(gameObject);
+			isFading = true;
+			GetComponent<Collider>().enabled = false;
+
 			return;
 		}
 
@@ -152,6 +168,22 @@ public class Weapon_Grenade : Weapon
         currFlashSpeed = colorFlashSpeed * (1f - (currentDistance / maxDistance)) + .05f;
 
         return;
+	}
+
+	void Fade()
+	{
+		fadeTimeElapsed += Time.fixedDeltaTime;
+		if (fadeTimeElapsed >= fadeTime)
+		{
+			Destroy(gameObject);
+			return;
+		}
+
+		Color fadeColor = rend.material.color;
+		fadeColor.a = Mathf.Lerp(explosionMat.color.a, 0f, fadeTimeElapsed / fadeTime);
+
+		rend.material.color = fadeColor;
+		return;
 	}
 
     void InitExplode()
