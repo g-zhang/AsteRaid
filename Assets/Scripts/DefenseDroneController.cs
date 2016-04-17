@@ -83,7 +83,17 @@ public class DefenseDroneController : AI {
 		}
 	}
 
-	void spin() {
+    protected override void DoOnDamage()
+    {
+        Color tcolor = GameManager.GM.getTeamColor(teamNumber);
+        ShipColor scolor = transform.Find("Mesh1").GetComponent<ShipColor>();
+        if (scolor != null)
+        {
+            scolor.FlashColor(Color.Lerp(tcolor, Color.white, .75f), .1f);
+        }
+    }
+
+    void spin() {
 		mesh.Rotate (0f, spinSpeed * RB.velocity.magnitude, 0f);
 	}
 
