@@ -10,21 +10,27 @@ public class Player : HealthSystem
     public State currState = State.Normal;
     public float currRespawnDelayTime = 0f;
     public float currDelayTime; //this is timer you want for UI
-    private Controls controls;
 
-    private GameObject effects;
     float currEffectTime = 0f;
 
-    [Header("Player Weapon Prefabs")]
+    [Header("Weapon Prefabs")]
     public GameObject primaryWeapon;
     public GameObject secondaryWeapon;
     public GameObject ultWeapon;
+
+	[Header("Weapon Parameters")]
     public int chargesNeededForUlt = 5;
     public int ultCharges = 0;
-    public List<Transform> turretTransforms;
-    public List<Transform> altTurretTransforms;
-    private float coolDownTimeRemaining = 0f;
+	public int grenadeAmmo = 3;
+	public int maxGrenadeAmmo = 3;
+	public float grenadeRefillTime = 5f;
+	private float timeSinceGrenadeRefill = 0f;
+	private float primaryCoolDownRemaining = 0f;
     private float grenadeCooldownRemaining = 0f;
+
+	[Header("Weapon Spawn Transforms")]
+	public List<Transform> turretTransforms;
+	public List<Transform> altTurretTransforms;
 
     [Header("Player Respawn Config")]
     public Transform respawnLocation;
@@ -32,7 +38,10 @@ public class Player : HealthSystem
     public float respawnDelayTimeMax = 20f;
     public float respawnIncrement = 2f;
     public float maxRandomOffset = .5f;
-    private Vector3 respawnLocationVector;
+
+	private Vector3 respawnLocationVector;
+	private Controls controls;
+	private GameObject effects;
 
 
     void SetLayers()
@@ -85,14 +94,20 @@ public class Player : HealthSystem
         Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .2f);
         transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
 
-        //Material[] shipMats = transform.Find("PlayerShip").GetComponent<Renderer>().materials;
-        //shipMats[1].color = tcolor;
+        // Material[] shipMats = transform.Find("PlayerShip").GetComponent<Renderer>().materials;
+        // shipMats[1].color = tcolor;
         effects.GetComponent<ParticleSystem>().startColor = new Color(ecolor.r, ecolor.g, ecolor.b, .75f);
 
     }
 
     protected override void DoOnUpdate()
     {
+		timeSinceGrenadeRefill += Time.deltaTime;
+		if (timeSinceGrenadeRefill >= grenadeRefillTime){
+			if (grenadeAmmo < maxGrenadeAmmo) grenadeAmmo++;
+			timeSinceGrenadeRefill = 0f;
+		}
+
         if(currEffectTime > 0)
         {
             currEffectTime -= Time.deltaTime;
@@ -103,8 +118,8 @@ public class Player : HealthSystem
             effects.GetComponent<ParticleSystem>().Stop();
         }
 
-        coolDownTimeRemaining -= Time.deltaTime;
-        if (coolDownTimeRemaining < 0f) coolDownTimeRemaining = 0f;
+        primaryCoolDownRemaining -= Time.deltaTime;
+        if (primaryCoolDownRemaining < 0f) primaryCoolDownRemaining = 0f;
         grenadeCooldownRemaining -= Time.deltaTime;
         if (grenadeCooldownRemaining < 0f) grenadeCooldownRemaining = 0f;
 
@@ -141,7 +156,7 @@ public class Player : HealthSystem
     {
 		if (currState == State.Dead) return;
 		if (controls.FireButtonIsPressed) Fire(primaryWeapon, altTurretTransforms);
-		if (controls.SecondFireButtonIsPressed) Fire(secondaryWeapon, turretTransforms);
+		if (controls.SecondFireButtonIsPressed && grenadeAmmo > 0) Fire(secondaryWeapon, turretTransforms);
 		if (controls.UltButtonWasPressed && ultCharges >= chargesNeededForUlt) {
 			Fire(ultWeapon, turretTransforms);
 			ultCharges = 0;
@@ -232,7 +247,7 @@ public class Player : HealthSystem
     void Fire(GameObject weapon, List<Transform> turrets)
     {
 
-        if (weapon == primaryWeapon && coolDownTimeRemaining > 0f) return;
+        if (weapon == primaryWeapon && primaryCoolDownRemaining > 0f) return;
         if (weapon == secondaryWeapon && grenadeCooldownRemaining > 0f) return;
 
         foreach (Transform turret in turrets)
@@ -243,9 +258,6 @@ public class Player : HealthSystem
             weaponScript.startingVelocity = turret.forward;
             go.transform.position = turret.position;
 
-			// TODO! This is not enough. laser as a child object prevents distinct collisions
-			// so the player can pass through the laser wall if the laserbeam touched it first!
-			// Laser has to have a "follow" script and be unparented, with its offset defined.
             if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
 
             if (teamNumber == Team.Team1)
@@ -268,9 +280,11 @@ public class Player : HealthSystem
         }
 
         if (weapon == primaryWeapon)
-            coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
-        if (weapon == secondaryWeapon)
-            grenadeCooldownRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+            primaryCoolDownRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+		if (weapon == secondaryWeapon) {
+			grenadeCooldownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
+			grenadeAmmo--;
+		}
 
     }
 
