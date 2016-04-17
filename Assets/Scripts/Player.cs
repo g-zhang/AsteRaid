@@ -12,6 +12,9 @@ public class Player : HealthSystem
     public float currDelayTime; //this is timer you want for UI
     private Controls controls;
 
+    private GameObject effects;
+    float currEffectTime = 0f;
+
     [Header("Player Weapon Prefabs")]
     public GameObject primaryWeapon;
     public GameObject secondaryWeapon;
@@ -19,6 +22,7 @@ public class Player : HealthSystem
     public int chargesNeededForUlt = 5;
     public int ultCharges = 0;
     public List<Transform> turretTransforms;
+    public List<Transform> altTurretTransforms;
     private float coolDownTimeRemaining = 0f;
     private float grenadeCooldownRemaining = 0f;
 
@@ -61,10 +65,13 @@ public class Player : HealthSystem
         foreach (Transform child in transform)
         {
             if (child.name == "Turret") turretTransforms.Add(child);
+            if (child.name == "AltTurret") altTurretTransforms.Add(child);
         }
+        altTurretTransforms.AddRange(turretTransforms);
 
         controls = GetComponent<Controls>();
-
+        effects = transform.Find("Effects").gameObject;
+        
         currRespawnDelayTime = respawnDelayTimeMin;
         currDelayTime = currRespawnDelayTime;
         respawnLocationVector = respawnLocation.position;
@@ -74,16 +81,28 @@ public class Player : HealthSystem
     protected override void OnStart()
     {
         Color tcolor = GameManager.GM.teamColors[(int)teamNumber];
+        Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
         Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .2f);
         transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
 
         //Material[] shipMats = transform.Find("PlayerShip").GetComponent<Renderer>().materials;
         //shipMats[1].color = tcolor;
+        effects.GetComponent<ParticleSystem>().startColor = new Color(ecolor.r, ecolor.g, ecolor.b, .75f);
 
     }
 
     protected override void DoOnUpdate()
     {
+        if(currEffectTime > 0)
+        {
+            currEffectTime -= Time.deltaTime;
+            if(!effects.GetComponent<ParticleSystem>().isPlaying)
+                effects.GetComponent<ParticleSystem>().Play();
+        } else
+        {
+            effects.GetComponent<ParticleSystem>().Stop();
+        }
+
         coolDownTimeRemaining -= Time.deltaTime;
         if (coolDownTimeRemaining < 0f) coolDownTimeRemaining = 0f;
         grenadeCooldownRemaining -= Time.deltaTime;
@@ -121,10 +140,10 @@ public class Player : HealthSystem
     protected override void DoOnFixedUpdate()
     {
 		if (currState == State.Dead) return;
-		if (controls.FireButtonIsPressed) Fire(primaryWeapon);
-		if (controls.SecondFireButtonIsPressed) Fire(secondaryWeapon);
+		if (controls.FireButtonIsPressed) Fire(primaryWeapon, altTurretTransforms);
+		if (controls.SecondFireButtonIsPressed) Fire(secondaryWeapon, turretTransforms);
 		if (controls.UltButtonWasPressed && ultCharges >= chargesNeededForUlt) {
-			Fire(ultWeapon);
+			Fire(ultWeapon, turretTransforms);
 			ultCharges = 0;
 		}
     }
@@ -132,6 +151,7 @@ public class Player : HealthSystem
     protected override void DoOnDamage()
     {
         controls.VibrateFor(.25f, .2f);
+        currEffectTime = .2f;
     }
 
     public override void DeathProcedure()
@@ -209,13 +229,13 @@ public class Player : HealthSystem
         transform.Find("GhostShip").gameObject.SetActive(false);
     }
 
-    void Fire(GameObject weapon)
+    void Fire(GameObject weapon, List<Transform> turrets)
     {
 
         if (weapon == primaryWeapon && coolDownTimeRemaining > 0f) return;
         if (weapon == secondaryWeapon && grenadeCooldownRemaining > 0f) return;
 
-        foreach (Transform turret in turretTransforms)
+        foreach (Transform turret in turrets)
         {
             GameObject go = Instantiate(weapon) as GameObject;
             Weapon weaponScript = go.GetComponent<Weapon>();
@@ -246,6 +266,7 @@ public class Player : HealthSystem
                 }
             }
         }
+
         if (weapon == primaryWeapon)
             coolDownTimeRemaining += weapon.GetComponent<Weapon>().coolDownTime;
         if (weapon == secondaryWeapon)
@@ -255,21 +276,12 @@ public class Player : HealthSystem
 
     float distanceFromRespawn()
     {
-        return Vector3.Distance(transform.position, respawnLocation.position);
+        return Vector3.Distance(transform.position, respawnLocationVector);
     }
 
     void baseRegenHealth()
     {
-        float distToRespawn = float.MaxValue;
-
-        if (teamNumber == Team.Team1)
-        {
-            distToRespawn = distanceFromRespawn();
-        }
-        else if (teamNumber == Team.Team2)
-        {
-            distToRespawn = distanceFromRespawn();
-        }
+        float distToRespawn = distanceFromRespawn();
 
         if (distToRespawn <= GameManager.GM.regenRadius)
         {

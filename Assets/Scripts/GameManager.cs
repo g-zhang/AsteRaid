@@ -50,6 +50,23 @@ public class GameManager : MonoBehaviour
         get { return Singleton; }
     }
 
+    public Color getTeamColor(Team team, bool enemyColor = false)
+    {
+        if(enemyColor)
+        {
+            if(team == Team.Team1)
+            {
+                return teamColors[(int)Team.Team2];
+            }
+            if(team == Team.Team2)
+            {
+                return teamColors[(int)Team.Team1];
+            }
+            return teamColors[(int)Team.Neutral];
+        }
+        return teamColors[(int)team];
+    }
+
     public GameObject GetPlayerGO(int playerNum)
     {
         GameObject ret = null;
