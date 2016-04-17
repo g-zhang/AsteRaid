@@ -119,9 +119,19 @@ public class AI_Turret : AI
 		return;
 	}
 
+    protected override void DoOnDamage()
+    {
+        Color tcolor = bodyRend.material.color;
+        ShipColor guncolor = transform.Find("Gun/GunBody").GetComponent<ShipColor>();
+        ShipColor bodycolor = transform.Find("Body").GetComponent<ShipColor>();
+        if (guncolor != null && bodycolor != null)
+        {
+            guncolor.FlashColor(Color.Lerp(tcolor, Color.white, .75f), .1f);
+            bodycolor.FlashColor(Color.Lerp(tcolor, Color.white, .75f), .1f);
+        }
+    }
 
-
-	void SetTeamLayer() {
+    void SetTeamLayer() {
 
 		if (teamNumber == Team.Team1) {
 			gameObject.layer = LayerMask.NameToLayer("BlueTurret");
