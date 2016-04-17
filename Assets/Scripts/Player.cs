@@ -89,12 +89,12 @@ public class Player : HealthSystem
     protected override void OnStart()
     {
         Color tcolor = GameManager.GM.teamColors[(int)teamNumber];
-        Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
+        //Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
         Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
         transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
 
-        effects.GetComponent<ParticleSystem>().startColor = new Color(ecolor.r, ecolor.g, ecolor.b, .75f);
-
+        //effects.GetComponent<ParticleSystem>().startColor = new Color(ecolor.r, ecolor.g, ecolor.b, .75f);
+        effects.GetComponent<ParticleSystem>().startColor = new Color(tcolor.r, tcolor.g, tcolor.b, .75f);
     }
 
     protected override void DoOnUpdate()
