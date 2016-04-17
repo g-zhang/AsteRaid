@@ -90,11 +90,9 @@ public class Player : HealthSystem
     {
         Color tcolor = GameManager.GM.teamColors[(int)teamNumber];
         Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
-        Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .2f);
+        Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
         transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
 
-        // Material[] shipMats = transform.Find("PlayerShip").GetComponent<Renderer>().materials;
-        // shipMats[1].color = tcolor;
         effects.GetComponent<ParticleSystem>().startColor = new Color(ecolor.r, ecolor.g, ecolor.b, .75f);
 
     }
@@ -166,6 +164,7 @@ public class Player : HealthSystem
     {
         controls.VibrateFor(.25f, .2f);
         currEffectTime = .2f;
+        transform.Find("PlayerShip").GetComponent<ShipColor>().FlashColor(Color.black, .1f);
     }
 
     public override void DeathProcedure()
