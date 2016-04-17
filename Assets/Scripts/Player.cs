@@ -171,10 +171,9 @@ public class Player : HealthSystem
 
     public override void DeathProcedure()
     {
-        KillHealAndCharge();
-
         if (currState != State.Dead)
         {
+            KillHealAndCharge();
             currState = State.Dead;
             currRespawnDelayTime += respawnIncrement;
             currRespawnDelayTime = currRespawnDelayTime > respawnDelayTimeMax ? respawnDelayTimeMax : currRespawnDelayTime;

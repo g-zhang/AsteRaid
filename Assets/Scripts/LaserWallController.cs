@@ -53,13 +53,11 @@ public class LaserWallController : MonoBehaviour {
 		if (parent.GetComponent<ShipControls>() == null) return; 
 
 		if (otherHS != null) {
-
-			if (otherHS.teamNumber != teamNumber && parent.GetComponent<ShipControls>().remainingStunTime <= 0f) {
-				otherHS.currHealth -= enemyDamage;
-                parent.GetComponent<Controls>().VibrateFor(1f, .5f);
-				parent.GetComponent<ShipControls> ().remainingStunTime = ejectStunTime;
-				parent.GetComponent<Rigidbody> ().AddForce (transform.forward * ejectForce, ForceMode.Impulse);
-			}
+			
+			otherHS.currHealth -= enemyDamage;
+            parent.GetComponent<Controls>().VibrateFor(1f, .5f);
+			parent.GetComponent<ShipControls> ().remainingStunTime = ejectStunTime;
+			parent.GetComponent<Rigidbody> ().AddForce (transform.forward * ejectForce, ForceMode.Impulse);
 		}
 	}
 }
