@@ -142,6 +142,7 @@ public class HealthSystem : MonoBehaviour
 
     void Update()
     {
+        HPBar.gameObject.transform.position = gameObject.transform.position + healthBarOffset;
         DoOnUpdate();
     }
 
