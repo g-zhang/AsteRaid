@@ -33,16 +33,15 @@ public class Player : HealthSystem
 	public List<Transform> altTurretTransforms;
 
     [Header("Player Respawn Config")]
-    public Transform respawnLocation;
+	public Transform[] respawnLocation;
     public float respawnDelayTimeMin = 6f;
     public float respawnDelayTimeMax = 20f;
     public float respawnIncrement = 2f;
     public float maxRandomOffset = .5f;
 
-	private Vector3 respawnLocationVector;
+	//private Vector3 respawnLocationVector;
 	private Controls controls;
 	private GameObject effects;
-
 
     void SetLayers()
     {
@@ -83,7 +82,7 @@ public class Player : HealthSystem
         
         currRespawnDelayTime = respawnDelayTimeMin;
         currDelayTime = currRespawnDelayTime;
-        respawnLocationVector = respawnLocation.position;
+        //respawnLocationVector = respawnLocation.position;
         currState = State.Normal;
     }
 
@@ -204,10 +203,12 @@ public class Player : HealthSystem
         {
             //RespawnShip();
         }
-        if (distanceFromRespawn() <= GameManager.GM.regenRadius)
-        {
-            RespawnShip();
-        }
+
+		for (int i = 0; i < respawnLocation.Length; i++) {
+			if (distanceFromRespawn (i) <= GameManager.GM.regenRadius) {
+				RespawnShip ();
+			}
+		}
     }
 
     void DisableShip()
@@ -287,19 +288,20 @@ public class Player : HealthSystem
 
     }
 
-    float distanceFromRespawn()
+	float distanceFromRespawn(int respawnIndex)
     {
-        return Vector3.Distance(transform.position, respawnLocationVector);
+        return Vector3.Distance(transform.position, respawnLocation[respawnIndex].position);
     }
 
     void baseRegenHealth()
     {
-        float distToRespawn = distanceFromRespawn();
+		for (int i = 0; i < respawnLocation.Length; i++) {
+			float distToRespawn = distanceFromRespawn (i);
 
-        if (distToRespawn <= GameManager.GM.regenRadius)
-        {
-            regenHealth(GameManager.GM.regenRate, Time.deltaTime);
-        }
+			if (distToRespawn <= GameManager.GM.regenRadius) {
+				regenHealth (GameManager.GM.regenRate, Time.deltaTime);
+			}
+		}
     }
 
     public void regenHealth(float regenRate, float deltaTime)
