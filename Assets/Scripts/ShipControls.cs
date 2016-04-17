@@ -9,6 +9,7 @@ public enum TranslationMode {
 
 [RequireComponent(typeof(Controls))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Player))]
 public class ShipControls : MonoBehaviour {
 
 	[Header("Ship Parameters")]
@@ -41,16 +42,24 @@ public class ShipControls : MonoBehaviour {
 	private Controls controls;
 	private ParticleSystem particles;
 	private ParticleSystem.EmissionModule emitter;
+	private Player player;
 
 	void Start() {
 		rigid = GetComponent<Rigidbody>();
 		controls = GetComponent<Controls>();
 		particles = GetComponent<ParticleSystem>();
+		player = GetComponent<Player> ();
 		if (particles != null) emitter = particles.emission;
 		if (boostCooldownMode) maxBoostTime = boostCooldownTime;
 	}
 
 	void Update() {
+
+
+		if (remainingStunTime > 0f) remainingStunTime -= Time.deltaTime;
+		if (remainingStunTime < 0f) remainingStunTime = 0f;
+
+		if (player.currState == Player.State.Dead) return;
 
 		if (boostCooldownMode) {
 			
@@ -72,8 +81,6 @@ public class ShipControls : MonoBehaviour {
 			if (boostTime > maxBoostTime) boostTime = maxBoostTime;
 		}
 
-		if (remainingStunTime > 0f) remainingStunTime -= Time.deltaTime;
-		if (remainingStunTime < 0f) remainingStunTime = 0f;
 	}
 
 	void FixedUpdate() {
