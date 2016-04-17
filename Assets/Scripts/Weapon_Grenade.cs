@@ -13,6 +13,10 @@ public class Weapon_Grenade : Weapon
 	public float maxExplosionSize = 10f;
 	public float fudgeValue = 0.1f;
     public float colorFlashSpeed = .25f;
+
+	public float flatForceDamage = 5f;
+	public float ejectForce = 1f;
+	public float ejectStunTime = 0.8f;
 	public float fadeTime = 2.5f;
 
 	public Material explosionMat;
@@ -96,15 +100,16 @@ public class Weapon_Grenade : Weapon
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (isExploding)
-		{
-			return;
-		}
-
 		Transform parent = other.transform;
 		while (parent.parent != null)
 		{
 			parent = parent.parent;
+		}
+
+		if (isExploding)
+		{
+			ExertExplosionForce(parent);
+			return;
 		}
 
 		Weapon otherWeapon = parent.GetComponent<Weapon>();
@@ -130,7 +135,9 @@ public class Weapon_Grenade : Weapon
 			}
 		}
 
-        InitExplode();
+		ExertExplosionForce(parent);
+		InitExplode();
+
         return;
 	}
 
@@ -191,4 +198,32 @@ public class Weapon_Grenade : Weapon
         if(rend != null) rend.material = explosionMat;
         isExploding = true;
     }
+
+	void ExertExplosionForce(Transform other)
+	{
+		HealthSystem otherHS = other.GetComponent<HealthSystem>();
+		if (otherHS == null)
+		{
+			return;
+		}
+
+		otherHS.currHealth -= flatForceDamage;
+
+		if ((otherHS is AI_Turret) || (otherHS is AI_WallTurret))
+		{
+			return;
+		}
+
+		other.GetComponent<Rigidbody>().AddExplosionForce(
+			ejectForce, transform.position, transform.localScale.x, 0f, ForceMode.Impulse);
+
+		ShipControls otherControls = other.GetComponent<ShipControls>();
+		if (otherControls != null)
+		{
+			other.GetComponent<Controls>().VibrateFor(1f, 0.5f);
+			otherControls.remainingStunTime = ejectStunTime;
+		}
+
+		return;
+	}
 }
