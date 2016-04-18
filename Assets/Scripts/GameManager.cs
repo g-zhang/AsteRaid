@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 {
     #region Public Game Constants and Enums
     public const int NUM_PLAYERS = 4;
-    public enum State { Error = 0, Menu, Countdown, InGame, EndGame, size }
+    public enum State { Error = 0, Menu, Countdown, InGame, EndGame, Tutorial, size }
     #endregion
 
     #region Private Members
@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public bool PausedGame;
 
     [Header("GameManager: Settings")]
+    public State sceneInitState = State.Countdown;
     public Color[] teamColors = { Color.green, Color.blue, Color.red };
 
     [Header("GameManager: Players")]
@@ -151,19 +152,23 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartCountDown();
+        currstate = sceneInitState;
 
-        for (int i = 0; i < NUM_PLAYERS; i++)
+        if(currstate == State.Countdown)
         {
-            if (playersGO[i] == null)
+            for (int i = 0; i < NUM_PLAYERS; i++)
             {
-                Debug.LogError(ES + "Player(" + i + ") is null!");
+                if (playersGO[i] == null)
+                {
+                    Debug.LogError(ES + "Player(" + i + ") is null!");
+                }
+                players[i] = playersGO[i].GetComponent<Player>();
+                if (players[i] == null)
+                {
+                    Debug.LogError(ES + "All GOs must have a Player component!");
+                }
             }
-            players[i] = playersGO[i].GetComponent<Player>();
-            if (players[i] == null)
-            {
-                Debug.LogError(ES + "All GOs must have a Player component!");
-            }
+            StartCountDown();
         }
     }
 
