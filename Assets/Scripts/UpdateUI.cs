@@ -4,22 +4,23 @@ using UnityEngine.UI;
 
 public class UpdateUI : MonoBehaviour {
 
-
     public GameObject Player0;
     public GameObject Player1;
     public GameObject Player2;
     public GameObject Player3;
 
-
     public GameObject Base1;
     public GameObject Base2;
 
+	public Text Player0Text;
+	public Text Player1Text;
+	public Text Player2Text;
+	public Text Player3Text;
 
-    public Text Player0Text;
-    public Text Player1Text;
-    public Text Player2Text;
-    public Text Player3Text;
-
+	public Text Player0Nades;
+	public Text Player1Nades;
+	public Text Player2Nades;
+	public Text Player3Nades;
 
 	public Slider Player0Boost;
 	public Slider Player1Boost;
@@ -38,7 +39,6 @@ public class UpdateUI : MonoBehaviour {
 	public ShipControls Player1SC;
 	public ShipControls Player2SC;
 	public ShipControls Player3SC;
-
 
 	public Text Base1Text;
     public Text Base2Text;
@@ -97,7 +97,10 @@ public class UpdateUI : MonoBehaviour {
 		Player2Ult.value = Player2.GetComponent<Player>().ultCharges;
 		Player3Ult.value = Player3.GetComponent<Player>().ultCharges;
 
-
+		Player0Nades.text = "Grenades: " + Player0.GetComponent<Player> ().grenadeAmmo.ToString();
+		Player1Nades.text = "Grenades: " + Player1.GetComponent<Player> ().grenadeAmmo.ToString();
+		Player2Nades.text = "Grenades: " + Player2.GetComponent<Player> ().grenadeAmmo.ToString();
+		Player3Nades.text = "Grenades: " + Player3.GetComponent<Player> ().grenadeAmmo.ToString();
 
 		if (currCountdown > 0) {
 			countdown ();
