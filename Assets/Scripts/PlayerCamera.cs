@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(UnityStandardAssets.ImageEffects.Grayscale))]
 public class PlayerCamera : MonoBehaviour {
 
     [Header("Config")]
@@ -11,13 +10,11 @@ public class PlayerCamera : MonoBehaviour {
     private Transform target;
     private Player player;
     private Player.State prevState;
-    private UnityStandardAssets.ImageEffects.Grayscale grayscale;
 
     // Use this for initialization
     void Start () {
         target = playerToFollow.GetComponent<Transform>();
         player = playerToFollow.GetComponent<Player>();
-        grayscale = GetComponent<UnityStandardAssets.ImageEffects.Grayscale>();
         if (target == null || player == null)
         {
             Debug.LogError("Target player isn't a player!");
@@ -47,11 +44,11 @@ public class PlayerCamera : MonoBehaviour {
         {
             if(player.currState == Player.State.Dead)
             {
-                //grayscale.enabled = true;
+                
             }
             else
             {
-                //grayscale.enabled = false;
+                
             }
             prevState = player.currState;
         }
