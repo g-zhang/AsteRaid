@@ -35,9 +35,10 @@ public class Player : HealthSystem
 
     [Header("Player Respawn Config")]
 	public Transform[] respawnLocation;
-    public float respawnDelayTimeMin = 6f;
-    public float respawnDelayTimeMax = 20f;
-    public float respawnIncrement = 2f;
+    public bool controlDeath = false;
+    float respawnDelayTimeMin = 2f;
+    float respawnDelayTimeMax = 2f;
+    float respawnIncrement = 2f;
     public float maxRandomOffset = .5f;
 
 	//private Vector3 respawnLocationVector;
@@ -66,7 +67,7 @@ public class Player : HealthSystem
             }
         }
 
-        //transform.Find("GhostShip").gameObject.layer = LayerMask.NameToLayer("Ghost");
+        transform.Find("GhostShip").gameObject.layer = LayerMask.NameToLayer("Ghost");
     }
 
     protected override void OnAwake()
@@ -95,8 +96,8 @@ public class Player : HealthSystem
     {
         Color tcolor = GameManager.GM.teamColors[(int)teamNumber];
         //Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
-        //Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
-        //transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
+        Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
+        transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
 
         //effects.GetComponent<ParticleSystem>().startColor = new Color(ecolor.r, ecolor.g, ecolor.b, .75f);
         effects.GetComponent<ParticleSystem>().startColor = new Color(tcolor.r, tcolor.g, tcolor.b, .75f);
@@ -191,12 +192,21 @@ public class Player : HealthSystem
 
     void ManageDeadState()
     {
-        if (currRespawnDelayTime - currDelayTime <= respawnIncrement)
+        if (currRespawnDelayTime - currDelayTime <= 1f)
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
         } else
         {
-            GetComponent<ShipControls>().enabled = true;
+            if(controlDeath)
+            {
+                GetComponent<ShipControls>().enabled = true;
+            }
+            else
+            {
+                Vector3 dir = respawnLocation[0].position - transform.position;
+                dir = dir.normalized;
+                GetComponent<Rigidbody>().velocity = dir * GetComponent<ShipControls>().maxSpeed;
+            }
         }
 
         if (currDelayTime > 0)
@@ -224,7 +234,7 @@ public class Player : HealthSystem
         transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
         transform.Find("Turret").gameObject.SetActive(false);
         transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
-        //transform.Find("GhostShip").gameObject.SetActive(true);
+        if(controlDeath) transform.Find("GhostShip").gameObject.SetActive(true);
     }
 
     void RespawnShip()
@@ -239,13 +249,13 @@ public class Player : HealthSystem
         currState = State.Normal;
         currHealth = 1f;
         GetComponent<ShipTrails>().enabled = true;
-        //GetComponent<ShipControls>().enabled = true;
+        GetComponent<ShipControls>().enabled = true;
         transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
         transform.Find("PlayerShip").GetComponent<Collider>().enabled = true;
         transform.Find("Turret").gameObject.SetActive(true);
         transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
         currDelayTime = currRespawnDelayTime;
-        //transform.Find("GhostShip").gameObject.SetActive(false);
+        if(controlDeath) transform.Find("GhostShip").gameObject.SetActive(false);
     }
 
     void Fire(GameObject weapon, List<Transform> turrets)
