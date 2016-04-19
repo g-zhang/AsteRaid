@@ -13,3 +13,27 @@ public domain sound from http://www.freesound.org/people/kafokafo/sounds/128229/
 RB icon
 
 <div>Icons made by <a href="http://www.flaticon.com/authors/yannick" title="Yannick">Yannick</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+Bomb icon
+
+<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+MICR Font
+
+http://m.font.downloadatoz.com/font,73578,micr-font-ext/download.html
+
+Chintzy CPU font
+
+http://www.1001fonts.com/chintzy-cpu-font.html
+
+Textures from CrazyTextures on the Asset Store:
+
+Rock 01
+http://u3d.as/bgY
+
+Metal 06
+http://u3d.as/9Sf
+
+Metal substance from Impact-IT on the Asset Store:
+http://u3d.as/jMP
+
