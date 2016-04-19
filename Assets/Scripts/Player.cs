@@ -114,7 +114,7 @@ public class Player : HealthSystem
         //Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
         if (enableMinimapIcon && CircleMarkerPrefab != null)
         {
-            CircleMarker.GetComponent<SpriteRenderer>().color = tcolor;
+            CircleMarker.GetComponent<SpriteRenderer>().color = Color.Lerp(tcolor, Color.white, .1f);
         }
 
         Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
@@ -258,7 +258,11 @@ public class Player : HealthSystem
         transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
         transform.Find("Turret").gameObject.SetActive(false);
         transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
-        if(controlDeath) transform.Find("GhostShip").gameObject.SetActive(true);
+        if (controlDeath) transform.Find("GhostShip").gameObject.SetActive(true);
+        if (enableMinimapIcon && CircleMarkerPrefab != null)
+        {
+            CircleMarker.SetActive(false);
+        }
     }
 
     void RespawnShip()
@@ -286,6 +290,10 @@ public class Player : HealthSystem
         transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
         currDelayTime = currRespawnDelayTime;
         if(controlDeath) transform.Find("GhostShip").gameObject.SetActive(false);
+        if (enableMinimapIcon && CircleMarkerPrefab != null)
+        {
+            CircleMarker.SetActive(true);
+        }
     }
 
     void Fire(GameObject weapon, List<Transform> turrets)
