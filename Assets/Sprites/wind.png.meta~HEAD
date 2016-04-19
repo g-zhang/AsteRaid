@@ -1,11 +1,6 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Sprites/signs.png.meta
-guid: d5bfc8f9cf2034f1997ced12b42548e5
-timeCreated: 1461038872
-=======
-guid: 392b377337ca31a43889782acf6b7393
-timeCreated: 1461036901
->>>>>>> origin/master:Assets/Sprites/signs.png.meta
+guid: c4b5a1ca7b3dd4db286e1256a4765a20
+timeCreated: 1461036484
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
