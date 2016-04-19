@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
     [Header("GameManager: Inspector Set Fields")]
     public bool useInvulnTime = false;
     public GameObject base_team1, base_team2;
-    public Canvas UICanvas;
     public int gameStartCountdown = 3;
     public float regenRate;
     public float regenRadius;
@@ -107,8 +106,6 @@ public class GameManager : MonoBehaviour
 
     public void StartCountDown()
     {
-        UICanvas.GetComponent<UpdateUI>().maxCountdown = gameStartCountdown;
-        UICanvas.GetComponent<UpdateUI>().countdown();
         currstate = State.Countdown;
     }
 
@@ -124,17 +121,6 @@ public class GameManager : MonoBehaviour
             currstate = State.EndGame;
 
             DisableAllVibration();
-
-            // Show WIN UI element
-            if (base_team1.GetComponent<BaseHealth>().isDestroyed)
-            {
-                UICanvas.GetComponent<UpdateUI>().displayWin(2);
-            }
-            else if (base_team2.GetComponent<BaseHealth>().isDestroyed)
-            {
-                UICanvas.GetComponent<UpdateUI>().displayWin(1);
-            }
-
         }
         else
         {
