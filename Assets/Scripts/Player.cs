@@ -36,6 +36,7 @@ public class Player : HealthSystem
     [Header("Player Respawn Config")]
 	public Transform[] respawnLocation;
     public bool controlDeath = false;
+    public bool instantHealth = false;
     float respawnDelayTimeMin = 2f;
     float respawnDelayTimeMax = 2f;
     float respawnIncrement = 2f;
@@ -247,7 +248,13 @@ public class Player : HealthSystem
         //                         + Random.Range(-maxRandomOffset, maxRandomOffset));
         //renable the player
         currState = State.Normal;
-        currHealth = 1f;
+        if(instantHealth)
+        {
+            currHealth = maxHealth;
+        } else
+        {
+            currHealth = 1f;
+        }
         GetComponent<ShipTrails>().enabled = true;
         GetComponent<ShipControls>().enabled = true;
         transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
