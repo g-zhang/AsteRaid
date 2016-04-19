@@ -86,6 +86,8 @@ public class Incentive : MonoBehaviour
 
 	void HealthRegen()
 	{
+		playersInRange.RemoveAll(p => p.currState == Player.State.Dead);
+
 		List<Player> team1 = new List<Player>(
 			playersInRange.FindAll(p => p.teamNumber == Team.Team1));
 		List<Player> team2 = new List<Player>(
