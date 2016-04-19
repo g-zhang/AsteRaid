@@ -14,6 +14,11 @@ public class Player : HealthSystem
 
     float currEffectTime = 0f;
 
+    [Header("Player: Minimap Icon")]
+    public bool enableMinimapIcon = false;
+    public GameObject CircleMarkerPrefab;
+    private GameObject CircleMarker;
+
     [Header("Weapon Prefabs")]
     public GameObject primaryWeapon;
     public GameObject secondaryWeapon;
@@ -89,6 +94,13 @@ public class Player : HealthSystem
         
         currRespawnDelayTime = respawnDelayTimeMin;
         currDelayTime = currRespawnDelayTime;
+
+        if(enableMinimapIcon && CircleMarkerPrefab != null)
+        {
+            CircleMarker = Instantiate(CircleMarkerPrefab);
+            CircleMarker.transform.parent = transform;
+            CircleMarker.transform.localPosition = new Vector3(0f, 20f, 0f);
+        }
         //respawnLocationVector = respawnLocation.position;
         currState = State.Normal;
     }
@@ -97,6 +109,11 @@ public class Player : HealthSystem
     {
         Color tcolor = GameManager.GM.teamColors[(int)teamNumber];
         //Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
+        if (enableMinimapIcon && CircleMarkerPrefab != null)
+        {
+            CircleMarker.GetComponent<SpriteRenderer>().color = tcolor;
+        }
+
         Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
         transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
 
