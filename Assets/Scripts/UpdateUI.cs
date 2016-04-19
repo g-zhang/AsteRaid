@@ -80,8 +80,26 @@ public class UpdateUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (GameManager.GM != null)
+        {
+            if (GameManager.GM.currstate == GameManager.State.Countdown)
+            {
+                maxCountdown = GameManager.GM.gameStartCountdown;
+                countdown();
+            }
 
-		Base1Text.text = "Blue Base HP: " + Base1.GetComponent<BaseHealth>().currHealth;
+            // Show WIN UI element
+            if (GameManager.GM.base_team1.GetComponent<BaseHealth>().isDestroyed)
+            {
+                displayWin(2);
+            }
+            else if (GameManager.GM. base_team2.GetComponent<BaseHealth>().isDestroyed)
+            {
+                displayWin(1);
+            }
+        }
+
+        Base1Text.text = "Blue Base HP: " + Base1.GetComponent<BaseHealth>().currHealth;
         Base2Text.text = "Red Base HP: " + Base2.GetComponent<BaseHealth>().currHealth;
 
 		Base1HP.value = Base1.GetComponent<BaseHealth> ().currHealth;
