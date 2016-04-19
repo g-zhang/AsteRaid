@@ -8,7 +8,7 @@ wind icon
 
 bullet sound
 
-http://www.freesound.org/people/kafokafo/sounds/128229/
+public domain sound from http://www.freesound.org/people/kafokafo/sounds/128229/ by user "kafokafo"
 
 RB icon
 
