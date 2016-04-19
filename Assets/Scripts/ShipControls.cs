@@ -59,8 +59,10 @@ public class ShipControls : MonoBehaviour {
 		if (remainingStunTime > 0f) remainingStunTime -= Time.deltaTime;
 		if (remainingStunTime < 0f) remainingStunTime = 0f;
 
-		if (player.currState == Player.State.Dead) return;
-
+		if (player.currState == Player.State.Dead) {
+			boostTimeRemaining = 0f;
+			return;
+		}
 		if (boostCooldownMode) {
 			
 			boostCooldownRemaining -= Time.deltaTime;
