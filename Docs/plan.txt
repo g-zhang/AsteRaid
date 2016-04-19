@@ -1,6 +1,17 @@
+Video
+Tutorial
+Minimap Icons
+Announcements
+Finalize death stuff
+Sound Effects
+Music
+Remove Inner spawn pool
 
 
-reward in middle
+
+
+
+DK reward in middle
 
 float back home automatically +
 player moves up above canyons while going back
@@ -10,15 +21,14 @@ ult is a cone, sweeping things away
 get rid of inner spawn
 
 GZ
-zoom camera in down from above @ start
-clear indications on minimap
-announcements of laser wall turret damage
+	zoom camera in down from above @ start
+	clear indications on minimap
+	announcements of laser wall turret damage
 
 AH tutorial
 
-JS UI overhaul, and add:
-	grenade ammo
-	ult-ready glowing
+JS UI overhaul
+JS ult-ready glowing
 
 Sounds:
 	drone bullet
