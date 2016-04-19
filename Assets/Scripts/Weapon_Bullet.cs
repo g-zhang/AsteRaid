@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class Weapon_Bullet : Weapon
 {
 	[Header("Weapon_Bullet: Inspector Set Fields")]
