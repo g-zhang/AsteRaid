@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Controls))]
+[RequireComponent(typeof(AudioSource))]
 public class Player : HealthSystem
 {
     public enum State { Normal = 0, Dead, Invuln, size };
@@ -43,6 +44,8 @@ public class Player : HealthSystem
 	private Controls controls;
 	private GameObject effects;
 
+	private AudioSource audioSource;
+
     void SetLayers()
     {
         if (teamNumber == Team.Team1)
@@ -69,6 +72,8 @@ public class Player : HealthSystem
     protected override void OnAwake()
     {
         SetLayers();
+
+		audioSource = GetComponent<AudioSource> ();
 
         foreach (Transform child in transform)
         {
@@ -280,7 +285,8 @@ public class Player : HealthSystem
 
 		if (weapon == primaryWeapon) {
 			primaryCoolDownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
-			MusicMan.MM.playClip (MusicMan.MM.bullet);
+			audioSource.clip = MusicMan.MM.bullet;
+			audioSource.Play ();
 		}
 		if (weapon == secondaryWeapon) {
 			grenadeCooldownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
