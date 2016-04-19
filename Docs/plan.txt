@@ -1,0 +1,36 @@
+
+
+reward in middle
+
+float back home automatically +
+player moves up above canyons while going back
+indicate death better
+
+ult is a cone, sweeping things away
+get rid of inner spawn
+
+GZ
+zoom camera in down from above @ start
+clear indications on minimap
+announcements of laser wall turret damage
+
+AH tutorial
+
+JS UI overhaul, and add:
+	grenade ammo
+	ult-ready glowing
+
+Sounds:
+	drone bullet
+	player bullet
+	turret bullet
+	ult
+	death
+	grenade launch
+	grenade explode
+	turret flip
+	turrets dying
+	laser going down
+	base dying
+	menu music
+	game music
