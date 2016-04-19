@@ -20,7 +20,7 @@ public class IndividualCanvas : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		player = go.GetComponent<Player>();
-		shipControls = go.GetComponent<ShipColor>();
+		shipControls = go.GetComponent<ShipControls>();
 		UltSlider.maxValue = player.chargesNeededForUlt;
 		BoostSlider.maxValue = shipControls.maxBoostTime;
 	}
@@ -41,7 +41,7 @@ public class IndividualCanvas : MonoBehaviour {
 			flip = true;
 		}
 
-		if (player.ultCharges == 0) {
+		if (player.ultCharges < player.chargesNeededForUlt) {
 			RBIcon.enabled = false;
 		} else if (flip){
 				RBIcon.enabled = !RBIcon.enabled;
