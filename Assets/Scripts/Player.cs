@@ -295,8 +295,6 @@ public class Player : HealthSystem
 
 		if (weapon == primaryWeapon) {
 			primaryCoolDownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
-			audioSource.clip = MusicMan.MM.bullet;
-			audioSource.Play ();
 		}
 		if (weapon == secondaryWeapon) {
 			grenadeCooldownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
