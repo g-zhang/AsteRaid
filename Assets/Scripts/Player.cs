@@ -278,8 +278,10 @@ public class Player : HealthSystem
             }
         }
 
-        if (weapon == primaryWeapon)
-            primaryCoolDownRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+		if (weapon == primaryWeapon) {
+			primaryCoolDownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
+			MusicMan.MM.playClip (MusicMan.MM.bullet);
+		}
 		if (weapon == secondaryWeapon) {
 			grenadeCooldownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
 			grenadeAmmo--;
