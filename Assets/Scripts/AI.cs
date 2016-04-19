@@ -66,10 +66,13 @@ public class AI : HealthSystem
 		List<GameObject> nonBlockedTargets = new List<GameObject>();
 		foreach (GameObject go in potentialTargets)
 		{
+			if (go == null)
+			{
+				continue;
+			}
+
 			Vector3 direction = go.transform.position - transform.position;
 			float distance = Vector3.Magnitude(direction);
-
-			Debug.DrawRay(transform.position, direction);
 
 			if (!Physics.Raycast(transform.position,
 				direction, distance, targetingRaycastMask))
