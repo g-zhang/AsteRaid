@@ -44,6 +44,7 @@ public class Player : HealthSystem
 	//private Vector3 respawnLocationVector;
 	private Controls controls;
 	private GameObject effects;
+	private GameObject ultGlow;
 
 	private AudioSource audioSource;
 
@@ -85,6 +86,8 @@ public class Player : HealthSystem
 
         controls = GetComponent<Controls>();
         effects = transform.Find("Effects").gameObject;
+		ultGlow = effects.transform.Find("UltGlow").gameObject;
+
         
         currRespawnDelayTime = respawnDelayTimeMin;
         currDelayTime = currRespawnDelayTime;
@@ -105,6 +108,9 @@ public class Player : HealthSystem
 
     protected override void DoOnUpdate()
     {
+
+		ultGlow.SetActive(ultCharges >= chargesNeededForUlt);
+
 		timeSinceGrenadeRefill += Time.deltaTime;
 		if (timeSinceGrenadeRefill >= grenadeRefillTime){
 			if (grenadeAmmo < maxGrenadeAmmo) grenadeAmmo++;
