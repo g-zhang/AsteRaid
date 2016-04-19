@@ -14,6 +14,11 @@ public class Player : HealthSystem
 
     float currEffectTime = 0f;
 
+    [Header("Player: Minimap Icon")]
+    public bool enableMinimapIcon = false;
+    public GameObject CircleMarkerPrefab;
+    private GameObject CircleMarker;
+
     [Header("Weapon Prefabs")]
     public GameObject primaryWeapon;
     public GameObject secondaryWeapon;
@@ -36,6 +41,7 @@ public class Player : HealthSystem
     [Header("Player Respawn Config")]
 	public Transform[] respawnLocation;
     public bool controlDeath = false;
+    public bool instantHealth = false;
     float respawnDelayTimeMin = 2f;
     float respawnDelayTimeMax = 2f;
     float respawnIncrement = 2f;
@@ -44,6 +50,7 @@ public class Player : HealthSystem
 	//private Vector3 respawnLocationVector;
 	private Controls controls;
 	private GameObject effects;
+	private GameObject ultGlow;
 
 	private AudioSource audioSource;
 
@@ -85,9 +92,18 @@ public class Player : HealthSystem
 
         controls = GetComponent<Controls>();
         effects = transform.Find("Effects").gameObject;
+		ultGlow = effects.transform.Find("UltGlow").gameObject;
+
         
         currRespawnDelayTime = respawnDelayTimeMin;
         currDelayTime = currRespawnDelayTime;
+
+        if(enableMinimapIcon && CircleMarkerPrefab != null)
+        {
+            CircleMarker = Instantiate(CircleMarkerPrefab);
+            CircleMarker.transform.parent = transform;
+            CircleMarker.transform.localPosition = new Vector3(0f, 20f, 0f);
+        }
         //respawnLocationVector = respawnLocation.position;
         currState = State.Normal;
     }
@@ -96,6 +112,11 @@ public class Player : HealthSystem
     {
         Color tcolor = GameManager.GM.teamColors[(int)teamNumber];
         //Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
+        if (enableMinimapIcon && CircleMarkerPrefab != null)
+        {
+            CircleMarker.GetComponent<SpriteRenderer>().color = tcolor;
+        }
+
         Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
         transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
 
@@ -105,6 +126,9 @@ public class Player : HealthSystem
 
     protected override void DoOnUpdate()
     {
+
+		ultGlow.SetActive(ultCharges >= chargesNeededForUlt);
+
 		timeSinceGrenadeRefill += Time.deltaTime;
 		if (timeSinceGrenadeRefill >= grenadeRefillTime){
 			if (grenadeAmmo < maxGrenadeAmmo) grenadeAmmo++;
@@ -247,7 +271,13 @@ public class Player : HealthSystem
         //                         + Random.Range(-maxRandomOffset, maxRandomOffset));
         //renable the player
         currState = State.Normal;
-        currHealth = 1f;
+        if(instantHealth)
+        {
+            currHealth = maxHealth;
+        } else
+        {
+            currHealth = 1f;
+        }
         GetComponent<ShipTrails>().enabled = true;
         GetComponent<ShipControls>().enabled = true;
         transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
