@@ -8,31 +8,47 @@ public class ObjectiveTrigger : MonoBehaviour {
 	public Team team;
 	public GameObject wall;
 
-	void Start() {
+	bool objComplete;
 
+	void Start() {
+		objComplete = false;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		// CapturePoint gets captured
-		if (type == objectiveType.CapturePoint) {
-			ControlPoint CP = GetComponent<ControlPoint> ();
-			if ((team == Team.Team1 && CP.driftPoint == CP.captureAbsValue) ||
-				(team == Team.Team2 && CP.driftPoint == (-1 * CP.captureAbsValue))) {
-				wall.GetComponent<TutorialWall> ().destroyWall ();
+		if (!objComplete) {
+			
+			// CapturePoint gets captured
+			if (type == objectiveType.CapturePoint) {
+				ControlPoint CP = GetComponent<ControlPoint> ();
+				if ((team == Team.Team1 && CP.driftPoint == CP.captureAbsValue) ||
+				   (team == Team.Team2 && CP.driftPoint == (-1 * CP.captureAbsValue))) {
+					completeObjective ();
+				}
+			}
+
+			// MercTurrect gets changed
+			else if (type == objectiveType.MercTurret) {
+				AI_Turret turret = GetComponent<AI_Turret> ();
+				if (turret.teamNumber == team) {
+					completeObjective ();
+				}
+			}
+
+			// LaserWall gets destroyed
+			else if (type == objectiveType.LaserWall) {
+
+			}
+
+			// Base gets damaged
+			else if (type == objectiveType.BaseDamage) {
+
 			}
 		}
-		// MercTurrect
-		else if (type == objectiveType.CapturePoint) {
+	}
 
-		}
-		// LaserWall
-		else if (type == objectiveType.CapturePoint) {
-
-		}
-		// BaseDamage
-		else if (type == objectiveType.CapturePoint) {
-
-		}
+	void completeObjective () {
+		wall.GetComponent<TutorialWall> ().destroyWall ();
+		objComplete = true;
 	}
 }

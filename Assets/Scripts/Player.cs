@@ -66,7 +66,7 @@ public class Player : HealthSystem
             }
         }
 
-        transform.Find("GhostShip").gameObject.layer = LayerMask.NameToLayer("Ghost");
+        //transform.Find("GhostShip").gameObject.layer = LayerMask.NameToLayer("Ghost");
     }
 
     protected override void OnAwake()
@@ -95,8 +95,8 @@ public class Player : HealthSystem
     {
         Color tcolor = GameManager.GM.teamColors[(int)teamNumber];
         //Color ecolor = GameManager.GM.getTeamColor(teamNumber, enemyColor: true);
-        Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
-        transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
+        //Color tGColor = new Color(tcolor.r, tcolor.g, tcolor.b, .3f);
+        //transform.Find("GhostShip").GetComponent<Renderer>().material.color = tGColor;
 
         //effects.GetComponent<ParticleSystem>().startColor = new Color(ecolor.r, ecolor.g, ecolor.b, .75f);
         effects.GetComponent<ParticleSystem>().startColor = new Color(tcolor.r, tcolor.g, tcolor.b, .75f);
@@ -224,7 +224,7 @@ public class Player : HealthSystem
         transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
         transform.Find("Turret").gameObject.SetActive(false);
         transform.Find("HealthBar(Clone)").gameObject.SetActive(false);
-        transform.Find("GhostShip").gameObject.SetActive(true);
+        //transform.Find("GhostShip").gameObject.SetActive(true);
     }
 
     void RespawnShip()
@@ -245,7 +245,7 @@ public class Player : HealthSystem
         transform.Find("Turret").gameObject.SetActive(true);
         transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
         currDelayTime = currRespawnDelayTime;
-        transform.Find("GhostShip").gameObject.SetActive(false);
+        //transform.Find("GhostShip").gameObject.SetActive(false);
     }
 
     void Fire(GameObject weapon, List<Transform> turrets)
