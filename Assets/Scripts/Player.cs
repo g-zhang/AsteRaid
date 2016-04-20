@@ -310,16 +310,7 @@ public class Player : HealthSystem
             Weapon weaponScript = go.GetComponent<Weapon>();
             weaponScript.originator = this;
 			weaponScript.startingVelocity = turret.transform.forward;
-
-            if (weaponScript is Weapon_Bullet)
-            {
-                weaponScript.beginVelocity = turret.transform.forward *
-                    Mathf.Abs(Vector3.Dot(GetComponent<Rigidbody>().velocity, turret.forward));
-            }
-            if (weaponScript is Weapon_Grenade)
-            {
-                weaponScript.beginVelocity = GetComponent<Rigidbody>().velocity;
-            }
+            weaponScript.beginVelocity = GetComponent<Rigidbody>().velocity;
 
             go.transform.position = turret.position;
 
