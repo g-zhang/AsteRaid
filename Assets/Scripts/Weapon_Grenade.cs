@@ -12,8 +12,8 @@ public class Weapon_Grenade : Weapon
 	public float startingSpeed = 5f;
 	public float explosionSpeed = 5f;
 	public float maxExplosionSize = 10f;
-	public float fudgeValue = 0.1f;
     public float colorFlashSpeed = .25f;
+	public float timeToDetonate = 5f;
 
 	public float flatForceDamage = 5f;
 	public float ejectForce = 1f;
@@ -30,6 +30,7 @@ public class Weapon_Grenade : Weapon
     public Rigidbody rigid;
 	public Renderer rend;
 
+	public float moveTimeElapsed;
 	public Vector3 startPosition;
 	public bool isExploding;
 
@@ -174,7 +175,9 @@ public class Weapon_Grenade : Weapon
 	{
 		float currentDistance =
 			Vector3.Magnitude(transform.position - startPosition);
-		if (currentDistance >= (maxDistance - fudgeValue))
+		moveTimeElapsed += Time.fixedDeltaTime;
+
+		if (moveTimeElapsed >= timeToDetonate)
 		{
             InitExplode();
         }
