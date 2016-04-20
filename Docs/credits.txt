@@ -50,3 +50,6 @@ http://www.freesound.org/people/bubaproducer/sounds/151018/
 
 Laser01rev:
 http://www.freesound.org/people/chipfork/sounds/72639/
+
+Skyboxes (Mars 3 and Stars):
+https://www.assetstore.unity3d.com/en/#!/content/53752
