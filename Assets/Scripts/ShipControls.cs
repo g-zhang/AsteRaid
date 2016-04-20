@@ -72,10 +72,6 @@ public class ShipControls : MonoBehaviour {
 
 			boostTime = boostCooldownRemaining;
 
-			if (controls.BoostButtonWasPressed && boostCooldownRemaining <= 0f) {
-				boostCooldownRemaining = boostCooldownTime;
-				boostTimeRemaining = boostDuration;
-			}
 		} else {
 			if (controls.BoostButtonIsPressed) boostTime -= Time.deltaTime;
 			else boostTime += Time.deltaTime * maxBoostTime / boostRefillTime;
@@ -97,7 +93,13 @@ public class ShipControls : MonoBehaviour {
 		float effectiveAcceleration = acceleration;
 
 		if (boostCooldownMode) {
-			if (boostTimeRemaining > 0f){
+            if (controls.BoostButtonWasPressed && boostCooldownRemaining <= 0f)
+            {
+                boostCooldownRemaining = boostCooldownTime;
+                boostTimeRemaining = boostDuration;
+            }
+
+            if (boostTimeRemaining > 0f){
 				effectiveMaxSpeed *= boostFactor;
 				effectiveAcceleration *= boostFactor;
 				emitter.enabled = true;

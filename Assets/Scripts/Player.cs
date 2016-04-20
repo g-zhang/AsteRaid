@@ -42,6 +42,7 @@ public class Player : HealthSystem
 	public Transform[] respawnLocation;
     public bool controlDeath = false;
     public bool instantHealth = false;
+    public float deadMoveSpeed = 7f;
     float respawnDelayTimeMin = 2f;
     float respawnDelayTimeMax = 2f;
     float respawnIncrement = 2f;
@@ -229,7 +230,8 @@ public class Player : HealthSystem
             {
                 Vector3 dir = respawnLocation[0].position - transform.position;
                 dir = dir.normalized;
-                GetComponent<Rigidbody>().velocity = dir * GetComponent<ShipControls>().maxSpeed;
+                GetComponent<Rigidbody>().velocity = dir * deadMoveSpeed;
+                GetComponent<ShipControls>().enabled = false;
             }
         }
 
@@ -308,8 +310,16 @@ public class Player : HealthSystem
             Weapon weaponScript = go.GetComponent<Weapon>();
             weaponScript.originator = this;
 			weaponScript.startingVelocity = turret.transform.forward;
-			weaponScript.beginVelocity =turret.transform.forward * 
-				Mathf.Abs(Vector3.Dot(GetComponent<Rigidbody>().velocity, turret.forward));
+
+            if (weaponScript is Weapon_Bullet)
+            {
+                weaponScript.beginVelocity = turret.transform.forward *
+                    Mathf.Abs(Vector3.Dot(GetComponent<Rigidbody>().velocity, turret.forward));
+            }
+            if (weaponScript is Weapon_Grenade)
+            {
+                weaponScript.beginVelocity = GetComponent<Rigidbody>().velocity;
+            }
 
             go.transform.position = turret.position;
 
