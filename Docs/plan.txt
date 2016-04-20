@@ -8,8 +8,9 @@ Music
 Remove Inner spawn pool
 
 
+BUGS:
 
-
+Grenade explodes on some irrelevant collisions (capture points)
 
 DK reward in middle
 
