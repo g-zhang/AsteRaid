@@ -36,12 +36,16 @@ public class Weapon_Grenade : Weapon
 	public bool isFading;
 	public float fadeTimeElapsed;
 
+	void Awake()
+	{
+		audioSource = GetComponent<AudioSource>();
+		return;
+	}
 
 	void Start()
 	{
 		rigid = GetComponent<Rigidbody>();
 		rend = GetComponent<Renderer>();
-		audioSource = GetComponent<AudioSource>();
 
 		startPosition = transform.position;
 		isExploding = false;
