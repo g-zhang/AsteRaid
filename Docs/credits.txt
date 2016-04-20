@@ -37,3 +37,9 @@ http://u3d.as/9Sf
 Metal substance from Impact-IT on the Asset Store:
 http://u3d.as/jMP
 
+
+Grenade launch sound:
+http://www.freesound.org/people/qubodup/sounds/162401/
+
+Grenade boom effect:
+http://www.freesound.org/people/knova/sounds/172334/

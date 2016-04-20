@@ -2,6 +2,7 @@
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(AudioSource))]
 public class Weapon_Grenade : Weapon
 {
     private float nextTime;
@@ -21,6 +22,9 @@ public class Weapon_Grenade : Weapon
 
 	public Material explosionMat;
 
+	private AudioSource audioSource;
+	public AudioClip explosionClip;
+
 	[Header("Weapon_Grenade: Dynamically Set Fields")]
     public float currFlashSpeed = 0f;
     public Rigidbody rigid;
@@ -32,10 +36,12 @@ public class Weapon_Grenade : Weapon
 	public bool isFading;
 	public float fadeTimeElapsed;
 
+
 	void Start()
 	{
 		rigid = GetComponent<Rigidbody>();
 		rend = GetComponent<Renderer>();
+		audioSource = GetComponent<AudioSource>();
 
 		startPosition = transform.position;
 		isExploding = false;
@@ -111,7 +117,7 @@ public class Weapon_Grenade : Weapon
 			ExertExplosionForce(parent);
 			return;
 		}
-
+		/*
 		Weapon otherWeapon = parent.GetComponent<Weapon>();
 		Player otherPlayer = parent.GetComponent<Player>();
 		AI otherAI = parent.GetComponent<AI>();
@@ -134,7 +140,7 @@ public class Weapon_Grenade : Weapon
 				return;
 			}
 		}
-
+		*/
 		ExertExplosionForce(parent);
 		InitExplode();
 
@@ -196,7 +202,9 @@ public class Weapon_Grenade : Weapon
     void InitExplode()
     {
         if(rend != null) rend.material = explosionMat;
-        isExploding = true;
+		isExploding = true;
+		audioSource.clip = explosionClip;
+		audioSource.Play();
     }
 
 	void ExertExplosionForce(Transform other)
