@@ -19,7 +19,7 @@ public class Weapon_Bullet : Weapon
 	{
 		rigid = GetComponent<Rigidbody>();
 		startPosition = transform.position;
-		rigid.velocity = startingVelocity * speed;
+		rigid.velocity = startingVelocity * speed + beginVelocity;
         currLingerTime = lingerTime;
 
         Color tcolor = GameManager.GM.teamColors[(int)originator.teamNumber];

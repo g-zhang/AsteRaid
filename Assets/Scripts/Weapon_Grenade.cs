@@ -48,7 +48,7 @@ public class Weapon_Grenade : Weapon
 		isFading = false;
 		fadeTimeElapsed = 0f;
 
-		rigid.velocity = startingVelocity * startingSpeed;
+		rigid.velocity = startingVelocity * startingSpeed + beginVelocity;
 		startingVelocity = rigid.velocity;
 
         nextTime = Time.time;

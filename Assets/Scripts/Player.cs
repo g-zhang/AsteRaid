@@ -307,7 +307,10 @@ public class Player : HealthSystem
             GameObject go = Instantiate(weapon) as GameObject;
             Weapon weaponScript = go.GetComponent<Weapon>();
             weaponScript.originator = this;
-            weaponScript.startingVelocity = turret.forward;
+			weaponScript.startingVelocity = turret.transform.forward;
+			weaponScript.beginVelocity =turret.transform.forward * 
+				Mathf.Abs(Vector3.Dot(GetComponent<Rigidbody>().velocity, turret.forward));
+
             go.transform.position = turret.position;
 
             if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;

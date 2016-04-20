@@ -12,4 +12,5 @@ public class Weapon : MonoBehaviour
 	[Header("Weapon: Externally Set Fields")]
 	public HealthSystem originator;
 	public Vector3 startingVelocity;
+	public Vector3 beginVelocity;
 }
