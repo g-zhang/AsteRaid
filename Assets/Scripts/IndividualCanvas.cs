@@ -17,6 +17,8 @@ public class IndividualCanvas : MonoBehaviour {
 	public Slider HealthSlider;
 	public Image tunnelVision;
 
+	public Text youDied;
+
 	public float RBFlipTime = 0.5f;
 	private float timeSinceRBFlip = 0f;
 
@@ -35,6 +37,8 @@ public class IndividualCanvas : MonoBehaviour {
 		Color tvColor = tunnelVision.color;
 		tvColor.a = player.damageLayerOpaque;
 		tunnelVision.color = tvColor;
+
+		youDied.enabled = player.currState == Player.State.Dead;
 
 		Bomb3Icon.enabled = (player.grenadeAmmo >= 3);
 		Bomb2Icon.enabled = (player.grenadeAmmo >= 2);

@@ -10,6 +10,10 @@ public class AI_WallTurret : AI_Turret {
     {
 		KillHealAndCharge();
 
+		if (deathExplosion != null) {
+			GameObject explosion = Instantiate (deathExplosion) as GameObject;
+			explosion.transform.position = transform.position;
+		}
         BroadcastDeathEvent();
         gameObject.SetActive(false);
         isDestroyed = true;

@@ -70,6 +70,7 @@ public class AI_Turret : AI
 		{
 			GameObject weapon = Instantiate(weaponPrefab);
 			weapon.transform.position = gun.position;
+			Instantiate (MusicMan.MM.turretBulletSoundSource, transform.position, Quaternion.identity);
 
 			if (teamNumber == Team.Team1) {
 				weapon.layer = LayerMask.NameToLayer ("BlueWeapon");

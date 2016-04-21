@@ -30,6 +30,10 @@ public class AI : HealthSystem
 
 		if (teamSwapDestruction)
 		{
+			if (deathExplosion != null) {
+				GameObject explosion = Instantiate (deathExplosion) as GameObject;
+				explosion.transform.position = transform.position;
+			}
 			if (lastAttacker == null)
 			{
 				// This shouldn't happen, but....
@@ -49,6 +53,7 @@ public class AI : HealthSystem
 		}
 		else
 		{
+			Instantiate (MusicMan.MM.droneDeathSoundSource, transform.position, Quaternion.identity);
 			base.DeathProcedure();
 		}
 

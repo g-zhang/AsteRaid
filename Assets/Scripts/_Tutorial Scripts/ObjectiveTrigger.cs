@@ -44,12 +44,14 @@ public class ObjectiveTrigger : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (!objComplete && type == objectiveType.BaseDamage) {
-			if (other.gameObject.GetComponent<Weapon> ().originator.gameObject.GetComponent<Player> () != null) {
-				other.gameObject.GetComponent<Weapon> ().originator.currHealth = 0;
-				for (int i = 0; i < GameManager.NUM_PLAYERS; i++) {
-					if (!TutorialManager.TM.playerReady[i] &&
-						TutorialManager.TM.players [i] == other.gameObject.GetComponent<Weapon> ().originator.gameObject) {
-						TutorialManager.TM.playerReady [i] = true;
+			if (other.gameObject.GetComponent<Weapon> () != null) {
+				if (other.gameObject.GetComponent<Weapon>().originator.gameObject.GetComponent<Player> () != null) {
+					for (int i = 0; i < GameManager.NUM_PLAYERS; i++) {
+						if (!TutorialManager.TM.playerReady[i] &&
+							TutorialManager.TM.players [i] == other.gameObject.GetComponent<Weapon> ().originator.gameObject) {
+							TutorialManager.TM.playerReady [i] = true;
+							other.gameObject.GetComponent<Weapon> ().originator.currHealth = 0;
+						}
 					}
 				}
 			}

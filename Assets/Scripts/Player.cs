@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AudioSource))]
 public class Player : HealthSystem
 {
-    public enum State { Normal = 0, Dead, Invuln, size };
+    public enum State { Normal = 0, Dead, Invuln, End, size };
 
     [Header("Player: Status")]
     public State currState = State.Normal;
@@ -179,6 +179,10 @@ public class Player : HealthSystem
                 }
                 break;
 
+            case State.End:
+                GetComponent<Rigidbody>().velocity = Vector3.zero;
+                break;
+
             default:
                 break;
         }
@@ -206,6 +210,12 @@ public class Player : HealthSystem
         transform.Find("PlayerShip").GetComponent<ShipColor>().FlashColor(Color.black, .1f);
     }
 
+    public void EndPlayer()
+    {
+        DeathProcedure();
+        currState = State.End;
+    }
+
     public override void DeathProcedure()
     {
         if (currState != State.Dead)
@@ -219,13 +229,13 @@ public class Player : HealthSystem
             beingHit = false;
             controls.VibrateFor(1f, .5f);
             DisableShip();
-            BroadcastDeathEvent();
-
-			if (deathExplosion != null)
-			{
-				GameObject explosion = Instantiate(deathExplosion);
+			BroadcastDeathEvent();
+			if (deathExplosion != null) {
+				Instantiate (MusicMan.MM.playerExplosionSoundSource, transform.position, Quaternion.identity);
+				GameObject explosion = Instantiate (deathExplosion) as GameObject;
 				explosion.transform.position = transform.position;
 			}
+
         }
     }
 
@@ -264,7 +274,7 @@ public class Player : HealthSystem
 		}
     }
 
-    void DisableShip()
+    public void DisableShip()
     {
         GetComponent<ShipTrails>().disableAllTrails();
         GetComponent<ShipTrails>().enabled = false;
@@ -327,7 +337,10 @@ public class Player : HealthSystem
 
             go.transform.position = turret.position;
 
-            if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
+			if (weaponScript is Weapon_LaserBeam) {
+				Instantiate (MusicMan.MM.ultimateSoundSource, transform.position, Quaternion.identity);
+				go.transform.parent = transform;
+			}
 
             if (teamNumber == Team.Team1)
             {

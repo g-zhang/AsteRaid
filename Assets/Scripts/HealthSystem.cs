@@ -38,15 +38,14 @@ public class HealthSystem : MonoBehaviour
     public event EventHandler OnDeathEvent;
     public event EventHandler OnSwapEvent;
 
+
     //override this for custom behavior when this object is "killed"
     public virtual void DeathProcedure()
     {
-		if (deathExplosion != null)
-		{
-			GameObject explosion = Instantiate(deathExplosion);
+		if (deathExplosion != null) {
+			GameObject explosion = Instantiate (deathExplosion) as GameObject;
 			explosion.transform.position = transform.position;
 		}
-
         BroadcastDeathEvent();
         Destroy(gameObject);
         return;
