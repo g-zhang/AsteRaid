@@ -14,7 +14,10 @@ public class DieWhenDonePlaying : MonoBehaviour {
 				break;
 			}
 		}
-		if (kill) Destroy (gameObject);
+		if (kill) {
+			Destroy (gameObject);
+			return;
+		}
 		src = GetComponent<AudioSource>();
 		src.Play ();
 	}
