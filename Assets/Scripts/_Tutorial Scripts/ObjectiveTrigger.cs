@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class ObjectiveTrigger : MonoBehaviour {
-	public enum objectiveType {CapturePoint, MercTurret, LaserWall, BaseDamage};
+	public enum objectiveType {CapturePoint, MercTurret, BaseDamage};
 
 	public objectiveType type;
 	public Team team;
@@ -34,21 +34,25 @@ public class ObjectiveTrigger : MonoBehaviour {
 					completeObjective ();
 				}
 			}
-
-			// LaserWall gets destroyed
-			else if (type == objectiveType.LaserWall) {
-
-			}
-
-			// Base gets damaged
-			else if (type == objectiveType.BaseDamage) {
-
-			}
 		}
 	}
 
 	void completeObjective () {
 		wall.GetComponent<TutorialWall> ().destroyWall ();
 		objComplete = true;
+	}
+
+	void OnTriggerEnter(Collider other) {
+		if (!objComplete && type == objectiveType.BaseDamage) {
+			if (other.gameObject.GetComponent<Weapon> ().originator.gameObject.GetComponent<Player> () != null) {
+				other.gameObject.GetComponent<Weapon> ().originator.currHealth = 0;
+				for (int i = 0; i < GameManager.NUM_PLAYERS; i++) {
+					if (!TutorialManager.TM.playerReady[i] &&
+						TutorialManager.TM.players [i] == other.gameObject.GetComponent<Weapon> ().originator.gameObject) {
+						TutorialManager.TM.playerReady [i] = true;
+					}
+				}
+			}
+		}
 	}
 }

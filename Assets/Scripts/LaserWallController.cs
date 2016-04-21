@@ -13,7 +13,7 @@ public class LaserWallController : MonoBehaviour {
 	[Header("LaserWall: Dynamic Set Fields")]
 	public Team teamNumber;
 
-	void Start() {
+	void Awake() {
 		teamNumber = gTurret1.GetComponent<HealthSystem> ().teamNumber;
 
 		Color teamColor = Color.green;
@@ -25,7 +25,17 @@ public class LaserWallController : MonoBehaviour {
 			teamColor = GameManager.GM.teamColors [(int)Team.Team2];
 			teamColor.a = 0.5f;
 		}
-		GetComponent<Renderer> ().material.color = teamColor;
+		//GetComponent<Renderer> ().material.color = teamColor;
+
+		ParticleSystem upParticles = transform.Find("UpParticles").GetComponent<ParticleSystem>();
+		ParticleSystem downParticles = transform.Find("DownParticles").GetComponent<ParticleSystem>();
+		Vector3 upBox = upParticles.shape.box;
+		Vector3 downBox = downParticles.shape.box;
+
+		upParticles.startColor = teamColor;
+		downParticles.startColor = teamColor;
+		upBox.x = transform.localScale.x;
+		downBox.x = transform.localScale.x;
 	}
 
 	// Update is called once per frame
