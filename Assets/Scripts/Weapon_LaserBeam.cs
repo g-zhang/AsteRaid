@@ -19,15 +19,6 @@ public class Weapon_LaserBeam : Weapon
 			GameManager.GM.teamColors[(int)originator.teamNumber];
 		
 		laser.gameObject.SetActive (false);
-		startingVelocity.Normalize();
-
-		transform.position += startingVelocity * maxDistance;
-		transform.rotation =
-			Quaternion.LookRotation(transform.forward, startingVelocity);
-
-		Vector3 scale = transform.localScale;
-		scale.y = maxDistance;
-		transform.localScale = scale;
 		timeElapsed = 0f;
 
 		firer = transform.parent;
@@ -38,6 +29,8 @@ public class Weapon_LaserBeam : Weapon
 		}
 
 		transform.parent = null;
+		laser.position += new Vector3(0, 0, (laser.localScale.z / 2) + 1);
+		transform.rotation = firer.rotation;
 
         return;
 	}

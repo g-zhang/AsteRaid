@@ -53,26 +53,6 @@ public class UpdateUI : MonoBehaviour {
 		currCountdown = maxCountdown;
 		loadLevelTime = Time.unscaledTime;
 
-		Player0SC = Player0.GetComponent<ShipControls>();
-		Player1SC = Player1.GetComponent<ShipControls>();
-		Player2SC = Player2.GetComponent<ShipControls>();
-		Player3SC = Player3.GetComponent<ShipControls>();
-
-		Player0Boost.maxValue = Player0SC.maxBoostTime;
-		Player1Boost.maxValue = Player1SC.maxBoostTime;
-		Player2Boost.maxValue = Player2SC.maxBoostTime;
-		Player3Boost.maxValue = Player3SC.maxBoostTime;
-
-		Player p0 = Player0.GetComponent<Player> ();
-		Player p1 = Player1.GetComponent<Player> ();
-		Player p2 = Player2.GetComponent<Player> ();
-		Player p3 = Player3.GetComponent<Player> ();
-
-		Player0Ult.maxValue = p0.chargesNeededForUlt;
-		Player1Ult.maxValue = p1.chargesNeededForUlt;
-		Player2Ult.maxValue = p2.chargesNeededForUlt;
-		Player3Ult.maxValue = p3.chargesNeededForUlt;
-
 		Base1HP.maxValue = Base1.GetComponent<BaseHealth> ().maxHealth;
 		Base2HP.maxValue = Base2.GetComponent<BaseHealth> ().maxHealth;
 
@@ -104,21 +84,6 @@ public class UpdateUI : MonoBehaviour {
 
 		Base1HP.value = Base1.GetComponent<BaseHealth> ().currHealth;
 		Base2HP.value = Base2.GetComponent<BaseHealth> ().currHealth;
-
-		Player0Boost.value = Player0SC.boostTime;
-		Player1Boost.value = Player1SC.boostTime;
-		Player2Boost.value = Player2SC.boostTime;
-		Player3Boost.value = Player3SC.boostTime;
-
-		Player0Ult.value = Player0.GetComponent<Player>().ultCharges;
-		Player1Ult.value = Player1.GetComponent<Player>().ultCharges;
-		Player2Ult.value = Player2.GetComponent<Player>().ultCharges;
-		Player3Ult.value = Player3.GetComponent<Player>().ultCharges;
-
-		Player0Nades.text = "Grenades: " + Player0.GetComponent<Player> ().grenadeAmmo.ToString();
-		Player1Nades.text = "Grenades: " + Player1.GetComponent<Player> ().grenadeAmmo.ToString();
-		Player2Nades.text = "Grenades: " + Player2.GetComponent<Player> ().grenadeAmmo.ToString();
-		Player3Nades.text = "Grenades: " + Player3.GetComponent<Player> ().grenadeAmmo.ToString();
 
 		if (currCountdown > 0) {
 			countdown ();

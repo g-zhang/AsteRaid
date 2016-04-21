@@ -24,17 +24,13 @@ public class ShipControls : MonoBehaviour {
 	public float speedLimitLerpSpeed = .1f;
 	public bool backwardPenalty = false;
 
-	public float maxBoostTime = 2f;
-	public float boostTime = 2f;
 	public float boostFactor = 2f;
-	public float boostRefillTime = 5f;
 
-
-	public float boostDuration = .5f;
+	public float boostTime = 2f;
 	public float boostTimeRemaining = 0f;
-	public float boostCooldownRemaining = 0f;
+
 	public float boostCooldownTime = 3f;
-	public bool boostCooldownMode = true;
+	public float boostCooldownRemaining = 0f;
 
 	public float remainingStunTime = 0f;
 
@@ -50,7 +46,6 @@ public class ShipControls : MonoBehaviour {
 		particles = GetComponent<ParticleSystem>();
 		player = GetComponent<Player> ();
 		if (particles != null) emitter = particles.emission;
-		if (boostCooldownMode) maxBoostTime = boostCooldownTime;
 	}
 
 	void Update() {
@@ -63,22 +58,12 @@ public class ShipControls : MonoBehaviour {
 			boostTimeRemaining = 0f;
 			return;
 		}
-		if (boostCooldownMode) {
 			
-			boostCooldownRemaining -= Time.deltaTime;
-			if (boostCooldownRemaining < 0f) boostCooldownRemaining = 0f;
-			boostTimeRemaining -= Time.deltaTime;
-			if (boostTimeRemaining < 0f) boostTimeRemaining = 0f;
+		boostCooldownRemaining -= Time.deltaTime;
+		if (boostCooldownRemaining < 0f) boostCooldownRemaining = 0f;
 
-			boostTime = boostCooldownRemaining;
-
-		} else {
-			if (controls.BoostButtonIsPressed) boostTime -= Time.deltaTime;
-			else boostTime += Time.deltaTime * maxBoostTime / boostRefillTime;
-			if (boostTime < 0f) boostTime = 0f;
-			if (boostTime > maxBoostTime) boostTime = maxBoostTime;
-		}
-
+		boostTimeRemaining -= Time.deltaTime;
+		if (boostTimeRemaining < 0f) boostTimeRemaining = 0f;
 	}
 
 	void FixedUpdate() {
@@ -92,29 +77,20 @@ public class ShipControls : MonoBehaviour {
 		float effectiveMaxSpeed = maxSpeed + alignment * alignmentEffect * maxSpeed;
 		float effectiveAcceleration = acceleration;
 
-		if (boostCooldownMode) {
-            if (controls.BoostButtonWasPressed && boostCooldownRemaining <= 0f)
-            {
-                boostCooldownRemaining = boostCooldownTime;
-                boostTimeRemaining = boostDuration;
-            }
+        if (controls.BoostButtonWasPressed && boostCooldownRemaining <= 0f)
+        {
+            boostCooldownRemaining = boostCooldownTime;
+			boostTimeRemaining = boostTime;
+        }
 
-            if (boostTimeRemaining > 0f){
-				effectiveMaxSpeed *= boostFactor;
-				effectiveAcceleration *= boostFactor;
-				emitter.enabled = true;
-			} else {
-				emitter.enabled = false;
-			}
+        if (boostTimeRemaining > 0f){
+			effectiveMaxSpeed *= boostFactor;
+			effectiveAcceleration *= boostFactor;
+			emitter.enabled = true;
 		} else {
-			if (controls.BoostButtonIsPressed && boostTime > 0f) {
-				effectiveMaxSpeed *= boostFactor;
-				effectiveAcceleration *= boostFactor;
-				emitter.enabled = true;
-			} else {
-				emitter.enabled = false;
-			}
+			emitter.enabled = false;
 		}
+	
 
 		Vector3 moveControl = new Vector3(controls.MoveStick.x, 0f, controls.MoveStick.y);
 		moveControl *= Time.deltaTime * effectiveAcceleration;

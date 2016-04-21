@@ -14,6 +14,8 @@ public class IndividualCanvas : MonoBehaviour {
 	public Image Bomb3Icon;
 	public Slider UltSlider;
 	public Slider BoostSlider;
+	public Slider HealthSlider;
+
 	public float RBFlipTime = 0.5f;
 	private float timeSinceRBFlip = 0f;
 
@@ -22,7 +24,8 @@ public class IndividualCanvas : MonoBehaviour {
 		player = go.GetComponent<Player>();
 		shipControls = go.GetComponent<ShipControls>();
 		UltSlider.maxValue = player.chargesNeededForUlt;
-		BoostSlider.maxValue = shipControls.maxBoostTime;
+		BoostSlider.maxValue = shipControls.boostCooldownTime;
+		HealthSlider.maxValue = player.maxHealth;
 	}
 	
 	// Update is called once per frame
@@ -32,7 +35,8 @@ public class IndividualCanvas : MonoBehaviour {
 		Bomb2Icon.enabled = (player.grenadeAmmo >= 2);
 		Bomb1Icon.enabled = (player.grenadeAmmo >= 1);
 		UltSlider.value = player.ultCharges;
-		BoostSlider.value = shipControls.boostTime;
+		BoostSlider.value = shipControls.boostCooldownTime - shipControls.boostCooldownRemaining;
+		HealthSlider.value = player.currHealth;
 
 		timeSinceRBFlip += Time.deltaTime;
 		bool flip = false;
@@ -44,7 +48,7 @@ public class IndividualCanvas : MonoBehaviour {
 		if (player.ultCharges < player.chargesNeededForUlt) {
 			RBIcon.enabled = false;
 		} else if (flip){
-				RBIcon.enabled = !RBIcon.enabled;
+			RBIcon.enabled = !RBIcon.enabled;
 		}
 	}
 }
