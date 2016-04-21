@@ -70,9 +70,12 @@ Skyboxes (Mars 3 and Stars):
 https://www.assetstore.unity3d.com/en/#!/content/53752
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 3DText Shader
 http://wiki.unity3d.com/index.php?title=3DText
 =======
+=======
+>>>>>>> origin/master
 base health icon:
 
 <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
@@ -82,5 +85,9 @@ health icon:
 <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
 Metal Clang
+<<<<<<< HEAD
+http://www.freesound.org/people/RoganDerrick/sounds/260435/
+>>>>>>> origin/master
+=======
 http://www.freesound.org/people/RoganDerrick/sounds/260435/
 >>>>>>> origin/master
