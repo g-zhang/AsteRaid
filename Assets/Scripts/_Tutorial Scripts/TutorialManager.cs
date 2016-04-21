@@ -37,7 +37,7 @@ public class TutorialManager : MonoBehaviour {
 			// move to next scene
 			timeTilGameStart -= Time.deltaTime;
 			if (timeTilGameStart <= 0f)
-				SceneManager.LoadScene("TheOctagon");
+				SceneManager.LoadScene("Loading(TutorialToOctagon)");
 		}
 	}
 

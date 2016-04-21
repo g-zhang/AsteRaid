@@ -18,7 +18,7 @@ public class MenuManager : MonoBehaviour {
             if (player.GetComponent<Controls>().StartWasPressed)
             {
 				print ("HELP");
-                SceneManager.LoadScene("Tutorial");
+				SceneManager.LoadScene("Loading(MenuToTutorial)");
             }
             if (player.GetComponent<Controls>().BoostButtonWasPressed)
             {
