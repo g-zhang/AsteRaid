@@ -55,6 +55,12 @@ public class Player : HealthSystem
 
 	private AudioSource audioSource;
 
+
+	public float damageLayerOpaque = 0f;
+	public float damageLayerClearTime = 1f;
+	public float damageOpaquenessIncrement = .1f;
+
+
     void SetLayers()
     {
         if (teamNumber == Team.Team1)
@@ -127,6 +133,8 @@ public class Player : HealthSystem
 
     protected override void DoOnUpdate()
     {
+		damageLayerOpaque -= Time.deltaTime / damageLayerClearTime;
+		if (damageLayerOpaque < 0f) damageLayerOpaque = 0f;
 
 		ultGlow.SetActive(ultCharges >= chargesNeededForUlt);
 
@@ -190,9 +198,11 @@ public class Player : HealthSystem
 			ultCharges = 0;
 		}
     }
-
+		
     protected override void DoOnDamage()
     {
+		damageLayerOpaque += damageOpaquenessIncrement;
+
         controls.VibrateFor(.25f, .2f);
         currEffectTime = .2f;
         transform.Find("PlayerShip").GetComponent<ShipColor>().FlashColor(Color.black, .1f);

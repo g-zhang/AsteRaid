@@ -15,6 +15,7 @@ public class IndividualCanvas : MonoBehaviour {
 	public Slider UltSlider;
 	public Slider BoostSlider;
 	public Slider HealthSlider;
+	public Image tunnelVision;
 
 	public float RBFlipTime = 0.5f;
 	private float timeSinceRBFlip = 0f;
@@ -30,6 +31,10 @@ public class IndividualCanvas : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		Color tvColor = tunnelVision.color;
+		tvColor.a = player.damageLayerOpaque;
+		tunnelVision.color = tvColor;
 
 		Bomb3Icon.enabled = (player.grenadeAmmo >= 3);
 		Bomb2Icon.enabled = (player.grenadeAmmo >= 2);
