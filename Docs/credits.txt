@@ -68,3 +68,6 @@ http://www.freesound.org/people/chipfork/sounds/72639/
 
 Skyboxes (Mars 3 and Stars):
 https://www.assetstore.unity3d.com/en/#!/content/53752
+
+3DText Shader
+http://wiki.unity3d.com/index.php?title=3DText
