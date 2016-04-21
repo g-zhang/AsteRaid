@@ -44,8 +44,8 @@ public class Player : HealthSystem
     public bool instantHealth = false;
     public float deadMoveSpeed = 7f;
     float respawnDelayTimeMin = 20f;
-    float respawnDelayTimeMax = 20f;
-    float respawnIncrement = 2f;
+    //float respawnDelayTimeMax = 20f;
+    //float respawnIncrement = 2f;
     public float maxRandomOffset = .5f;
 
 	//private Vector3 respawnLocationVector;

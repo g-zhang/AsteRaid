@@ -250,6 +250,17 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        if (currstate == State.InGame)
+        {
+            foreach (GameObject player in playersGO)
+            {
+                if (player.GetComponent<Controls>().isActive && player.GetComponent<Controls>().ID.Action2.WasPressed && isPaused)
+                {
+                    UnPauseGame();
+                }
+            }
+        }
+
         if (isPaused)
         {
             foreach (GameObject player in playersGO)
@@ -257,6 +268,25 @@ public class GameManager : MonoBehaviour
                 if (player.GetComponent<Controls>().SelectWasPressed)
                 {
                     SceneManager.LoadScene("Menu");
+                }
+
+                if (player.GetComponent<Controls>().isActive && player.GetComponent<Controls>().ID.Action4)
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (currstate == State.InGame)
+        {
+            foreach (GameObject player in playersGO)
+            {
+                if (player.GetComponent<Controls>().StartWasPressed && !isPaused)
+                {
+                    PauseGame();
                 }
             }
         }
