@@ -8,7 +8,7 @@ public class BaseHealth : HealthSystem {
 	private float announcementCooldownMax = 30f;
 	private float announcementCooldownRemaining = 0f;
 
-	protected void DoOnUpdate(){
+	protected override void DoOnUpdate(){
 		announcementCooldownRemaining -= Time.deltaTime;
 		if (announcementCooldownRemaining < 0f)
 			announcementCooldownRemaining = 0f;
@@ -41,6 +41,12 @@ public class BaseHealth : HealthSystem {
 			if (deathExplosion != null) {
 				Instantiate (MusicMan.MM.baseExplosionSoundSource, transform.position, Quaternion.identity);
 				GameObject explosion = Instantiate (deathExplosion) as GameObject;
+				explosion.transform.position = transform.position;
+			}
+
+			if (deathExplosion != null)
+			{
+				GameObject explosion = Instantiate(deathExplosion);
 				explosion.transform.position = transform.position;
 			}
 
