@@ -9,6 +9,11 @@ public class UpdateUI : MonoBehaviour {
 	public Slider Base1HP;
 	public Slider Base2HP;
 
+    public Slider BlueNorthSlider;
+    public Slider BlueSouthSlider;
+    public Slider RedNorthSlider;
+    public Slider RedSouthSlider;
+
 	public int maxCountdown;
 	int currCountdown;
 	float loadLevelTime;
@@ -47,6 +52,44 @@ public class UpdateUI : MonoBehaviour {
             if(GameManager.GM.currstate == GameManager.State.EndGame)
             {
                 transform.Find("RestartText").gameObject.SetActive(true);
+            }
+
+            if(GameManager.GM.currstate == GameManager.State.InGame)
+            {
+                if(Announcer.announcer.T1N.GetComponent<LaserWallManager>().isDown)
+                {
+                    BlueNorthSlider.value = 1f - Announcer.announcer.T1N.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T1N.GetComponent<LaserWallManager>().respawnTime;
+                } else
+                {
+                    BlueNorthSlider.value = 1f;
+                }
+
+                if (Announcer.announcer.T1S.GetComponent<LaserWallManager>().isDown)
+                {
+                    BlueSouthSlider.value = 1f - Announcer.announcer.T1S.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T1S.GetComponent<LaserWallManager>().respawnTime;
+                }
+                else
+                {
+                    BlueSouthSlider.value = 1f;
+                }
+
+                if (Announcer.announcer.T2N.GetComponent<LaserWallManager>().isDown)
+                {
+                    RedNorthSlider.value = 1f - Announcer.announcer.T2N.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T2N.GetComponent<LaserWallManager>().respawnTime;
+                }
+                else
+                {
+                    RedNorthSlider.value = 1f;
+                }
+
+                if (Announcer.announcer.T2S.GetComponent<LaserWallManager>().isDown)
+                {
+                    RedSouthSlider.value = 1f - Announcer.announcer.T2S.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T2S.GetComponent<LaserWallManager>().respawnTime;
+                }
+                else
+                {
+                    RedSouthSlider.value = 1f;
+                }
             }
         }
 
