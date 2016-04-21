@@ -37,8 +37,9 @@ public class LaserWallManager : MonoBehaviour
             }
             turretAI.Add(comp);
         }
-
-        wallIcon = transform.Find("WallIcon").gameObject;
+		if (transform.Find ("WallIcon") != null) {
+			wallIcon = transform.Find ("WallIcon").gameObject;
+		}
     }
 
     //void OnGUI()
