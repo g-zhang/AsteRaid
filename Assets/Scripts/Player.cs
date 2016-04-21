@@ -244,10 +244,9 @@ public class Player : HealthSystem
             //RespawnShip();
         }
 
-		for (int i = 0; i < respawnLocation.Length; i++) {
-			if (distanceFromRespawn (i) <= GameManager.GM.regenRadius) {
-				RespawnShip ();
-			}
+		if ((!controlDeath && distanceFromRespawn(0) <= GameManager.GM.regenRadius/2)
+           || (controlDeath && distanceFromRespawn(0) <= GameManager.GM.regenRadius)) {
+			RespawnShip ();
 		}
     }
 
