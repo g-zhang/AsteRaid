@@ -127,7 +127,11 @@ public class AttackDroneController : AI {
 			elapsedFireDelay = 0f;
 
 			GameObject weapon = Instantiate(weaponPrefab);
-			Instantiate (MusicMan.MM.droneBulletSoundSource, transform.position, Quaternion.identity);
+            if(MusicMan.MM.droneBulletSoundSource != null)
+            {
+                Instantiate(MusicMan.MM.droneBulletSoundSource, transform.position, Quaternion.identity);
+            }
+
 			weapon.transform.position = transform.position;
 
 			// make bullets tiny lol
