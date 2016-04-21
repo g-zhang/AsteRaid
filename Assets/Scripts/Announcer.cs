@@ -50,6 +50,8 @@ public class Announcer : MonoBehaviour {
 	}
 
 	void Start(){
+		if (GameManager.GM.currstate == GameManager.State.Tutorial)
+			return;
 		T1NL = T1N.GetComponent<LaserWallManager> ();
 		T1SL = T1S.GetComponent<LaserWallManager> ();
 		T2NL = T2N.GetComponent<LaserWallManager> ();
@@ -57,12 +59,16 @@ public class Announcer : MonoBehaviour {
 	}
 
 	public void AddAnnouncement(AudioClip clip) {
+		if (GameManager.GM.currstate == GameManager.State.Tutorial)
+			return;
 		clips.Enqueue(new KeyValuePair<AudioClip, float> (clip, Time.realtimeSinceStartup));
 	}
 
 	// Update is called once per frame
 	void Update () {
 
+		if (GameManager.GM.currstate == GameManager.State.Tutorial)
+			return;
 		if (!T1Nd && T1NL.isDown)
 			AddAnnouncement (BlueNorthDown);
 		if (!T1Sd && T1SL.isDown)
