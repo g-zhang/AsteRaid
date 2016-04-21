@@ -17,6 +17,7 @@ public class ControlPoint : MonoBehaviour
     public float healthRegenRate = 5f;
 
     private GameObject captureBars;
+    private GameObject captureMinimap;
 
 	[Header("ControlPoint: Inspector Set Proximity Capture Fields")]
 	public float captureAbsValue = 10f;
@@ -39,6 +40,7 @@ public class ControlPoint : MonoBehaviour
 	void Awake()
 	{
         captureBars = transform.Find("CaptureBar").gameObject;
+        captureMinimap = transform.Find("Icon").gameObject;
 		mat = GetComponent<Renderer>().material;
 		neutralAreaColor.a = areaAlpha;
 		team1AreaColor.a = areaAlpha;
@@ -82,6 +84,12 @@ public class ControlPoint : MonoBehaviour
 
 	void Update()
 	{
+        if(captureMinimap != null)
+        {
+            Color cColor = captureMinimap.GetComponent<SpriteRenderer>().color;
+            captureMinimap.GetComponent<SpriteRenderer>().color = new Color(mat.color.r, mat.color.g, mat.color.b, cColor.a);
+        }
+
 		List<HealthSystem> capturingObjects = new List<HealthSystem>();
         if(capturingPlayers.Count > 0)
         {
