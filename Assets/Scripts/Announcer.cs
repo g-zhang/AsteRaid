@@ -23,6 +23,11 @@ public class Announcer : MonoBehaviour {
 	private bool T2Nd = false;
 	private bool T2Sd = false;
 
+	private bool T1Nu = false;
+	private bool T1Su = false;
+	private bool T2Nu = false;
+	private bool T2Su = false;
+
 	public AudioClip RedNorthDown;
 	public AudioClip RedSouthDown;
 	public AudioClip RedNorthUp;
@@ -71,6 +76,20 @@ public class Announcer : MonoBehaviour {
 		T1Sd = T1SL.isDown;
 		T2Nd = T2NL.isDown;
 		T2Sd = T2SL.isDown;
+
+		if (!T1Nu && T1NL.currRespawnTime < 10f)
+			AddAnnouncement (BlueNorthUp);
+		if (!T1Su && T1SL.currRespawnTime < 10f)
+			AddAnnouncement (BlueSouthUp);
+		if (!T2Nu && T2NL.currRespawnTime < 10f)
+			AddAnnouncement (RedNorthUp);
+		if (!T2Su && T2SL.currRespawnTime < 10f)
+			AddAnnouncement (RedSouthUp);
+
+		T1Nu = T1NL.currRespawnTime < 10f;
+		T1Su = T1SL.currRespawnTime < 10f;
+		T2Nu = T2NL.currRespawnTime < 10f;
+		T2Su = T2SL.currRespawnTime < 10f;
 
 		if (source.isPlaying) return;
 		if (clips.Count == 0) return;
