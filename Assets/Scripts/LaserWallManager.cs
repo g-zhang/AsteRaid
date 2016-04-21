@@ -54,36 +54,40 @@ public class LaserWallManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (iconstate == IconState.Flash)
+        if(wallIcon != null)
         {
-            if (currFlashTime > 0)
+            if (iconstate == IconState.Flash)
             {
-                currFlashTime -= Time.deltaTime;
-            }
-            else
-            {
-                currFlashTime = flashTime;
-                if (wallIcon.activeSelf)
+                if (currFlashTime > 0)
                 {
-                    wallIcon.SetActive(false);
+                    currFlashTime -= Time.deltaTime;
                 }
                 else
+                {
+                    currFlashTime = flashTime;
+                    if (wallIcon.activeSelf)
+                    {
+                        wallIcon.SetActive(false);
+                    }
+                    else
+                    {
+                        wallIcon.SetActive(true);
+                    }
+                }
+            }
+            else if (iconstate == IconState.On)
+            {
+                if (!wallIcon.activeSelf)
                 {
                     wallIcon.SetActive(true);
                 }
             }
-        }
-        else if(iconstate == IconState.On)
-        {
-            if(!wallIcon.activeSelf)
+            else if (iconstate == IconState.Off)
             {
-                wallIcon.SetActive(true);
-            }
-        } else if(iconstate == IconState.Off)
-        {
-            if(wallIcon.activeSelf)
-            {
-                wallIcon.SetActive(false);
+                if (wallIcon.activeSelf)
+                {
+                    wallIcon.SetActive(false);
+                }
             }
         }
 
