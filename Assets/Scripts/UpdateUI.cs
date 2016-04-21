@@ -4,44 +4,10 @@ using UnityEngine.UI;
 
 public class UpdateUI : MonoBehaviour {
 
-    public GameObject Player0;
-    public GameObject Player1;
-    public GameObject Player2;
-    public GameObject Player3;
-
     public GameObject Base1;
     public GameObject Base2;
-
-	public Text Player0Text;
-	public Text Player1Text;
-	public Text Player2Text;
-	public Text Player3Text;
-
-	public Text Player0Nades;
-	public Text Player1Nades;
-	public Text Player2Nades;
-	public Text Player3Nades;
-
-	public Slider Player0Boost;
-	public Slider Player1Boost;
-	public Slider Player2Boost;
-	public Slider Player3Boost;
-
-	public Slider Player0Ult;
-	public Slider Player1Ult;
-	public Slider Player2Ult;
-	public Slider Player3Ult;
-
 	public Slider Base1HP;
 	public Slider Base2HP;
-
-	public ShipControls Player0SC;
-	public ShipControls Player1SC;
-	public ShipControls Player2SC;
-	public ShipControls Player3SC;
-
-	public Text Base1Text;
-    public Text Base2Text;
 
 	public int maxCountdown;
 	int currCountdown;
@@ -78,9 +44,6 @@ public class UpdateUI : MonoBehaviour {
                 displayWin(1);
             }
         }
-
-        Base1Text.text = "Blue Base HP: " + Base1.GetComponent<BaseHealth>().currHealth;
-        Base2Text.text = "Red Base HP: " + Base2.GetComponent<BaseHealth>().currHealth;
 
 		Base1HP.value = Base1.GetComponent<BaseHealth> ().currHealth;
 		Base2HP.value = Base2.GetComponent<BaseHealth> ().currHealth;
