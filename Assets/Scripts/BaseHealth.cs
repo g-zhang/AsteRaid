@@ -39,6 +39,7 @@ public class BaseHealth : HealthSystem {
             GetComponent<MeshRenderer>().enabled = false;
 			GetComponent<Collider>().enabled = false;
 			if (deathExplosion != null) {
+				Instantiate (MusicMan.MM.baseExplosionSoundSource, transform.position, Quaternion.identity);
 				GameObject explosion = Instantiate (deathExplosion) as GameObject;
 				explosion.transform.position = transform.position;
 			}

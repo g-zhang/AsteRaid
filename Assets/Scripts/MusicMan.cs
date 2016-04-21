@@ -13,6 +13,7 @@ public class MusicMan : MonoBehaviour {
 	public GameObject droneBulletSoundSource;
 	public GameObject turretBulletSoundSource;
 	public GameObject ultimateSoundSource;
+	public GameObject baseExplosionSoundSource;
 
 	public static MusicMan MM;
 
