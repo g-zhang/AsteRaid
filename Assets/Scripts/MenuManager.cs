@@ -12,12 +12,13 @@ public class MenuManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         foreach (GameObject player in playersGO)
         {
             if (player.GetComponent<Controls>().StartWasPressed)
             {
-                SceneManager.LoadScene("CameraTest");
+				print ("HELP");
+                SceneManager.LoadScene("Tutorial");
             }
             if (player.GetComponent<Controls>().BoostButtonWasPressed)
             {
