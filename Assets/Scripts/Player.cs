@@ -43,8 +43,8 @@ public class Player : HealthSystem
     public bool controlDeath = false;
     public bool instantHealth = false;
     public float deadMoveSpeed = 7f;
-    float respawnDelayTimeMin = 2f;
-    float respawnDelayTimeMax = 2f;
+    float respawnDelayTimeMin = 20f;
+    float respawnDelayTimeMax = 20f;
     float respawnIncrement = 2f;
     public float maxRandomOffset = .5f;
 
@@ -228,8 +228,6 @@ public class Player : HealthSystem
         {
             KillHealAndCharge();
             currState = State.Dead;
-            currRespawnDelayTime += respawnIncrement;
-            currRespawnDelayTime = currRespawnDelayTime > respawnDelayTimeMax ? respawnDelayTimeMax : currRespawnDelayTime;
             ultCharges = 0;
             tookDamage = false;
             beingHit = false;
@@ -271,12 +269,12 @@ public class Player : HealthSystem
         }
         else
         {
-            //RespawnShip();
+            RespawnShip(true);
         }
 
-		if ((!controlDeath && distanceFromRespawn(0) <= GameManager.GM.regenRadius/2)
-           || (controlDeath && distanceFromRespawn(0) <= GameManager.GM.regenRadius)) {
-			RespawnShip ();
+		if (distanceFromRespawn(0) <= GameManager.GM.regenRadius) {
+            Debug.Log("Respawn Ship");
+			RespawnShip (false);
 		}
     }
 
@@ -285,6 +283,7 @@ public class Player : HealthSystem
         GetComponent<ShipTrails>().disableAllTrails();
         GetComponent<ShipTrails>().enabled = false;
         GetComponent<ShipControls>().enabled = false;
+        GetComponent<Swivel>().enabled = false;
         transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = false;
         transform.Find("PlayerShip").GetComponent<Collider>().enabled = false;
         transform.Find("Turret").gameObject.SetActive(false);
@@ -296,14 +295,15 @@ public class Player : HealthSystem
         }
     }
 
-    void RespawnShip()
+    void RespawnShip(bool teleport)
     {
         GetComponent<Rigidbody>().velocity = Vector3.zero;
-        //transform.position = new Vector3(respawnLocationVector.x
-        //                         + Random.Range(-maxRandomOffset, maxRandomOffset),
-        //                         transform.position.y,
-        //                         respawnLocationVector.z
-        //                         + Random.Range(-maxRandomOffset, maxRandomOffset));
+        
+        if(teleport)
+        {
+            transform.position = respawnLocation[0].position;
+        }
+
         //renable the player
         currState = State.Normal;
         if(instantHealth)
@@ -313,6 +313,7 @@ public class Player : HealthSystem
         {
             currHealth = 1f;
         }
+        GetComponent<Swivel>().enabled = true;
         GetComponent<ShipTrails>().enabled = true;
         GetComponent<ShipControls>().enabled = true;
         transform.Find("PlayerShip").GetComponent<MeshRenderer>().enabled = true;
