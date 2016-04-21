@@ -53,13 +53,9 @@ public class Player : HealthSystem
 	private GameObject effects;
 	private GameObject ultGlow;
 
-	private AudioSource audioSource;
-
-
 	public float damageLayerOpaque = 0f;
 	public float damageLayerClearTime = 1f;
 	public float damageOpaquenessIncrement = .1f;
-
 
     void SetLayers()
     {
@@ -86,9 +82,7 @@ public class Player : HealthSystem
 
     protected override void OnAwake()
     {
-        SetLayers();
-
-		audioSource = GetComponent<AudioSource> ();
+		SetLayers ();
 
         foreach (Transform child in transform)
         {
@@ -133,6 +127,8 @@ public class Player : HealthSystem
 
     protected override void DoOnUpdate()
     {
+		//audioSources.RemoveAll (src => !src.isPlaying);
+
 		damageLayerOpaque -= Time.deltaTime / damageLayerClearTime;
 		if (damageLayerOpaque < 0f) damageLayerOpaque = 0f;
 
@@ -202,6 +198,8 @@ public class Player : HealthSystem
     protected override void DoOnDamage()
     {
 		damageLayerOpaque += damageOpaquenessIncrement;
+
+		Instantiate (MusicMan.MM.damageSoundSource);
 
         controls.VibrateFor(.25f, .2f);
         currEffectTime = .2f;

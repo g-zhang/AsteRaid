@@ -9,6 +9,8 @@ public class MusicMan : MonoBehaviour {
 	public AudioClip laser;
 	public AudioSource source;
 
+	public GameObject damageSoundSource;
+
 	public static MusicMan MM;
 
 	void Awake(){

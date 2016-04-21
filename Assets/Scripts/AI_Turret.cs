@@ -120,7 +120,8 @@ public class AI_Turret : AI
 	}
 
     protected override void DoOnDamage()
-    {
+	{
+		Instantiate (MusicMan.MM.damageSoundSource, transform.position, Quaternion.identity);
         Color tcolor = bodyRend.material.color;
         ShipColor guncolor = transform.Find("Gun/GunBody").GetComponent<ShipColor>();
         ShipColor bodycolor = transform.Find("Body").GetComponent<ShipColor>();

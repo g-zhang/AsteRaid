@@ -6,18 +6,21 @@ public class Weapon_LaserBeam : Weapon
 	public float lifetime = 1f;
 	public float leadTime = 0.25f;
 
+	public LayerMask team1LaserCollisions;
+	public LayerMask team2LaserCollisions;
+
 	[Header("Weapon_LaserBeam: Dynamically Set Fields")]
 	public float timeElapsed;
 	public Transform laser;
 
 	Transform firer;
+	LayerMask finalLaserCollisions;
+
+	float lasLength;
 
 	void Start()
 	{
 		laser = transform.Find ("laser");
-		laser.gameObject.GetComponent<Renderer>().material.color =
-			GameManager.GM.teamColors[(int)originator.teamNumber];
-		
 		laser.gameObject.SetActive (false);
 		timeElapsed = 0f;
 
@@ -29,8 +32,24 @@ public class Weapon_LaserBeam : Weapon
 		}
 
 		transform.parent = null;
-		laser.localPosition = new Vector3(0, 0, (laser.localScale.z / 2) + 1);
+		lasLength = laser.localScale.z;
+		laser.localPosition = new Vector3(0, 0, (lasLength / 2) + 1);
 		transform.rotation = firer.rotation;
+
+		ParticleSystem particles = transform.Find("particles").GetComponent<ParticleSystem>();
+
+		HealthSystem hs = firer.GetComponent<HealthSystem>();
+		if (hs.teamNumber == Team.Team1)
+		{
+			finalLaserCollisions = team1LaserCollisions;
+		}
+		else if (hs.teamNumber == Team.Team2)
+		{
+			finalLaserCollisions = team2LaserCollisions;
+		}
+
+		ParticleSystem.CollisionModule coll = particles.collision;
+		coll.collidesWith = finalLaserCollisions;
 
         return;
 	}
@@ -49,6 +68,22 @@ public class Weapon_LaserBeam : Weapon
 
 		transform.position = firer.position;
 		transform.rotation = firer.rotation;
+
+		RaycastHit hit;
+		if (Physics.Raycast(transform.position - transform.forward,
+			transform.forward, out hit, laser.localScale.z + 1, finalLaserCollisions))
+		{
+			Vector3 scale = laser.localScale;
+			scale.z = lasLength * (hit.distance / lasLength);
+			laser.localScale = scale;
+		}
+		else
+		{
+			Vector3 scale = laser.localScale;
+			scale.z = lasLength;
+			laser.localScale = scale;
+		}
+		laser.localPosition = new Vector3(0, 0, (laser.localScale.z / 2) + 1);
 
 		return;
 	}

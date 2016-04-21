@@ -222,6 +222,11 @@ public class Weapon_Grenade : Weapon
 			return;
 		}
 
+		if (otherHS.teamNumber == originator.teamNumber)
+		{
+			return;
+		}
+
 		otherHS.currHealth -= flatForceDamage;
 
 		if ((otherHS is AI_Turret) || (otherHS is AI_WallTurret))
