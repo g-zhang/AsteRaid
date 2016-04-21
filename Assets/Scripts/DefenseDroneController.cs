@@ -124,6 +124,7 @@ public class DefenseDroneController : AI {
 
 			GameObject weapon = Instantiate(weaponPrefab);
 			weapon.transform.position = transform.position;
+			Instantiate (MusicMan.MM.droneBulletSoundSource, transform.position, Quaternion.identity);
 
 			// make bullets tiny lol
 			weapon.transform.localScale = new Vector3 (0.3f, 0.3f, 0.3f);
