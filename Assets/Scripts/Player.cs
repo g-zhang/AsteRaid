@@ -219,7 +219,12 @@ public class Player : HealthSystem
             beingHit = false;
             controls.VibrateFor(1f, .5f);
             DisableShip();
-            BroadcastDeathEvent();
+			BroadcastDeathEvent();
+			if (deathExplosion != null) {
+				GameObject explosion = Instantiate (deathExplosion) as GameObject;
+				explosion.transform.position = transform.position;
+			}
+
         }
     }
 
@@ -321,7 +326,10 @@ public class Player : HealthSystem
 
             go.transform.position = turret.position;
 
-            if (weaponScript is Weapon_LaserBeam) go.transform.parent = transform;
+			if (weaponScript is Weapon_LaserBeam) {
+				Instantiate (MusicMan.MM.ultimateSoundSource, transform.position, Quaternion.identity);
+				go.transform.parent = transform;
+			}
 
             if (teamNumber == Team.Team1)
             {

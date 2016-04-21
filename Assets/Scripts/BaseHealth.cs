@@ -5,7 +5,7 @@ public class BaseHealth : HealthSystem {
 
     public bool isDestroyed = false;
 
-	private float announcementCooldownMax = 0f;
+	private float announcementCooldownMax = 30f;
 	private float announcementCooldownRemaining = 0f;
 
 	protected void DoOnUpdate(){
@@ -37,7 +37,11 @@ public class BaseHealth : HealthSystem {
         {
             isDestroyed = true;
             GetComponent<MeshRenderer>().enabled = false;
-            GetComponent<Collider>().enabled = false;
+			GetComponent<Collider>().enabled = false;
+			if (deathExplosion != null) {
+				GameObject explosion = Instantiate (deathExplosion) as GameObject;
+				explosion.transform.position = transform.position;
+			}
 
             //begin end game stuff
             GameManager.GM.EndTheGame();

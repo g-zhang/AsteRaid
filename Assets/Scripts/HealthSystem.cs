@@ -13,6 +13,8 @@ public class HealthSystem : MonoBehaviour
     public float deathHealAmount = 1f;
     public int deathUltChargeAmount = 1;
 
+	public GameObject deathExplosion;
+
     [Header("Health Bar: Config")]
     public bool enableHealthBar = true;
     public float healthBarLen = 2f;
@@ -36,9 +38,14 @@ public class HealthSystem : MonoBehaviour
     public event EventHandler OnDeathEvent;
     public event EventHandler OnSwapEvent;
 
+
     //override this for custom behavior when this object is "killed"
     public virtual void DeathProcedure()
     {
+		if (deathExplosion != null) {
+			GameObject explosion = Instantiate (deathExplosion) as GameObject;
+			explosion.transform.position = transform.position;
+		}
         BroadcastDeathEvent();
         Destroy(gameObject);
         return;

@@ -30,6 +30,10 @@ public class AI : HealthSystem
 
 		if (teamSwapDestruction)
 		{
+			if (deathExplosion != null) {
+				GameObject explosion = Instantiate (deathExplosion) as GameObject;
+				explosion.transform.position = transform.position;
+			}
 			if (lastAttacker == null)
 			{
 				// This shouldn't happen, but....
