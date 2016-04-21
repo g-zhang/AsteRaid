@@ -84,7 +84,8 @@ public class DefenseDroneController : AI {
 	}
 
     protected override void DoOnDamage()
-    {
+	{
+		Instantiate (MusicMan.MM.damageSoundSource, transform.position, Quaternion.identity);
         Color tcolor = GameManager.GM.getTeamColor(teamNumber);
         ShipColor scolor = transform.Find("Mesh1").GetComponent<ShipColor>();
         if (scolor != null)
