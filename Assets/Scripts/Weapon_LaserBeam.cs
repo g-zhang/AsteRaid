@@ -36,6 +36,8 @@ public class Weapon_LaserBeam : Weapon
 		laser.localPosition = new Vector3(0, 0, (lasLength / 2) + 1);
 		transform.rotation = firer.rotation;
 
+		ParticleSystem particles = transform.Find("particles").GetComponent<ParticleSystem>();
+
 		HealthSystem hs = firer.GetComponent<HealthSystem>();
 		if (hs.teamNumber == Team.Team1)
 		{
@@ -46,8 +48,7 @@ public class Weapon_LaserBeam : Weapon
 			finalLaserCollisions = team2LaserCollisions;
 		}
 
-		ParticleSystem.CollisionModule coll =
-			transform.Find("particles").GetComponent<ParticleSystem>().collision;
+		ParticleSystem.CollisionModule coll = particles.collision;
 		coll.collidesWith = finalLaserCollisions;
 
         return;
@@ -67,8 +68,6 @@ public class Weapon_LaserBeam : Weapon
 
 		transform.position = firer.position;
 		transform.rotation = firer.rotation;
-
-		Debug.DrawRay(transform.position, transform.forward * laser.localScale.z);
 
 		RaycastHit hit;
 		if (Physics.Raycast(transform.position - transform.forward,
