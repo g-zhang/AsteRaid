@@ -8,7 +8,7 @@ public class BaseHealth : HealthSystem {
 	private float announcementCooldownMax = 30f;
 	private float announcementCooldownRemaining = 0f;
 
-	protected void DoOnUpdate(){
+	protected override void DoOnUpdate(){
 		announcementCooldownRemaining -= Time.deltaTime;
 		if (announcementCooldownRemaining < 0f)
 			announcementCooldownRemaining = 0f;
