@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AudioSource))]
 public class Player : HealthSystem
 {
-    public enum State { Normal = 0, Dead, Invuln, size };
+    public enum State { Normal = 0, Dead, Invuln, End, size };
 
     [Header("Player: Status")]
     public State currState = State.Normal;
@@ -179,6 +179,10 @@ public class Player : HealthSystem
                 }
                 break;
 
+            case State.End:
+                GetComponent<Rigidbody>().velocity = Vector3.zero;
+                break;
+
             default:
                 break;
         }
@@ -204,6 +208,12 @@ public class Player : HealthSystem
         controls.VibrateFor(.25f, .2f);
         currEffectTime = .2f;
         transform.Find("PlayerShip").GetComponent<ShipColor>().FlashColor(Color.black, .1f);
+    }
+
+    public void EndPlayer()
+    {
+        DeathProcedure();
+        currState = State.End;
     }
 
     public override void DeathProcedure()
@@ -264,7 +274,7 @@ public class Player : HealthSystem
 		}
     }
 
-    void DisableShip()
+    public void DisableShip()
     {
         GetComponent<ShipTrails>().disableAllTrails();
         GetComponent<ShipTrails>().enabled = false;

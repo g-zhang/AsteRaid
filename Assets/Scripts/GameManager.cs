@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 {
     #region Public Game Constants and Enums
     public const int NUM_PLAYERS = 4;
-    public enum State { Error = 0, Menu, Countdown, InGame, EndGame, Tutorial, size }
+    public enum State { Error = 0, Menu, PreGame, Countdown, InGame, PostGame, EndGame, Tutorial, size }
     #endregion
 
     #region Private Members
@@ -27,9 +27,11 @@ public class GameManager : MonoBehaviour
     public State currstate = State.Menu;
     //inspector viewing purposes only, use the isPaused property for coding
     public bool PausedGame;
+    public float currEndDelay = 0f;
 
     [Header("GameManager: Settings")]
     public State sceneInitState = State.Countdown;
+    public float gameEndDelay = 5f;
     public Color[] teamColors = { Color.green, Color.blue, Color.red };
 
     [Header("GameManager: Players")]
@@ -104,23 +106,62 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    public void PausePlayers(float time)
+    {
+        foreach(GameObject player in playersGO)
+        {
+            player.GetComponent<ShipControls>().remainingStunTime = time;
+        }
+    }
+
+    public void KillPlayers()
+    {
+        foreach (GameObject player in playersGO)
+        {
+            player.GetComponent<Player>().EndPlayer();
+        }
+    }
+
+    public void FreezePlayers()
+    {
+        foreach (GameObject player in playersGO)
+        {
+            //player.GetComponent<Player>().DisableShip();
+            player.GetComponent<Player>().enabled = false;
+        }
+    }
+
     public void StartCountDown()
     {
-        currstate = State.Countdown;
+        if(currstate == State.PreGame)
+        {
+            currstate = State.Countdown;
+        }
+        else
+        {
+            Debug.LogError(ES + "Cannot start game from State:" + currstate);
+        }
     }
 
     public void StartTheGame()
     {
-        currstate = State.InGame;
+        if(currstate == State.Countdown)
+        {
+            currstate = State.InGame;
+            PausePlayers(0f);
+        }
+        else
+        {
+            Debug.LogError(ES + "Cannot start game from State:" + currstate);
+        }
     }
 
     public void EndTheGame()
     {
         if (currstate == State.InGame)
         {
-            currstate = State.EndGame;
-
-            DisableAllVibration();
+            currstate = State.PostGame;
+            currEndDelay = gameEndDelay;
         }
         else
         {
@@ -139,8 +180,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         currstate = sceneInitState;
+        UnPauseGame();
 
-        if(currstate == State.Countdown)
+        if (currstate != State.Tutorial && currstate != State.Menu)
         {
             for (int i = 0; i < NUM_PLAYERS; i++)
             {
@@ -154,7 +196,6 @@ public class GameManager : MonoBehaviour
                     Debug.LogError(ES + "All GOs must have a Player component!");
                 }
             }
-            StartCountDown();
         }
     }
 
@@ -162,13 +203,40 @@ public class GameManager : MonoBehaviour
     {
         PausedGame = isPaused;
 
-        if (currstate == State.Countdown || currstate == State.EndGame)
+        //game state machine
+        switch (currstate)
         {
-            PauseGame();
-        }
-        else
-        {
-            UnPauseGame();
+            case State.PreGame:
+                PausePlayers(1f);
+                break;
+
+            case State.Countdown:
+                PausePlayers(1f);
+                break;
+
+            case State.PostGame:
+
+                if (currEndDelay >= 0f)
+                {
+                    currEndDelay -= Time.deltaTime;
+                    if (currEndDelay <= .5f)
+                    {
+                        KillPlayers();
+                    }
+                }
+                else
+                {
+                    currstate = State.EndGame;
+                    DisableAllVibration();
+                }
+                break;
+
+            case State.EndGame:
+                FreezePlayers();
+                break;
+
+            default:
+                break;
         }
 
         if (currstate == State.EndGame)

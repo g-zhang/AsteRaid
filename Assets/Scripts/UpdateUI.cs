@@ -43,6 +43,11 @@ public class UpdateUI : MonoBehaviour {
             {
                 displayWin(1);
             }
+
+            if(GameManager.GM.currstate == GameManager.State.EndGame)
+            {
+                transform.Find("RestartText").gameObject.SetActive(true);
+            }
         }
 
 		Base1HP.value = Base1.GetComponent<BaseHealth> ().currHealth;
