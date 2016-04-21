@@ -169,7 +169,7 @@ public class Player : HealthSystem
                 break;
 
             case State.Dead:
-                ManageDeadState();
+                //ManageDeadState();
                 break;
 
             case State.Invuln:
@@ -192,7 +192,11 @@ public class Player : HealthSystem
 
     protected override void DoOnFixedUpdate()
     {
-		if (currState == State.Dead) return;
+        if (currState == State.Dead)
+        {
+            ManageDeadState();
+            return;
+        }
 		if (controls.FireButtonIsPressed) Fire(primaryWeapon, altTurretTransforms);
 		if (controls.SecondFireButtonIsPressed && grenadeAmmo > 0) Fire(secondaryWeapon, turretTransforms);
 		if (controls.UltButtonWasPressed && ultCharges >= chargesNeededForUlt) {
@@ -263,7 +267,7 @@ public class Player : HealthSystem
 
         if (currDelayTime > 0)
         {
-            currDelayTime -= Time.deltaTime;
+            currDelayTime -= Time.fixedDeltaTime;
         }
         else
         {
