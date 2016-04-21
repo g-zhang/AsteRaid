@@ -131,6 +131,8 @@ public class Player : HealthSystem
 
 		damageLayerOpaque -= Time.deltaTime / damageLayerClearTime;
 		if (damageLayerOpaque < 0f) damageLayerOpaque = 0f;
+		if (damageLayerOpaque > 0.3f) damageLayerOpaque = 0.3f;
+
 
 		ultGlow.SetActive(ultCharges >= chargesNeededForUlt);
 
