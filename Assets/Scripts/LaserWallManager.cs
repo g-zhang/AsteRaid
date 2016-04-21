@@ -16,6 +16,13 @@ public class LaserWallManager : MonoBehaviour
     public bool isDown = false;
 
     private List<AI_WallTurret> turretAI = new List<AI_WallTurret>();
+
+    private GameObject wallIcon;
+    private enum IconState { Off = 0, Flash = 1, On }
+    private IconState iconstate = IconState.On;
+    private float flashTime = .5f;
+    private float currFlashTime = 0f;
+
     // Use this for initialization
     void Start()
     {
@@ -30,25 +37,65 @@ public class LaserWallManager : MonoBehaviour
             }
             turretAI.Add(comp);
         }
+
+        wallIcon = transform.Find("WallIcon").gameObject;
     }
 
-    void OnGUI()
-    {
-        //temp solution for notifying downed shields
-        if (isDown)
-        {
-            string text = team + " Shield is Down! (" + currRespawnTime.ToString("n0") + "s left)";
-            GUI.Label(new Rect(Screen.width / 3, 0, Screen.width, Screen.height), text);
-        }
-    }
+    //void OnGUI()
+    //{
+    //    //temp solution for notifying downed shields
+    //    if (isDown)
+    //    {
+    //        string text = team + " Shield is Down! (" + currRespawnTime.ToString("n0") + "s left)";
+    //        GUI.Label(new Rect(Screen.width / 3, 0, Screen.width, Screen.height), text);
+    //    }
+    //}
 
     // Update is called once per frame
     void Update()
     {
+        if (iconstate == IconState.Flash)
+        {
+            if (currFlashTime > 0)
+            {
+                currFlashTime -= Time.deltaTime;
+            }
+            else
+            {
+                currFlashTime = flashTime;
+                if (wallIcon.activeSelf)
+                {
+                    wallIcon.SetActive(false);
+                }
+                else
+                {
+                    wallIcon.SetActive(true);
+                }
+            }
+        }
+        else if(iconstate == IconState.On)
+        {
+            if(!wallIcon.activeSelf)
+            {
+                wallIcon.SetActive(true);
+            }
+        } else if(iconstate == IconState.Off)
+        {
+            if(wallIcon.activeSelf)
+            {
+                wallIcon.SetActive(false);
+            }
+        }
+
         if (allTurretsDown && !isDown)
         {
             isDown = true;
             disableShields();
+            iconstate = IconState.Off;
+        }
+        else if(oneTurretDown && !isDown)
+        {
+            iconstate = IconState.Flash;
         }
 
         if (isDown)
@@ -62,6 +109,7 @@ public class LaserWallManager : MonoBehaviour
             enableShields();
             respawnTurrets();
             currRespawnTime = respawnTime;
+            iconstate = IconState.On;
         }
     }
 
@@ -101,6 +149,21 @@ public class LaserWallManager : MonoBehaviour
                 }
             }
             return true;
+        }
+    }
+
+    bool oneTurretDown
+    {
+        get
+        {
+            foreach (AI_WallTurret turret in turretAI)
+            {
+                if (turret.isDestroyed)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
