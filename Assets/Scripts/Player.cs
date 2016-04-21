@@ -161,6 +161,7 @@ public class Player : HealthSystem
         {
             case State.Normal:
                 baseRegenHealth();
+                CheckBounds();
                 if (controls.InvincibliltyOn)
                 {
                     Debug.Log("Player(" + controls.playerNum + ") is invulnerable!");
@@ -214,6 +215,14 @@ public class Player : HealthSystem
         controls.VibrateFor(.25f, .2f);
         currEffectTime = .2f;
         transform.Find("PlayerShip").GetComponent<ShipColor>().FlashColor(Color.black, .1f);
+    }
+
+    void CheckBounds()
+    {
+        if (!Physics.Raycast(transform.position, -Vector3.up, 10f, 1 << LayerMask.NameToLayer("Environment")))
+        {
+            RespawnShip(true);
+        }
     }
 
     public void EndPlayer()
