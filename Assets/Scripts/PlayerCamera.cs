@@ -42,14 +42,14 @@ public class PlayerCamera : MonoBehaviour {
 
         if(prevState != player.currState)
         {
-            if(player.currState == Player.State.Dead)
-            {
-                GetComponent<Camera>().cullingMask |= (1 << LayerMask.NameToLayer("Ghost"));
-            }
-            else
-            {
-                GetComponent<Camera>().cullingMask = ~(1 << LayerMask.NameToLayer("Ghost"));
-            }
+            //if(player.currState == Player.State.Dead)
+            //{
+            //    GetComponent<Camera>().cullingMask |= (1 << LayerMask.NameToLayer("Ghost"));
+            //}
+            //else
+            //{
+            //    GetComponent<Camera>().cullingMask = ~(1 << LayerMask.NameToLayer("Ghost"));
+            //}
             prevState = player.currState;
         }
 	}
