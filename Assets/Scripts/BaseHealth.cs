@@ -20,6 +20,12 @@ public class BaseHealth : HealthSystem {
             GetComponent<MeshRenderer>().enabled = false;
             GetComponent<Collider>().enabled = false;
 
+			if (deathExplosion != null)
+			{
+				GameObject explosion = Instantiate(deathExplosion);
+				explosion.transform.position = transform.position;
+			}
+
             //begin end game stuff
             GameManager.GM.EndTheGame();
         }

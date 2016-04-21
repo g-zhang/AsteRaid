@@ -220,6 +220,12 @@ public class Player : HealthSystem
             controls.VibrateFor(1f, .5f);
             DisableShip();
             BroadcastDeathEvent();
+
+			if (deathExplosion != null)
+			{
+				GameObject explosion = Instantiate(deathExplosion);
+				explosion.transform.position = transform.position;
+			}
         }
     }
 
