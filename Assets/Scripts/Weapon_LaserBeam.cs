@@ -29,7 +29,7 @@ public class Weapon_LaserBeam : Weapon
 		}
 
 		transform.parent = null;
-		laser.position += new Vector3(0, 0, (laser.localScale.z / 2) + 1);
+		laser.localPosition = new Vector3(0, 0, (laser.localScale.z / 2) + 1);
 		transform.rotation = firer.rotation;
 
         return;
