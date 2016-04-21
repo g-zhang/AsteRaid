@@ -53,6 +53,44 @@ public class UpdateUI : MonoBehaviour {
             {
                 transform.Find("RestartText").gameObject.SetActive(true);
             }
+
+            if(GameManager.GM.currstate == GameManager.State.InGame)
+            {
+                if(Announcer.announcer.T1N.GetComponent<LaserWallManager>().isDown)
+                {
+                    BlueNorthSlider.value = 1f - Announcer.announcer.T1N.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T1N.GetComponent<LaserWallManager>().respawnTime;
+                } else
+                {
+                    BlueNorthSlider.value = 1f;
+                }
+
+                if (Announcer.announcer.T1S.GetComponent<LaserWallManager>().isDown)
+                {
+                    BlueSouthSlider.value = 1f - Announcer.announcer.T1S.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T1S.GetComponent<LaserWallManager>().respawnTime;
+                }
+                else
+                {
+                    BlueSouthSlider.value = 1f;
+                }
+
+                if (Announcer.announcer.T2N.GetComponent<LaserWallManager>().isDown)
+                {
+                    RedNorthSlider.value = 1f - Announcer.announcer.T2N.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T2N.GetComponent<LaserWallManager>().respawnTime;
+                }
+                else
+                {
+                    RedNorthSlider.value = 1f;
+                }
+
+                if (Announcer.announcer.T2S.GetComponent<LaserWallManager>().isDown)
+                {
+                    RedSouthSlider.value = 1f - Announcer.announcer.T2S.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T2S.GetComponent<LaserWallManager>().respawnTime;
+                }
+                else
+                {
+                    RedSouthSlider.value = 1f;
+                }
+            }
         }
 
 		Base1HP.value = Base1.GetComponent<BaseHealth> ().currHealth;
