@@ -14,7 +14,12 @@ public class UpdateUI : MonoBehaviour {
     public Slider RedNorthSlider;
     public Slider RedSouthSlider;
 
-	public int maxCountdown;
+    public LaserWallManager T1NL;
+    public LaserWallManager T1SL;
+    public LaserWallManager T2NL;
+    public LaserWallManager T2SL;
+
+    public int maxCountdown;
 	int currCountdown;
 	float loadLevelTime;
 
@@ -27,7 +32,11 @@ public class UpdateUI : MonoBehaviour {
 		Base1HP.maxValue = Base1.GetComponent<BaseHealth> ().maxHealth;
 		Base2HP.maxValue = Base2.GetComponent<BaseHealth> ().maxHealth;
 
-	}
+        T1NL = Announcer.announcer.T1N.GetComponent<LaserWallManager>();
+        T1SL = Announcer.announcer.T1S.GetComponent<LaserWallManager>();
+        T2NL = Announcer.announcer.T2N.GetComponent<LaserWallManager>();
+        T2SL = Announcer.announcer.T2S.GetComponent<LaserWallManager>();
+}
 	
 	// Update is called once per frame
 	void Update () {
@@ -56,39 +65,66 @@ public class UpdateUI : MonoBehaviour {
 
             if(GameManager.GM.currstate == GameManager.State.InGame)
             {
-                if(Announcer.announcer.T1N.GetComponent<LaserWallManager>().isDown)
+                if(T1NL.isDown)
                 {
-                    BlueNorthSlider.value = 1f - Announcer.announcer.T1N.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T1N.GetComponent<LaserWallManager>().respawnTime;
+                    BlueNorthSlider.value = 1f - T1NL.currRespawnTime / T1NL.respawnTime;
                 } else
                 {
-                    BlueNorthSlider.value = 1f;
+                    if(T1NL.wallIcon.activeSelf)
+                    {
+                        BlueNorthSlider.value = 1f;
+                    } else
+                    {
+                        BlueNorthSlider.value = .5f;
+                    }  
                 }
 
-                if (Announcer.announcer.T1S.GetComponent<LaserWallManager>().isDown)
+                if (T1SL.isDown)
                 {
-                    BlueSouthSlider.value = 1f - Announcer.announcer.T1S.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T1S.GetComponent<LaserWallManager>().respawnTime;
+                    BlueSouthSlider.value = 1f - T1SL.currRespawnTime / T1SL.respawnTime;
                 }
                 else
                 {
-                    BlueSouthSlider.value = 1f;
+                    if (T1SL.wallIcon.activeSelf)
+                    {
+                        BlueSouthSlider.value = 1f;
+                    }
+                    else
+                    {
+                        BlueSouthSlider.value = .5f;
+                    }
                 }
 
-                if (Announcer.announcer.T2N.GetComponent<LaserWallManager>().isDown)
+                if (T2NL.isDown)
                 {
-                    RedNorthSlider.value = 1f - Announcer.announcer.T2N.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T2N.GetComponent<LaserWallManager>().respawnTime;
+                    RedNorthSlider.value = 1f - T2NL.currRespawnTime / T2NL.respawnTime;
                 }
                 else
                 {
-                    RedNorthSlider.value = 1f;
+                    if (T2NL.wallIcon.activeSelf)
+                    {
+                        RedNorthSlider.value = 1f;
+                    }
+                    else
+                    {
+                        RedNorthSlider.value = .5f;
+                    }
                 }
 
-                if (Announcer.announcer.T2S.GetComponent<LaserWallManager>().isDown)
+                if (T2SL.isDown)
                 {
-                    RedSouthSlider.value = 1f - Announcer.announcer.T2S.GetComponent<LaserWallManager>().currRespawnTime / Announcer.announcer.T2S.GetComponent<LaserWallManager>().respawnTime;
+                    RedSouthSlider.value = 1f - T2SL.currRespawnTime / T2SL.respawnTime;
                 }
                 else
                 {
-                    RedSouthSlider.value = 1f;
+                    if (T2SL.wallIcon.activeSelf)
+                    {
+                        RedSouthSlider.value = 1f;
+                    }
+                    else
+                    {
+                        RedSouthSlider.value = .5f;
+                    }
                 }
             }
         }

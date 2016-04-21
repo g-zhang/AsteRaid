@@ -17,9 +17,9 @@ public class LaserWallManager : MonoBehaviour
 
     private List<AI_WallTurret> turretAI = new List<AI_WallTurret>();
 
-    private GameObject wallIcon;
-    private enum IconState { Off = 0, Flash = 1, On }
-    private IconState iconstate = IconState.On;
+    public GameObject wallIcon;
+    public enum IconState { Off = 0, Flash = 1, On }
+    public IconState iconstate = IconState.On;
     private float flashTime = .5f;
     private float currFlashTime = 0f;
 
