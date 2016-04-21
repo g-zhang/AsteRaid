@@ -9,6 +9,11 @@ public class UpdateUI : MonoBehaviour {
 	public Slider Base1HP;
 	public Slider Base2HP;
 
+    public Slider BlueNorthSlider;
+    public Slider BlueSouthSlider;
+    public Slider RedNorthSlider;
+    public Slider RedSouthSlider;
+
 	public int maxCountdown;
 	int currCountdown;
 	float loadLevelTime;
