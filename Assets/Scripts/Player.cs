@@ -231,6 +231,7 @@ public class Player : HealthSystem
             DisableShip();
 			BroadcastDeathEvent();
 			if (deathExplosion != null) {
+				Instantiate (MusicMan.MM.playerExplosionSoundSource, transform.position, Quaternion.identity);
 				GameObject explosion = Instantiate (deathExplosion) as GameObject;
 				explosion.transform.position = transform.position;
 			}

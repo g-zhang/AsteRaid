@@ -53,6 +53,7 @@ public class AI : HealthSystem
 		}
 		else
 		{
+			Instantiate (MusicMan.MM.droneDeathSoundSource, transform.position, Quaternion.identity);
 			base.DeathProcedure();
 		}
 

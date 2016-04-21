@@ -154,6 +154,7 @@ public class AttackDroneController : AI {
 
 	// Deal with clean up after death
 	void OnDestroy() {
+
         if(CPSpawn != null)
         {
             if (teamNumber == Team.Team1)
