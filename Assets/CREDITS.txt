@@ -1,0 +1,139 @@
+====================
+UI Icons and Sprites
+====================
+
+Laser Icon,
+Wind Icon (Boost icon),
+Home Icon (Base Minimap Icon),
+Heart Icon (Health UI Icon),
+Bomb Icon,
+Home Icon 2 (Base Health Icon),
+Health Icon
+By Freepik, from Flaticon.com
+Creative Commons BY 3.0
+
+Health Particle (Middle Incentive Icon)
+By Dave Gandy, from Flaticon.com
+Author: http://www.flaticon.com/authors/dave-gandy
+Creative Commons BY 3.0
+
+RB Button Icon (UI element for Ultimate)
+By Yannick, from Flaticon.com
+Author: http://www.flaticon.com/authors/yannick
+Creative Commons BY 3.0
+
+Xbox Controller Input Icons (Used in the tutorial scene)
+By lukezammit, from dribbble.com
+Author: https://dribbble.com/lukezammit
+Page: https://dribbble.com/shots/2392002-Xbox-One-Buttons
+PSD download of the icons offered by author in description.
+Otherwise, no explicit license specified.
+
+
+=====
+Fonts
+=====
+
+Micr Font Ext
+No listed Author
+Page: http://m.font.downloadatoz.com/font,73578,micr-font-ext/
+Free License
+
+Chintzy CPU
+By AEnigma Fonts
+Author: Brian Kent
+Free for Personal and Commercial Use
+License: http://www.1001fonts.com/licenses/general-font-usage-terms.html
+
+Quantico
+By MADType, from Google Fonts
+SIL Open Font License, 1.1
+License: http://scripts.sil.org/OFL
+
+
+=====================
+Textures and Skyboxes
+=====================
+
+Rock 01, Metal 06
+By CrazyTextures, from Unity Asset Store
+http://u3d.as/bgY, http://u3d.as/9Sf
+Unity Asset Store License
+
+Customizable Metal Substance
+By Impact-IT, from Unity Asset Store
+https://www.assetstore.unity3d.com/en/#!/content/46415
+Unity Asset Store License
+
+Earth & Planets skyboxes (Mars and Stars)
+By Stagit East
+https://www.assetstore.unity3d.com/en/#!/content/53752
+Unity Asset Store License
+
+
+========
+Sound FX
+========
+
+M203 Grenade Launcher 2 (Bomb Launch)
+By qubodup, from FreeSound.org
+https://www.freesound.org/people/qubodup/sounds/162401/
+Creative Commons Zero 1.0 (Public Domain)
+
+Grenade Knova (Bomb Explosion)
+By knova, from FreeSound.org
+https://www.freesound.org/people/knova/sounds/172334/
+Creative Commons BY-NC 3.0
+
+Laser Shot Long
+By bubaproducer, from FreeSound.org
+https://www.freesound.org/people/bubaproducer/sounds/151018/
+Creative Commons BY 3.0
+
+Laser01rev
+By chipfork, from FreeSound.org
+https://www.freesound.org/people/chipfork/sounds/72639/
+Creative Commons BY 3.0
+
+Metal Clang
+By RoganDerrick, from FreeSound.org
+http://www.freesound.org/people/RoganDerrick/sounds/260435/
+Creative Commons BY 3.0
+
+8-bit Hurt
+By timgormly, from FreeSound.org
+https://www.freesound.org/people/timgormly/sounds/170149/
+Creative Commons BY 3.0
+
+Huge Explosion
+By unfa, from FreeSound.org
+https://www.freesound.org/people/unfa/sounds/259300/
+Creative Commons BY 3.0
+
+Explosion 01
+By tommccann, from FreeSound.org
+https://www.freesound.org/people/tommccann/sounds/235968/
+Creative Commons BY 3.0
+
+
+=====
+Music
+=====
+
+Space Fighter Loop
+By Kevin MacLeod, from Incompetech
+http://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100672
+Creative Commons BY 3.0
+
+Space 1990-B (Not Used)
+By Kevin MacLeod, from Incompetech
+http://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200109
+Creative Commons BY 3.0
+
+
+=============
+VO Production
+=============
+
+Actor
+Michael Martinez - Announcer
