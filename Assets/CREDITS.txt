@@ -137,3 +137,19 @@ VO Production
 
 Actor
 Michael Martinez - Announcer
+
+====
+Code
+====
+
+InControl (Controller Input Manager)
+By Patrick Hogan
+https://github.com/pbhogan/InControl
+Open Source Version
+Modified by Gordon Zhang for Updated XInput
+
+XInputDotNet (Used for InControl XInput Support)
+By Remi Gillig
+https://github.com/speps/XInputDotNet
+The MIT License
+Copyright (c) 2009 Remi Gillig <remigillig@gmail.com>
