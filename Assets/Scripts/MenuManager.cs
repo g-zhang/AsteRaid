@@ -23,9 +23,9 @@ public class MenuManager : MonoBehaviour {
             {
                 SceneManager.LoadScene("Loading(TutorialToOctagon)");
             }
-            if (player.GetComponent<Controls>().BoostButtonWasPressed)
+            if (player.GetComponent<Controls>().QuitWasPressed)
             {
-                print("quit");
+                Debug.Log("<b><color=red>Quitting Application.</color></b>");
                 Application.Quit();
             }
         }

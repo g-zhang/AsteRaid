@@ -24,22 +24,22 @@ public class Player : HealthSystem
     public GameObject secondaryWeapon;
     public GameObject ultWeapon;
 
-	[Header("Weapon Parameters")]
+    [Header("Weapon Parameters")]
     public int chargesNeededForUlt = 5;
     public int ultCharges = 0;
-	public int grenadeAmmo = 3;
-	public int maxGrenadeAmmo = 3;
-	public float grenadeRefillTime = 5f;
-	private float timeSinceGrenadeRefill = 0f;
-	private float primaryCoolDownRemaining = 0f;
+    public int grenadeAmmo = 3;
+    public int maxGrenadeAmmo = 3;
+    public float grenadeRefillTime = 5f;
+    private float timeSinceGrenadeRefill = 0f;
+    private float primaryCoolDownRemaining = 0f;
     private float grenadeCooldownRemaining = 0f;
 
-	[Header("Weapon Spawn Transforms")]
-	public List<Transform> turretTransforms;
-	public List<Transform> altTurretTransforms;
+    [Header("Weapon Spawn Transforms")]
+    public List<Transform> turretTransforms;
+    public List<Transform> altTurretTransforms;
 
     [Header("Player Respawn Config")]
-	public Transform[] respawnLocation;
+    public Transform[] respawnLocation;
     public bool controlDeath = false;
     public bool instantHealth = false;
     public float deadMoveSpeed = 7f;
@@ -48,14 +48,14 @@ public class Player : HealthSystem
     //float respawnIncrement = 2f;
     public float maxRandomOffset = .5f;
 
-	//private Vector3 respawnLocationVector;
-	private Controls controls;
-	private GameObject effects;
-	private GameObject ultGlow;
+    //private Vector3 respawnLocationVector;
+    private Controls controls;
+    private GameObject effects;
+    private GameObject ultGlow;
 
-	public float damageLayerOpaque = 0f;
-	public float damageLayerClearTime = 1f;
-	public float damageOpaquenessIncrement = .1f;
+    public float damageLayerOpaque = 0f;
+    public float damageLayerClearTime = 1f;
+    public float damageOpaquenessIncrement = .1f;
 
     void SetLayers()
     {
@@ -82,7 +82,7 @@ public class Player : HealthSystem
 
     protected override void OnAwake()
     {
-		SetLayers ();
+        SetLayers();
 
         foreach (Transform child in transform)
         {
@@ -93,13 +93,13 @@ public class Player : HealthSystem
 
         controls = GetComponent<Controls>();
         effects = transform.Find("Effects").gameObject;
-		ultGlow = effects.transform.Find("UltGlow").gameObject;
+        ultGlow = effects.transform.Find("UltGlow").gameObject;
 
-        
+
         currRespawnDelayTime = respawnDelayTimeMin;
         currDelayTime = currRespawnDelayTime;
 
-        if(enableMinimapIcon && CircleMarkerPrefab != null)
+        if (enableMinimapIcon && CircleMarkerPrefab != null)
         {
             CircleMarker = Instantiate(CircleMarkerPrefab);
             CircleMarker.transform.parent = transform;
@@ -127,27 +127,29 @@ public class Player : HealthSystem
 
     protected override void DoOnUpdate()
     {
-		//audioSources.RemoveAll (src => !src.isPlaying);
+        //audioSources.RemoveAll (src => !src.isPlaying);
 
-		damageLayerOpaque -= Time.deltaTime / damageLayerClearTime;
-		if (damageLayerOpaque < 0f) damageLayerOpaque = 0f;
-		if (damageLayerOpaque > 0.3f) damageLayerOpaque = 0.3f;
+        damageLayerOpaque -= Time.deltaTime / damageLayerClearTime;
+        if (damageLayerOpaque < 0f) damageLayerOpaque = 0f;
+        if (damageLayerOpaque > 0.3f) damageLayerOpaque = 0.3f;
 
 
-		ultGlow.SetActive(ultCharges >= chargesNeededForUlt);
+        ultGlow.SetActive(ultCharges >= chargesNeededForUlt);
 
-		timeSinceGrenadeRefill += Time.deltaTime;
-		if (timeSinceGrenadeRefill >= grenadeRefillTime){
-			if (grenadeAmmo < maxGrenadeAmmo) grenadeAmmo++;
-			timeSinceGrenadeRefill = 0f;
-		}
+        timeSinceGrenadeRefill += Time.deltaTime;
+        if (timeSinceGrenadeRefill >= grenadeRefillTime)
+        {
+            if (grenadeAmmo < maxGrenadeAmmo) grenadeAmmo++;
+            timeSinceGrenadeRefill = 0f;
+        }
 
-        if(currEffectTime > 0)
+        if (currEffectTime > 0)
         {
             currEffectTime -= Time.deltaTime;
-            if(!effects.GetComponent<ParticleSystem>().isPlaying)
+            if (!effects.GetComponent<ParticleSystem>().isPlaying)
                 effects.GetComponent<ParticleSystem>().Play();
-        } else
+        }
+        else
         {
             effects.GetComponent<ParticleSystem>().Stop();
         }
@@ -169,12 +171,9 @@ public class Player : HealthSystem
                 }
                 break;
 
-            case State.Dead:
-                //ManageDeadState();
-                break;
-
             case State.Invuln:
                 currHealth = maxHealth;
+                ultCharges = chargesNeededForUlt;
                 if (controls.InvincibliltyOff)
                 {
                     Debug.Log("Player(" + controls.playerNum + ") stopped cheating!");
@@ -198,19 +197,20 @@ public class Player : HealthSystem
             ManageDeadState();
             return;
         }
-		if (controls.FireButtonIsPressed) Fire(primaryWeapon, altTurretTransforms);
-		if (controls.SecondFireButtonIsPressed && grenadeAmmo > 0) Fire(secondaryWeapon, turretTransforms);
-		if (controls.UltButtonWasPressed && ultCharges >= chargesNeededForUlt) {
-			Fire(ultWeapon, turretTransforms);
-			ultCharges = 0;
-		}
+        if (controls.FireButtonIsPressed) Fire(primaryWeapon, altTurretTransforms);
+        if (controls.SecondFireButtonIsPressed && grenadeAmmo > 0) Fire(secondaryWeapon, turretTransforms);
+        if (controls.UltButtonWasPressed && ultCharges >= chargesNeededForUlt)
+        {
+            Fire(ultWeapon, turretTransforms);
+            ultCharges = 0;
+        }
     }
-		
+
     protected override void DoOnDamage()
     {
-		damageLayerOpaque += damageOpaquenessIncrement;
+        damageLayerOpaque += damageOpaquenessIncrement;
 
-		Instantiate (MusicMan.MM.damageSoundSource);
+        Instantiate(MusicMan.MM.damageSoundSource);
 
         controls.VibrateFor(.25f, .2f);
         currEffectTime = .2f;
@@ -242,12 +242,13 @@ public class Player : HealthSystem
             beingHit = false;
             controls.VibrateFor(1f, .5f);
             DisableShip();
-			BroadcastDeathEvent();
-			if (deathExplosion != null) {
-				Instantiate (MusicMan.MM.playerExplosionSoundSource, transform.position, Quaternion.identity);
-				GameObject explosion = Instantiate (deathExplosion) as GameObject;
-				explosion.transform.position = transform.position;
-			}
+            BroadcastDeathEvent();
+            if (deathExplosion != null)
+            {
+                Instantiate(MusicMan.MM.playerExplosionSoundSource, transform.position, Quaternion.identity);
+                GameObject explosion = Instantiate(deathExplosion) as GameObject;
+                explosion.transform.position = transform.position;
+            }
 
         }
     }
@@ -257,9 +258,10 @@ public class Player : HealthSystem
         if (currRespawnDelayTime - currDelayTime <= 1f)
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
-        } else
+        }
+        else
         {
-            if(controlDeath)
+            if (controlDeath)
             {
                 GetComponent<ShipControls>().enabled = true;
             }
@@ -281,10 +283,11 @@ public class Player : HealthSystem
             RespawnShip(true);
         }
 
-		if (distanceFromRespawn(0) <= GameManager.GM.regenRadius) {
-            Debug.Log("Respawn Ship");
-			RespawnShip (false);
-		}
+        if (distanceFromRespawn(0) <= GameManager.GM.regenRadius)
+        {
+            //Debug.Log("Respawn Ship");
+            RespawnShip(false);
+        }
     }
 
     public void DisableShip()
@@ -307,18 +310,19 @@ public class Player : HealthSystem
     void RespawnShip(bool teleport)
     {
         GetComponent<Rigidbody>().velocity = Vector3.zero;
-        
-        if(teleport)
+
+        if (teleport)
         {
             transform.position = respawnLocation[0].position;
         }
 
         //renable the player
         currState = State.Normal;
-        if(instantHealth)
+        if (instantHealth)
         {
             currHealth = maxHealth;
-        } else
+        }
+        else
         {
             currHealth = 1f;
         }
@@ -330,7 +334,7 @@ public class Player : HealthSystem
         transform.Find("Turret").gameObject.SetActive(true);
         transform.Find("HealthBar(Clone)").gameObject.SetActive(true);
         currDelayTime = currRespawnDelayTime;
-        if(controlDeath) transform.Find("GhostShip").gameObject.SetActive(false);
+        if (controlDeath) transform.Find("GhostShip").gameObject.SetActive(false);
         if (enableMinimapIcon && CircleMarkerPrefab != null)
         {
             CircleMarker.SetActive(true);
@@ -348,15 +352,16 @@ public class Player : HealthSystem
             GameObject go = Instantiate(weapon) as GameObject;
             Weapon weaponScript = go.GetComponent<Weapon>();
             weaponScript.originator = this;
-			weaponScript.startingVelocity = turret.transform.forward;
+            weaponScript.startingVelocity = turret.transform.forward;
             weaponScript.beginVelocity = GetComponent<Rigidbody>().velocity;
 
             go.transform.position = turret.position;
 
-			if (weaponScript is Weapon_LaserBeam) {
-				Instantiate (MusicMan.MM.ultimateSoundSource, transform.position, Quaternion.identity);
-				go.transform.parent = transform;
-			}
+            if (weaponScript is Weapon_LaserBeam)
+            {
+                Instantiate(MusicMan.MM.ultimateSoundSource, transform.position, Quaternion.identity);
+                go.transform.parent = transform;
+            }
 
             if (teamNumber == Team.Team1)
             {
@@ -377,30 +382,33 @@ public class Player : HealthSystem
             }
         }
 
-		if (weapon == primaryWeapon) {
-			primaryCoolDownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
-		}
-		if (weapon == secondaryWeapon) {
-			grenadeCooldownRemaining += weapon.GetComponent<Weapon> ().coolDownTime;
-			grenadeAmmo--;
-		}
+        if (weapon == primaryWeapon)
+        {
+            primaryCoolDownRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+        }
+        if (weapon == secondaryWeapon)
+        {
+            grenadeCooldownRemaining += weapon.GetComponent<Weapon>().coolDownTime;
+            grenadeAmmo--;
+        }
 
     }
 
-	float distanceFromRespawn(int respawnIndex)
+    float distanceFromRespawn(int respawnIndex)
     {
         return Vector3.Distance(transform.position, respawnLocation[respawnIndex].position);
     }
 
     void baseRegenHealth()
     {
-		for (int i = 0; i < respawnLocation.Length; i++) {
-			float distToRespawn = distanceFromRespawn (i);
-
-			if (distToRespawn <= GameManager.GM.regenRadius) {
-				regenHealth (GameManager.GM.regenRate, Time.deltaTime);
-			}
-		}
+        for (int i = 0; i < respawnLocation.Length; i++)
+        {
+            float distToRespawn = distanceFromRespawn(i);
+            if (distToRespawn <= GameManager.GM.regenRadius)
+            {
+                regenHealth(GameManager.GM.regenRate, Time.deltaTime);
+            }
+        }
     }
 
     public void regenHealth(float regenRate, float deltaTime)

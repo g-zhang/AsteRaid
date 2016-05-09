@@ -54,13 +54,13 @@ public class GameManager : MonoBehaviour
 
     public Color getTeamColor(Team team, bool enemyColor = false)
     {
-        if(enemyColor)
+        if (enemyColor)
         {
-            if(team == Team.Team1)
+            if (team == Team.Team1)
             {
                 return teamColors[(int)Team.Team2];
             }
-            if(team == Team.Team2)
+            if (team == Team.Team2)
             {
                 return teamColors[(int)Team.Team1];
             }
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
 
     public void PausePlayers(float time)
     {
-        foreach(GameObject player in playersGO)
+        foreach (GameObject player in playersGO)
         {
             player.GetComponent<ShipControls>().remainingStunTime = time;
         }
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
 
     public void StartCountDown()
     {
-        if(currstate == State.PreGame)
+        if (currstate == State.PreGame)
         {
             currstate = State.Countdown;
         }
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
 
     public void StartTheGame()
     {
-        if(currstate == State.Countdown)
+        if (currstate == State.Countdown)
         {
             currstate = State.InGame;
             PausePlayers(0f);
@@ -239,11 +239,19 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        if (currstate == State.EndGame)
+        if (currstate == State.EndGame || isPaused)
         {
             foreach (GameObject player in playersGO)
             {
-                if (player.GetComponent<Controls>().StartWasPressed)
+                if (player.GetComponent<Controls>().SelectWasPressed)
+                {
+                    SceneManager.LoadScene("Menu");
+                }
+                if (player.GetComponent<Controls>().StartWasPressed && currstate == State.EndGame)
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }
+                if (player.GetComponent<Controls>().RestartWasPressed && isPaused)
                 {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
@@ -254,25 +262,9 @@ public class GameManager : MonoBehaviour
         {
             foreach (GameObject player in playersGO)
             {
-                if (player.GetComponent<Controls>().isActive && player.GetComponent<Controls>().ID.Action2.WasPressed && isPaused)
+                if (player.GetComponent<Controls>().QuitWasPressed && isPaused)
                 {
                     UnPauseGame();
-                }
-            }
-        }
-
-        if (isPaused)
-        {
-            foreach (GameObject player in playersGO)
-            {
-                if (player.GetComponent<Controls>().SelectWasPressed)
-                {
-                    SceneManager.LoadScene("Menu");
-                }
-
-                if (player.GetComponent<Controls>().isActive && player.GetComponent<Controls>().ID.Action4)
-                {
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
             }
         }
@@ -286,6 +278,7 @@ public class GameManager : MonoBehaviour
             {
                 if (player.GetComponent<Controls>().StartWasPressed && !isPaused)
                 {
+                    DisableAllVibration();
                     PauseGame();
                 }
             }

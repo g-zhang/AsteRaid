@@ -115,43 +115,43 @@ public class Controls : MonoBehaviour
         {
             return (MousePosition - transform.position).normalized;
         }
-	}
+    }
 
-	public bool FireButtonWasPressed
-	{
-		get
-		{
-			if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
-			return Input.GetMouseButtonDown(0);
-		}
-	}
+    public bool FireButtonWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.RightTrigger.WasPressed;
+            return Input.GetMouseButtonDown(0);
+        }
+    }
 
-	public bool FireButtonIsPressed
-	{
-		get
-		{
-			if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
-			return Input.GetMouseButton(0);
-		}
-	}
+    public bool FireButtonIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.RightTrigger.IsPressed;
+            return Input.GetMouseButton(0);
+        }
+    }
 
-	public bool SecondFireButtonWasPressed
-	{
-		get
-		{
-			if (ControlsMode == Mode.Controller) return ID.LeftTrigger.WasPressed;
-			return Input.GetMouseButtonDown(1);
-		}
-	}
+    public bool SecondFireButtonWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.LeftTrigger.WasPressed;
+            return Input.GetMouseButtonDown(1);
+        }
+    }
 
-	public bool SecondFireButtonIsPressed
-	{
-		get
-		{
-			if (ControlsMode == Mode.Controller) return ID.LeftTrigger.IsPressed;
-			return Input.GetMouseButton(1);
-		}
-	}
+    public bool SecondFireButtonIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.LeftTrigger.IsPressed;
+            return Input.GetMouseButton(1);
+        }
+    }
 
     public bool BoostButtonWasPressed
     {
@@ -222,6 +222,42 @@ public class Controls : MonoBehaviour
         {
             if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Back).IsPressed;
             return Input.GetKey(KeyCode.Backspace);
+        }
+    }
+
+    public bool QuitWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Action2).WasPressed;
+            return Input.GetKeyDown(KeyCode.Escape);
+        }
+    }
+
+    public bool QuitIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Action2).IsPressed;
+            return Input.GetKey(KeyCode.Escape);
+        }
+    }
+
+    public bool RestartWasPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Action4).WasPressed;
+            return Input.GetKeyDown(KeyCode.R);
+        }
+    }
+
+    public bool RestartIsPressed
+    {
+        get
+        {
+            if (ControlsMode == Mode.Controller) return ID.GetControl(InputControlType.Action4).IsPressed;
+            return Input.GetKey(KeyCode.R);
         }
     }
 
